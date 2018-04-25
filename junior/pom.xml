@@ -14,7 +14,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>_001</module>
+        <module>001_Collections_Pro</module>
     </modules>
 
 </project>

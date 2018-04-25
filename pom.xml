@@ -6,7 +6,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>traineer</module>
         <module>junior</module>
     </modules>
 
