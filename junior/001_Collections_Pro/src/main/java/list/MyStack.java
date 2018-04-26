@@ -17,29 +17,37 @@ public class MyStack<E> extends MyLinkedList<E> {
     }
 
     public E pop() {
-        if (size == 0) {
+        if (getSize() == 0) {
             throw new EmptyStackException();
         }
-        int index = size - 1;
+        int index = getSize() - 1;
         E obj = get(index);
         remove(obj);
         return obj;
     }
 
+
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = getModCount();
-            int g = size - 1;
+            Node<E> inststance = last;
 
             @Override
             public boolean hasNext() {
                 boolean result = false;
+                Node<E> localInst = inststance;
                 if (expectedModCount != getModCount()) {
                     throw new ConcurrentModificationException();
                 }
-                if (g >= 0) {
-                    result = true;
+                while (localInst != null) {
+                    if (localInst.item == null) {
+                        localInst = localInst.prev;
+                        continue;
+                    } else {
+                        result = true;
+                        break;
+                    }
                 }
                 return result;
             }
@@ -49,8 +57,10 @@ public class MyStack<E> extends MyLinkedList<E> {
                 if (expectedModCount != getModCount()) {
                     throw new ConcurrentModificationException();
                 }
-                if (g >= 0) {
-                    return get(g--);
+                if (inststance != null) {
+                    E e = inststance.item;
+                    inststance = inststance.prev;
+                    return e != null ? e : next();
                 } else {
                     throw new NoSuchElementException();
                 }

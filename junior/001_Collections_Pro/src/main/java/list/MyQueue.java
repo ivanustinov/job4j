@@ -14,7 +14,7 @@ public class MyQueue<E> extends MyLinkedList<E> {
     }
 
     public E pop() {
-        if (size == 0) {
+        if (getSize() == 0) {
             throw new EmptyStackException();
         }
         E obj = get(0);

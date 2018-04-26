@@ -14,10 +14,20 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<E> implements Iterable<E> {
 
-    transient int size;
+    private transient int size;
     transient Node<E> first;
     transient Node<E> last;
     private int modCount;
+
+    /**
+     * Gets size
+     *
+     * @return value of size
+     */
+
+    public int getSize() {
+        return size;
+    }
 
     @Override
     public Iterator<E> iterator() {
