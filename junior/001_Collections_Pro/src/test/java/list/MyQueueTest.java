@@ -25,7 +25,7 @@ public class MyQueueTest {
     @Test
     public void testPopMethod() {
         assertThat(queue.pop(), is("Integer"));
-        assertThat(queue.size, is(2));
+        assertThat(queue.getSize(), is(2));
         assertThat(queue.pop(), is("Long"));
         Iterator<String> it = queue.iterator();
         assertThat(it.next(), is("Double"));

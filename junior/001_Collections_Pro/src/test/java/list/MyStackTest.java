@@ -25,7 +25,7 @@ public class MyStackTest {
     @Test
     public void testPopMethod() {
         assertThat(stack.pop(), is("Double"));
-        assertThat(stack.size, is(2));
+        assertThat(stack.getSize(), is(2));
         assertThat(stack.pop(), is("Long"));
         Iterator<String> it = stack.iterator();
         assertThat(it.next(), is("Integer"));
