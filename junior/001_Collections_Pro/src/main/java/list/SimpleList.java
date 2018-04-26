@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @since 25.04.2018
  */
 public class SimpleList<E> implements Iterable<E> {
-    Object[] container;
+    private Object[] container;
     private int position = 0;
     private static final double INCREASECAPACITY = 1.5;
     private int modCount = 0;
@@ -25,6 +25,26 @@ public class SimpleList<E> implements Iterable<E> {
      */
     public SimpleList() {
         this.container = new Object[5];
+    }
+
+    /**
+     * Gets container
+     *
+     * @return value of container
+     */
+
+    public Object[] getContainer() {
+        return container;
+    }
+
+    /**
+     * Gets position
+     *
+     * @return value of position
+     */
+
+    public int getPosition() {
+        return position;
     }
 
     /**
@@ -60,7 +80,7 @@ public class SimpleList<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = modCount;
-            int g = 0;
+            int newInst = 0;
 
             @Override
             public boolean hasNext() {
@@ -68,7 +88,7 @@ public class SimpleList<E> implements Iterable<E> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                if (g < position) {
+                if (newInst < position) {
                     result = true;
                 }
                 return result;
@@ -79,8 +99,8 @@ public class SimpleList<E> implements Iterable<E> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                if (g < position) {
-                    return (E) container[g++];
+                if (newInst < position) {
+                    return (E) container[newInst++];
                 }
                 throw new NoSuchElementException();
             }
