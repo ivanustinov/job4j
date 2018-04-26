@@ -23,16 +23,23 @@ public class MyLinkedList<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = modCount;
-            int g = 0;
+            Node<E> inststance = first;
 
             @Override
             public boolean hasNext() {
                 boolean result = false;
+                Node<E> localInst = inststance;
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                if (g < size) {
-                    result = true;
+                while (localInst != null) {
+                    if (localInst.item == null) {
+                        localInst = localInst.next;
+                        continue;
+                    } else {
+                        result = true;
+                        break;
+                    }
                 }
                 return result;
             }
@@ -42,8 +49,10 @@ public class MyLinkedList<E> implements Iterable<E> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                if (g < size) {
-                    return get(g++);
+                if (inststance != null) {
+                    E e = inststance.item;
+                    inststance = inststance.next;
+                    return e != null ? e : next();
                 } else {
                     throw new NoSuchElementException();
                 }
@@ -105,7 +114,7 @@ public class MyLinkedList<E> implements Iterable<E> {
         return element;
     }
 
-    private static class Node<E> {
+     class Node<E> {
         E item;
         Node<E> next;
         Node<E> prev;
