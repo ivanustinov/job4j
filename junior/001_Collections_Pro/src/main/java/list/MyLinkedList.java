@@ -124,7 +124,7 @@ public class MyLinkedList<E> implements Iterable<E> {
         return element;
     }
 
-     class Node<E> {
+    class Node<E> {
         E item;
         Node<E> next;
         Node<E> prev;
@@ -178,5 +178,4 @@ public class MyLinkedList<E> implements Iterable<E> {
         }
 
     }
-
 }

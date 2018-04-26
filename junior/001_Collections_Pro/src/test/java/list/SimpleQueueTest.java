@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
  * @version 1.0
  * @since 25.04.2018
  */
-public class MyQueueTest {
-    MyQueue<String> queue = new MyQueue<>();
+public class SimpleQueueTest {
+    SimpleQueue<String> queue = new SimpleQueue<>();
     @Before
     public void setUp() throws Exception {
         queue.push("Integer");

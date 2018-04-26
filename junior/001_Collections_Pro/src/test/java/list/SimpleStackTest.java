@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
  * @version 1.0
  * @since 25.04.2018
  */
-public class MyStackTest {
-    MyStack<String> stack = new MyStack<>();
+public class SimpleStackTest {
+    SimpleStack<String> stack = new SimpleStack<>();
     @Before
     public void setUp() throws Exception {
         stack.push("Integer");

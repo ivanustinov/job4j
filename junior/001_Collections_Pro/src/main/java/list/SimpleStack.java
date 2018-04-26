@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * @version 1.0
  * @since 25.04.2018
  */
-public class MyStack<E> extends MyLinkedList<E> {
+public class SimpleStack<E> extends MyLinkedList<E> {
     public E push(E item) {
         add(item);
         return item;

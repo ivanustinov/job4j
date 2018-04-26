@@ -14,7 +14,6 @@ public class NewLinkedList<E> {
     private int modCount;
 
 
-
     public boolean add(Node<E> node) {
         modCount++;
         final Node<E> l = last;
