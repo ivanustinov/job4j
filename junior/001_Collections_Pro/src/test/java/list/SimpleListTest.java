@@ -27,7 +27,7 @@ public class SimpleListTest {
 
     @Test
     public void testTheList() {
-        assertThat(list.container.length, is(5));
+        assertThat(list.getContainer().length, is(5));
         assertThat(list.get(0), is(1));
         assertThat(list.get(3), is(4));
     }
@@ -40,7 +40,7 @@ public class SimpleListTest {
     @Test
     public void testMaxFill() {
         list.add(5);
-        assertThat(list.container.length, is(7));
+        assertThat(list.getContainer().length, is(7));
         assertThat(list.get(4), is(5));
     }
 
