@@ -7,7 +7,7 @@ import java.util.EmptyStackException;
  * @version 1.0
  * @since 25.04.2018
  */
-public class SimpleQueue<E> extends MyLinkedList<E> {
+public class SimpleQueue<E> extends SimpleLinkedList<E> {
     public E push(E item) {
         add(item);
         return item;

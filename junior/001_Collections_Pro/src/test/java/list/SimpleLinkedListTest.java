@@ -17,9 +17,9 @@ import static org.junit.Assert.assertThat;
  */
 
 
-public class MyLinkedListTest {
+public class SimpleLinkedListTest {
 
-    MyLinkedList<String> list = new MyLinkedList<>();
+    SimpleLinkedList<String> list = new SimpleLinkedList<>();
 
     @Before
     public void setUp() throws Exception {

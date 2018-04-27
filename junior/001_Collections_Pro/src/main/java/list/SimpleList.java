@@ -28,16 +28,6 @@ public class SimpleList<E> implements Iterable<E> {
     }
 
     /**
-     * Gets modCount
-     *
-     * @return value of modCount
-     */
-
-    public int getModCount() {
-        return modCount;
-    }
-
-    /**
      * Gets container
      *
      * @return value of container
@@ -45,16 +35,6 @@ public class SimpleList<E> implements Iterable<E> {
 
     public Object[] getContainer() {
         return container;
-    }
-
-    /**
-     * Gets position
-     *
-     * @return value of position
-     */
-
-    public int getPosition() {
-        return position;
     }
 
     /**
