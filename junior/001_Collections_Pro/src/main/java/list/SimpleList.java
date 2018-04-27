@@ -28,6 +28,16 @@ public class SimpleList<E> implements Iterable<E> {
     }
 
     /**
+     * Gets modCount
+     *
+     * @return value of modCount
+     */
+
+    public int getModCount() {
+        return modCount;
+    }
+
+    /**
      * Gets container
      *
      * @return value of container
@@ -62,6 +72,15 @@ public class SimpleList<E> implements Iterable<E> {
         } else {
             container[position++] = object;
         }
+    }
+
+    public boolean contains(E object) {
+        for (E e : this) {
+            if (e.equals(object)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

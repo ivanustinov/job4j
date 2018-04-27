@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Set on the massive.
+ * Set based on the massive.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -15,7 +15,6 @@ import java.util.NoSuchElementException;
  */
 public class SimpleSet<E> implements Iterable<E> {
 
-    private int modCount;
     private SimpleList<E> simpleList;
 
     public SimpleSet() {
@@ -23,26 +22,22 @@ public class SimpleSet<E> implements Iterable<E> {
     }
 
     public void add(E object) {
-        modCount++;
-        for (E e : simpleList) {
-            if (e.equals(object)) {
-                e = object;
-                return;
-            }
+        if (!simpleList.contains(object)) {
+            simpleList.add(object);
         }
-        simpleList.add(object);
     }
+
 
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            int expectedModCount = modCount;
+            int expectedModCount = simpleList.getModCount();
             int newInst = 0;
 
             @Override
             public boolean hasNext() {
                 boolean result = false;
-                if (expectedModCount != modCount) {
+                if (expectedModCount != simpleList.getModCount()) {
                     throw new ConcurrentModificationException();
                 }
                 if (newInst < simpleList.getPosition()) {
@@ -53,7 +48,7 @@ public class SimpleSet<E> implements Iterable<E> {
 
             @Override
             public E next() {
-                if (expectedModCount != modCount) {
+                if (expectedModCount != simpleList.getModCount()) {
                     throw new ConcurrentModificationException();
                 } else if (newInst < simpleList.getPosition()) {
                     return (E) simpleList.getContainer()[newInst++];
