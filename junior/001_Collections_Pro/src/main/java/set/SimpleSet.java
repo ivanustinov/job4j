@@ -30,32 +30,6 @@ public class SimpleSet<E> implements Iterable<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            int expectedModCount = simpleList.getModCount();
-            int newInst = 0;
-
-            @Override
-            public boolean hasNext() {
-                boolean result = false;
-                if (expectedModCount != simpleList.getModCount()) {
-                    throw new ConcurrentModificationException();
-                }
-                if (newInst < simpleList.getPosition()) {
-                    result = true;
-                }
-                return result;
-            }
-
-            @Override
-            public E next() {
-                if (expectedModCount != simpleList.getModCount()) {
-                    throw new ConcurrentModificationException();
-                } else if (newInst < simpleList.getPosition()) {
-                    return (E) simpleList.getContainer()[newInst++];
-                } else {
-                    throw new NoSuchElementException();
-                }
-            }
-        };
+        return simpleList.iterator();
     }
 }
