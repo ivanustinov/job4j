@@ -15,21 +15,26 @@ import static org.junit.Assert.assertThat;
  */
 
 public class NewLinkedListTest {
-    NewLinkedList<Integer> list = new NewLinkedList<>();
-    Node<Integer> first = new Node<>(1);
-    Node<Integer> second = new Node<>(2);
-    Node<Integer> third = new Node<>(3);
 
-    @Before
-    public void setUp() throws Exception {
+    @Test
+    public void testCycleMethod() {
+        NewLinkedList<Integer> list = new NewLinkedList<>();
+        Node<Integer> first = new Node<>(1);
+        Node<Integer> second = new Node<>(2);
+        Node<Integer> third = new Node<>(3);
         list.add(first);
         list.add(second);
         list.add(third);
         list.add(first);
+        assertThat(list.hasCycle(), is(true));
     }
 
     @Test
-    public void testCycleMethod() {
-        assertThat(list.hasCycle(), is(true));
+    public void testCycleMethodWhenFalse() {
+        NewLinkedList<Integer> list = new NewLinkedList<>();
+        list.add(new Node<>(1)) ;
+        list.add(new Node<>(2)) ;
+        list.add(new Node<>(3)) ;
+        assertThat(list.hasCycle(), is(false));
     }
 }
