@@ -13,11 +13,8 @@ import java.util.Iterator;
  */
 public class SetOnLinkedList<E> implements Iterable<E> {
 
-    SimpleLinkedList<E> list;
+    private SimpleLinkedList<E> list = new SimpleLinkedList<>();
 
-    public SetOnLinkedList() {
-        list = new SimpleLinkedList<>();
-    }
 
     public void add(E object) {
             if (!list.contains(object)) {
