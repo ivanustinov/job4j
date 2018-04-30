@@ -16,10 +16,14 @@ import java.util.Map;
 public class FirstMap {
     Map<User, String> map = new HashMap<>();
 
+
     @Test
     public void put() {
-        map.put(new User("Ivan", 3, new GregorianCalendar(1985, 8, 20)), "First");
-        map.put(new User("Ivan", 3, new GregorianCalendar(1985, 8, 20)), "Second");
+        User first = new User("Ivan", 3, new GregorianCalendar(1985, 8, 20));
+        User second = new User("Ivan", 3, new GregorianCalendar(1985, 8, 20));
+        map.put(first, "First");
+        map.put(second, "Second");
         System.out.println(map);
+        System.out.println(first.equals(second));
     }
 }
