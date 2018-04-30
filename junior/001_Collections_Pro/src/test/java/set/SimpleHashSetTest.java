@@ -35,8 +35,7 @@ public class SimpleHashSetTest {
         hashSet.add(new Element(2));
         hashSet.add(new Element(6));
         hashSet.add(new Element(7));
-        assertThat(hashSet.getContainer().length, is(10));
-        System.out.println(Arrays.toString(hashSet.getContainer()));
+        assertThat(hashSet.size(), is(10));
     }
 
 

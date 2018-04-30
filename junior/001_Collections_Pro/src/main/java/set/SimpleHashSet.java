@@ -18,6 +18,10 @@ public class SimpleHashSet<E extends Element> {
         this.container = new Object[number];
     }
 
+    public int size() {
+        return container.length;
+    }
+
     public boolean add(E object) {
         modCount++;
         int index = hashFunction(object, container.length);
