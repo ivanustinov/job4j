@@ -137,7 +137,7 @@ public class SimpleHashMap<K, V> implements Iterable {
         }
     }
 
-    public synchronized V get(K key) {
+    public V get(K key) {
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % table.length;
         Entry<?, ?> e = table[index];
@@ -155,7 +155,7 @@ public class SimpleHashMap<K, V> implements Iterable {
         return null;
     }
 
-    public synchronized boolean remove(Object key) {
+    public boolean remove(Object key) {
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % table.length;
         Entry<?, ?> e = table[index];
