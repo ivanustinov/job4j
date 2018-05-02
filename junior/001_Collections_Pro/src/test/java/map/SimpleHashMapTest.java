@@ -22,14 +22,13 @@ public class SimpleHashMapTest {
     @Before
     public void setUp() throws Exception {
         map.insert(15, "Ivan");
-        map.insert(16, "Grigorii");
+        map.insert(4, "Grigorii");
         map.insert(17, "Gosha");
-        map.insert(40, "Gosha");
+        map.insert(39, "Gosha");
         map.insert(0, "Alex");
         map.insert(3, "Maga");
         map.insert(5, "Maga");
         map.insert(8, "Avdotia");
-        map.insert(1, "Maga");
     }
 
     @Test

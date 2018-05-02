@@ -89,12 +89,22 @@ public class SimpleHashMap<K, V> implements Iterable {
         // Makes sure the key is not already in the hashtable.
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % table.length;
-        if (table[index] != null) {
-            return false;
-        } else {
-            addEntry(hash, key, value, index);
-            return true;
+        Entry<?, ?> e = table[index];
+        while (e != null) {
+            if (e.key.equals(key) && e.hash == hash) {
+                ((Entry<K, V>) e).value = value;
+                return true;
+            } else {
+                index++;
+                if (index == table.length) {
+                    rehash();
+                    insert(key, value);
+                }
+                e = table[index];
+            }
         }
+        addEntry(hash, key, value, index);
+        return true;
     }
 
     private void addEntry(int hash, K key, V value, int index) {
@@ -127,13 +137,19 @@ public class SimpleHashMap<K, V> implements Iterable {
         }
     }
 
-    public synchronized V get(Object key) {
+    public synchronized V get(K key) {
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % table.length;
         Entry<?, ?> e = table[index];
-        if (e != null) {
+        while (e != null) {
             if ((e.hash == hash) && e.key.equals(key)) {
                 return (V) e.value;
+            } else {
+                index++;
+                if (index == table.length) {
+                    return null;
+                }
+                e = table[index];
             }
         }
         return null;
@@ -142,11 +158,18 @@ public class SimpleHashMap<K, V> implements Iterable {
     public synchronized boolean remove(Object key) {
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % table.length;
-        Entry<K, V> e = (Entry<K, V>) table[index];
-        if (e != null) {
+        Entry<?, ?> e = table[index];
+        while (e != null) {
             if ((e.hash == hash) && e.key.equals(key)) {
                 table[index] = null;
                 return true;
+            } else {
+                index++;
+
+                if (index == table.length) {
+                    return false;
+                }
+                e = table[index];
             }
         }
         return false;
