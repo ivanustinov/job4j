@@ -38,7 +38,7 @@ public class SimpleHashMapTest {
         map.insert(15, "Maga");
         System.out.println(map);
         assertThat(map.remove(15), is(true));
-        map.insert(2, "Iosif");
+//        map.insert(2, "Iosif");
         map.insert(19, "Iosif");
         assertThat(map.tableSize(), is(23));
         System.out.println(map);

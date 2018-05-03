@@ -124,7 +124,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         return element;
     }
 
-    class Node<E> {
+    public class Node<E> {
         E item;
         Node<E> next;
         Node<E> prev;

@@ -14,18 +14,11 @@ import java.util.NoSuchElementException;
  * @since 25.04.2018
  */
 public class SimpleList<E> implements Iterable<E> {
-    private Object[] container;
+    private Object[] container  = new Object[5];
     private int position = 0;
     private static final double INCREASECAPACITY = 1.5;
     private int modCount = 0;
 
-    /**
-     * Constructor.
-     * size by default= 5.
-     */
-    public SimpleList() {
-        this.container = new Object[5];
-    }
 
     /**
      * Gets container

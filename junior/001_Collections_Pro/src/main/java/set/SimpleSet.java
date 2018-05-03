@@ -2,9 +2,7 @@ package set;
 
 import list.SimpleList;
 
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * Set based on the massive.
@@ -15,11 +13,8 @@ import java.util.NoSuchElementException;
  */
 public class SimpleSet<E> implements Iterable<E> {
 
-    private SimpleList<E> simpleList;
+    private SimpleList<E> simpleList = new SimpleList<>();
 
-    public SimpleSet() {
-        simpleList = new SimpleList<>();
-    }
 
     public void add(E object) {
         if (!simpleList.contains(object)) {
