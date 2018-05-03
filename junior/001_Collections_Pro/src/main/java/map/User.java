@@ -27,13 +27,17 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return children == user.children &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(birthday, user.birthday);
+                name.equals(user.name) &&
+                birthday.equals(user.birthday);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, children, birthday);
+        int result = 1;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (int)children;
+        result = 31 * result + birthday.hashCode();
+        return result;
     }
 
     @Override
