@@ -39,6 +39,12 @@ public class FirstSimpleTreeTest {
         assertThat(it.next(), is(1));
         assertThat(it.next(), is(3));
         assertThat(it.next(), is(4));
+        assertThat(it.hasNext(), is(true));
+        assertThat(it.next(), is(8));
+        assertThat(it.next(), is(6));
+        assertThat(it.next(), is(7));
+        assertThat(it.hasNext(), is(false));
+        assertThat(tree.isBynary(), is(false));
     }
 
 }

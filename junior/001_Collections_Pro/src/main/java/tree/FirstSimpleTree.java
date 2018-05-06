@@ -27,6 +27,23 @@ public class FirstSimpleTree<E extends Comparable<E>> implements SimpleTree<E> {
         }
     }
 
+    public boolean isBynary() {
+        Queue<Node<E>> data = new LinkedList<>();
+        data.offer(this.root);
+        while (!data.isEmpty()) {
+            int childs = 0;
+            Node<E> el = data.poll();
+            for (Node<E> child : el.leaves()) {
+                childs++;
+                if (childs > 2) {
+                    return false;
+                }
+                data.offer(child);
+            }
+        }
+        return true;
+    }
+
     @Override
     public Optional<Node<E>> findBy(E value) {
         Optional<Node<E>> rsl = Optional.empty();
