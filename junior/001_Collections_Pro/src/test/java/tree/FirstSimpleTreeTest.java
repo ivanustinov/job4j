@@ -25,7 +25,6 @@ public class FirstSimpleTreeTest {
         tree.add(1, 4);
         tree.add(4, 6);
         tree.add(4, 7);
-        tree.add(1, 8);
     }
 
     @Test
@@ -40,10 +39,11 @@ public class FirstSimpleTreeTest {
         assertThat(it.next(), is(3));
         assertThat(it.next(), is(4));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(8));
         assertThat(it.next(), is(6));
         assertThat(it.next(), is(7));
         assertThat(it.hasNext(), is(false));
+        assertThat(tree.isBynary(), is(true));
+        tree.add(1, 8);
         assertThat(tree.isBynary(), is(false));
     }
 

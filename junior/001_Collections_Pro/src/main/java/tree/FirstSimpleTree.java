@@ -30,18 +30,22 @@ public class FirstSimpleTree<E extends Comparable<E>> implements SimpleTree<E> {
     public boolean isBynary() {
         Queue<Node<E>> data = new LinkedList<>();
         data.offer(this.root);
-        while (!data.isEmpty()) {
-            int childs = 0;
-            Node<E> el = data.poll();
-            for (Node<E> child : el.leaves()) {
-                childs++;
-                if (childs > 2) {
-                    return false;
+        boolean result = true;
+        block: {
+            while (!data.isEmpty()) {
+                int childs = 0;
+                Node<E> el = data.poll();
+                for (Node<E> child : el.leaves()) {
+                    childs++;
+                    if (childs > 2) {
+                        result = false;
+                        break block;
+                    }
+                    data.offer(child);
                 }
-                data.offer(child);
             }
         }
-        return true;
+        return result;
     }
 
     @Override
@@ -84,7 +88,7 @@ public class FirstSimpleTree<E extends Comparable<E>> implements SimpleTree<E> {
             }
             @Override
             public boolean hasNext() {
-                return nextData.isEmpty();
+                return !nextData.isEmpty();
             }
 
             @Override
