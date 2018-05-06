@@ -26,17 +26,7 @@ public class SimpleHashSet<E extends Element> {
         modCount++;
         int index = hashFunction(object, container.length);
         if (container[index] != null) {
-            int newLength = (int) (container.length * INCREASECAPACITY);
-            Object[] containerNew = new Object[newLength];
-            for (Object o : container) {
-                if (o == null) {
-                    continue;
-                }
-                index = hashFunction((E)o, newLength);
-                containerNew[index] = o;
-            }
-            container = containerNew;
-            add(object);
+            return false;
         } else {
             container[index] = object;
         }

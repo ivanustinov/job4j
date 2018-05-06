@@ -23,6 +23,7 @@ public class SimpleHashSetTest {
         hashSet.add(new Element(1));
         hashSet.add(new Element(2));
         hashSet.add(new Element(6));
+        hashSet.add(new Element(6));
         assertThat(hashSet.contains(new Element(1)), is(true));
         assertThat(hashSet.remove(new Element(1)), is(true));
         assertThat(hashSet.contains(new Element(1)), is(false));
