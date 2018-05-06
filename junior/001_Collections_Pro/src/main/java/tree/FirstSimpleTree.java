@@ -82,14 +82,9 @@ public class FirstSimpleTree<E extends Comparable<E>> implements SimpleTree<E> {
                 System.out.println(nextData);
                 return nextData;
             }
-
             @Override
             public boolean hasNext() {
-                if (nextData.isEmpty()) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return nextData.isEmpty();
             }
 
             @Override
