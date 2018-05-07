@@ -56,11 +56,7 @@ public class BynarySearchTree<E extends Comparable<E>> implements Iterable<E> {
 
             @Override
             public boolean hasNext() {
-                if (queue.isEmpty()) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return !queue.isEmpty();
             }
 
             @Override

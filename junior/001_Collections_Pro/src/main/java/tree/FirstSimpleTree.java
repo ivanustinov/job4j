@@ -31,20 +31,16 @@ public class FirstSimpleTree<E extends Comparable<E>> implements SimpleTree<E> {
         Queue<Node<E>> data = new LinkedList<>();
         data.offer(this.root);
         boolean result = true;
-        block: {
             while (!data.isEmpty()) {
-                int childs = 0;
                 Node<E> el = data.poll();
+                if (el.leaves().size() > 2) {
+                    result = false;
+                    break;
+                }
                 for (Node<E> child : el.leaves()) {
-                    childs++;
-                    if (childs > 2) {
-                        result = false;
-                        break block;
-                    }
                     data.offer(child);
                 }
             }
-        }
         return result;
     }
 
