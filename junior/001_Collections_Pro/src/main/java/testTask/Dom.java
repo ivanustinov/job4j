@@ -71,6 +71,9 @@ public class Dom {
             if (volumeAfterTrade == 0) {
                 order = null;
             }
+            else{
+                order.setVolume(volumeAfterTrade);
+            }
         } else {
             orderInTable.setVolume(-volumeAfterTrade);
             tree.add(orderInTable);
