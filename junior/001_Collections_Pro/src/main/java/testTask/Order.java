@@ -9,12 +9,12 @@ import java.util.Comparator;
  * @version 1.0
  * @since 07.05.2018
  */
-public class Order<K> {
-    private K id;
+public class Order implements Comparable{
+    private Integer id;
     private String book;
     private String type;
     private String action;
-    private int price;
+    private Integer price;
     private int volume;
 /**
  * Constructor.
@@ -26,7 +26,7 @@ public class Order<K> {
  * @param price price of one share.
  * @param volume the number of shares.
  */
-    public Order(K id, String book, String type, String action, int price, int volume){
+    public Order(int id, String book, String type, String action, int price, int volume){
         this.id = id;
         this.book = book;
         this.type = type;
@@ -35,13 +35,13 @@ public class Order<K> {
         this.volume = volume;
     }
 
-    public Order(K id, String type, int price) {
+    public Order(int id, String type, int price) {
         this.id = id;
         this.type = type;
         this.price = price;
     }
 
-    public Order(K id, String type) {
+    public Order(Integer id, String type) {
         this.id = id;
         this.type = type;
     }
@@ -52,7 +52,7 @@ public class Order<K> {
      * @return value of id
      */
 
-    public K getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -92,7 +92,7 @@ public class Order<K> {
      * @return value of price
      */
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -126,5 +126,11 @@ public class Order<K> {
         if (obj == null || getClass() != obj.getClass()) return false;
         Order order = (Order) obj;
         return this.hashCode() == order.hashCode();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Order order = (Order) o;
+        return -price.compareTo(order.getPrice());
     }
 }

@@ -1,6 +1,7 @@
 package testTask;
 
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -18,22 +19,8 @@ public class Dom {
 
     public Dom(String company) {
         this.company = company;
-        buy = new TreeSet<>(new Comparator<Order>() {
-            @Override
-            public int compare(Order o1, Order o2) {
-                Integer first = o1.getPrice();
-                Integer second = o2.getPrice();
-                return -first.compareTo(second);
-            }
-        });
-        sale = new TreeSet<>(new Comparator<Order>() {
-            @Override
-            public int compare(Order o1, Order o2) {
-                Integer first = o1.getPrice();
-                Integer second = o2.getPrice();
-                return -first.compareTo(second);
-            }
-        });
+        buy = new TreeSet<>();
+        sale = new TreeSet<>();
     }
 
     public boolean addOrder(Order order) {
@@ -54,13 +41,13 @@ public class Dom {
         TreeSet<Order> sales = new TreeSet<>(sale);
         boolean result = false;
         for (Order saler : sales) {
-            tobuy = tobuy.getPrice() >= saler.getPrice() ? getVolumeAfterTrade(tobuy, saler) : tobuy;
+            tobuy = tobuy.getPrice() >= saler.getPrice() ? getVolumeAfterTrade(tobuy, saler, sale) : tobuy;
             if (tobuy == null) {
                 return false;
             }
         }
         if (checkSumm(buy, tobuy)) {
-            result =  buy.add(tobuy);
+            result = buy.add(tobuy);
         }
         return result;
     }
@@ -77,7 +64,7 @@ public class Dom {
         return result;
     }
 
-    public Order getVolumeAfterTrade(Order order, Order orderInTable) {
+    public Order getVolumeAfterTrade(Order order, Order orderInTable, TreeSet<Order> tree) {
         int volumeAfterTrade = order.getVolume() - orderInTable.getVolume();
         if (volumeAfterTrade >= 0) {
             deleteOrder(orderInTable);
@@ -86,6 +73,7 @@ public class Dom {
             }
         } else {
             orderInTable.setVolume(-volumeAfterTrade);
+            tree.add(orderInTable);
             order = null;
         }
         return order;
@@ -94,8 +82,8 @@ public class Dom {
     public boolean checkBuy(Order saler) {
         TreeSet<Order> buys = new TreeSet<>(buy);
         boolean result = false;
-        for (Order buy : buys) {
-            saler = saler.getPrice() <= buy.getPrice() ? getVolumeAfterTrade(saler, buy) : saler;
+        for (Order buyse : buys) {
+            saler = saler.getPrice() <= buyse.getPrice() ? getVolumeAfterTrade(saler, buyse, buy) : saler;
             if (saler == null) {
                 return false;
             }
