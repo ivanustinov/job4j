@@ -1,7 +1,6 @@
 package testTask;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -14,6 +13,7 @@ import java.util.TreeSet;
  */
 public class Dom {
     private String company;
+    private HashMap<Integer, Order> map;
     private TreeSet<Order> buy;
     private TreeSet<Order> sale;
 
@@ -21,6 +21,7 @@ public class Dom {
         this.company = company;
         buy = new TreeSet<>();
         sale = new TreeSet<>();
+        map = new HashMap<>();
     }
 
     public boolean addOrder(Order order) {
@@ -34,7 +35,14 @@ public class Dom {
     }
 
     public boolean deleteOrder(Order order) {
-        return buy.remove(order) ? true : sale.remove(order);
+        boolean result = false;
+        Order toDel = map.remove(order.getId());
+        if (toDel.getAction().equals("Buy")) {
+            result = deleteSumm(buy, toDel) > 0 ? true : buy.remove(toDel);
+        } else {
+            result = deleteSumm(sale, toDel) > 0 ? true : sale.remove(toDel);
+        }
+        return result;
     }
 
     public boolean checkSails(Order tobuy) {
@@ -46,8 +54,25 @@ public class Dom {
                 return false;
             }
         }
+        map.put(tobuy.getId(), tobuy);
         if (checkSumm(buy, tobuy)) {
             result = buy.add(tobuy);
+        }
+        return result;
+    }
+
+    public boolean checkBuy(Order saler) {
+        TreeSet<Order> buys = new TreeSet<>(buy);
+        boolean result = false;
+        for (Order buyse : buys) {
+            saler = saler.getPrice() <= buyse.getPrice() ? getVolumeAfterTrade(saler, buyse, buy) : saler;
+            if (saler == null) {
+                return false;
+            }
+        }
+        map.put(saler.getId(), saler);
+        if (checkSumm(sale, saler)) {
+            result = sale.add(saler);
         }
         return result;
     }
@@ -64,37 +89,34 @@ public class Dom {
         return result;
     }
 
+    public int deleteSumm(TreeSet<Order> tree, Order order) {
+        int result = 1;
+        for (Order order1 : tree) {
+            if (order1.getPrice() == order.getPrice()) {
+                result = order1.getVolume() - order.getVolume() > 0 ? result : -1;
+                order1.setVolume(order1.getVolume() - order.getVolume());
+                break;
+            }
+        }
+        return result;
+    }
+
     public Order getVolumeAfterTrade(Order order, Order orderInTable, TreeSet<Order> tree) {
         int volumeAfterTrade = order.getVolume() - orderInTable.getVolume();
         if (volumeAfterTrade >= 0) {
             deleteOrder(orderInTable);
             if (volumeAfterTrade == 0) {
                 order = null;
-            }
-            else{
+            } else {
                 order.setVolume(volumeAfterTrade);
             }
         } else {
             orderInTable.setVolume(-volumeAfterTrade);
             tree.add(orderInTable);
+            map.put(orderInTable.getId(), orderInTable);
             order = null;
         }
         return order;
-    }
-
-    public boolean checkBuy(Order saler) {
-        TreeSet<Order> buys = new TreeSet<>(buy);
-        boolean result = false;
-        for (Order buyse : buys) {
-            saler = saler.getPrice() <= buyse.getPrice() ? getVolumeAfterTrade(saler, buyse, buy) : saler;
-            if (saler == null) {
-                return false;
-            }
-        }
-        if (checkSumm(sale, saler)) {
-            result = sale.add(saler);
-        }
-        return result;
     }
 
     @Override
@@ -115,7 +137,7 @@ public class Dom {
             } else {
                 Order order = it2.next();
                 String sale = order.getPrice() + "  " + order.getVolume() + "\n";
-                builder.append("          ").append(sale);
+                builder.append("         ").append(sale);
             }
         }
         return builder.toString();

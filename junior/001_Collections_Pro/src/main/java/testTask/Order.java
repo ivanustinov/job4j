@@ -35,15 +35,11 @@ public class Order implements Comparable{
         this.volume = volume;
     }
 
-    public Order(int id, String type, int price) {
-        this.id = id;
-        this.type = type;
-        this.price = price;
-    }
 
-    public Order(Integer id, String type) {
+    public Order(Integer id, String book, String type) {
         this.id = id;
         this.type = type;
+        this.book = book;
     }
 
     /**
