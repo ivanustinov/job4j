@@ -11,15 +11,31 @@ import java.util.*;
  */
 public class Orders {
     private String company;
-    private List<Order> sale;
-    private List<Order> buy;
-    private List<Order> list;
+    private Set<Order> sale;
+    private Set<Order> buy;
+    private Set<Order> list;
 
     public Orders(String company) {
         this.company = company;
-        sale = new ArrayList<>();
-        buy = new ArrayList<>();
-        list = new ArrayList<>();
+        sale = new TreeSet<>(new Comparator<Order>() {
+            @Override
+            public int compare(Order o1,Order o2) {
+                Integer first = o1.hashCode();
+                Integer second = o2.hashCode();
+                int result = o1.getPrice().compareTo(o2.getPrice());
+                return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
+            }
+        });
+        buy = new TreeSet<>(new Comparator<Order>() {
+            @Override
+            public int compare(Order o1,Order o2) {
+                Integer first = o1.hashCode();
+                Integer second = o2.hashCode();
+                int result = -o1.getPrice().compareTo(o2.getPrice());
+                return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
+            }
+        });
+        list = new TreeSet<>();
     }
 
     public void addOrder(Order order) {
@@ -27,24 +43,12 @@ public class Orders {
             deleteOrder(order);
             return;
         }
-        List<Order> toCheck;
-        List<Order> toAdd;
+        Set<Order> toCheck;
+        Set<Order> toAdd;
         if (order.getAction().equals("Buy")) {
-            sale.sort(new Comparator<Order>() {
-                @Override
-                public int compare(Order o1, Order o2) {
-                    return o1.getPrice().compareTo(o2.getPrice());
-                }
-            });
             toCheck = sale;
             toAdd = buy;
         } else {
-            buy.sort(new Comparator<Order>() {
-                @Override
-                public int compare(Order o1, Order o2) {
-                    return -o1.getPrice().compareTo(o2.getPrice());
-                }
-            });
             toCheck = buy;
             toAdd = sale;
         }
@@ -54,12 +58,13 @@ public class Orders {
         }
     }
 
-    public Order checkList(Order order, List<Order> list) {
+    public Order checkList(Order order, Set<Order> list) {
         LinkedList<Order> toDel = new LinkedList<>();
-        int index = 0;
-        while (order.getVolume() > 0 && index < list.size()) {
-            Order order1 = list.get(index++);
+        for (Order order1 : list) {
             order1.comparePrice(order);
+            if (order.getVolume() == 0) {
+                break;
+            }
             if (order1.getVolume() == 0) {
                 toDel.add(order1);
             }
