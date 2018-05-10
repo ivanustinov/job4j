@@ -11,15 +11,15 @@ import java.util.*;
  */
 public class Orders {
     private String company;
-    private Set<Order> sale;
-    private Set<Order> buy;
-    private Set<Order> list;
+    private List<Order> sale;
+    private List<Order> buy;
+    private List<Order> list;
 
     public Orders(String company) {
         this.company = company;
-        sale = new HashSet<>();
-        buy = new HashSet<>();
-        list = new HashSet<>();
+        sale = new ArrayList<>();
+        buy = new ArrayList<>();
+        list = new ArrayList<>();
     }
 
     public void addOrder(Order order) {
@@ -27,26 +27,39 @@ public class Orders {
             deleteOrder(order);
             return;
         }
-        Set<Order> toCheck;
-        Set<Order> toAdd;
+        List<Order> toCheck;
+        List<Order> toAdd;
         if (order.getAction().equals("Buy")) {
+            sale.sort(new Comparator<Order>() {
+                @Override
+                public int compare(Order o1, Order o2) {
+                    return o1.getPrice().compareTo(o2.getPrice());
+                }
+            });
             toCheck = sale;
             toAdd = buy;
         } else {
+            buy.sort(new Comparator<Order>() {
+                @Override
+                public int compare(Order o1, Order o2) {
+                    return -o1.getPrice().compareTo(o2.getPrice());
+                }
+            });
             toCheck = buy;
             toAdd = sale;
         }
-        checkList(order, toCheck);
-        if (order.getVolume() != 0) {
+        if (checkList(order, toCheck).getVolume() != 0) {
             toAdd.add(order);
             list.add(order);
         }
     }
 
-    public Order checkList(Order order, Set<Order> list) {
+    public Order checkList(Order order, List<Order> list) {
         LinkedList<Order> toDel = new LinkedList<>();
-        for (Order order1 : list) {
-            order.comparePrice(order1);
+        int index = 0;
+        while (order.getVolume() > 0 && index < list.size()) {
+            Order order1 = list.get(index++);
+            order1.comparePrice(order);
             if (order1.getVolume() == 0) {
                 toDel.add(order1);
             }

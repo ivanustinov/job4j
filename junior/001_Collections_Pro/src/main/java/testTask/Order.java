@@ -7,7 +7,7 @@ package testTask;
  * @version 1.0
  * @since 07.05.2018
  */
-public class Order implements Comparable {
+public class Order implements Comparable{
     private Integer id;
     private String book;
     private String type;
@@ -44,12 +44,12 @@ public class Order implements Comparable {
 
 
     public void comparePrice(Order order) {
+        int v = volume;
         if ((action.equals("Buy") && price >= order.getPrice()) || action.equals("Sale") && price <= order.getPrice()) {
-            int v = volume - order.getVolume();
+            v = v - order.getVolume();
             this.setVolume(v);
             order.setVolume(-v);
         }
-
     }
 
     public void setVolume(int volume) {
@@ -134,9 +134,11 @@ public class Order implements Comparable {
         return this.hashCode() == order.hashCode();
     }
 
+
     @Override
     public int compareTo(Object o) {
-        Order order = (Order) o;
-        return -price.compareTo(order.getPrice());
+        Integer a = this.hashCode();
+        Order b = (Order) o;
+        return a.compareTo(b.hashCode());
     }
 }
