@@ -34,15 +34,6 @@ public class Order implements Comparable{
         this.volume = volume;
     }
 
-
-    public Order(Integer id, String book, String type, String action) {
-        this.id = id;
-        this.type = type;
-        this.book = book;
-        this.action = action;
-    }
-
-
     public void comparePrice(Order order) {
         int v = volume;
         if ((action.equals("Buy") && price >= order.getPrice()) || action.equals("Sale") && price <= order.getPrice()) {
@@ -58,16 +49,6 @@ public class Order implements Comparable{
         } else {
             this.volume = volume;
         }
-    }
-
-    /**
-     * Gets id
-     *
-     * @return value of id
-     */
-
-    public Integer getId() {
-        return id;
     }
 
     /**

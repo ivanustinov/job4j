@@ -22,7 +22,7 @@ public class OrdersTest {
         orders.addOrder(new Order(5, "IBM", "Create", "Sale", 32, 6));
         orders.addOrder(new Order(6, "IBM", "Create", "Sale", 37, 7));
         orders.addOrder(new Order(7, "IBM", "Create", "Buy", 40, 7));
-        orders.addOrder(new Order(1, "IBM", "Delete", "Buy"));
+        orders.addOrder(new Order(1, "IBM", "Delete", "Buy", 15, 10));
         System.out.println(orders);
     }
 
