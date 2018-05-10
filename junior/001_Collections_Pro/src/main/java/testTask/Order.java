@@ -1,7 +1,5 @@
 package testTask;
 
-import java.util.Comparator;
-
 /**
  * //TODO add comments.
  *
@@ -9,24 +7,25 @@ import java.util.Comparator;
  * @version 1.0
  * @since 07.05.2018
  */
-public class Order implements Comparable{
+public class Order implements Comparable {
     private Integer id;
     private String book;
     private String type;
     private String action;
     private Integer price;
     private int volume;
-/**
- * Constructor.
- *
- * @param id the unique number of order.
- * @param book the type of share.
- * @param type has two values: to create or delete order.
- * @param action Has two values: to buy or sale shares.
- * @param price price of one share.
- * @param volume the number of shares.
- */
-    public Order(int id, String book, String type, String action, int price, int volume){
+
+    /**
+     * Constructor.
+     *
+     * @param id     the unique number of order.
+     * @param book   the type of share.
+     * @param type   has two values: to create or delete order.
+     * @param action Has two values: to buy or sale shares.
+     * @param price  price of one share.
+     * @param volume the number of shares.
+     */
+    public Order(int id, String book, String type, String action, int price, int volume) {
         this.id = id;
         this.book = book;
         this.type = type;
@@ -36,10 +35,29 @@ public class Order implements Comparable{
     }
 
 
-    public Order(Integer id, String book, String type) {
+    public Order(Integer id, String book, String type, String action) {
         this.id = id;
         this.type = type;
         this.book = book;
+        this.action = action;
+    }
+
+
+    public void comparePrice(Order order) {
+        if ((action.equals("Buy") && price >= order.getPrice()) || action.equals("Sale") && price <= order.getPrice()) {
+            int v = volume - order.getVolume();
+            this.setVolume(v);
+            order.setVolume(-v);
+        }
+
+    }
+
+    public void setVolume(int volume) {
+        if (volume < 0) {
+            this.volume = 0;
+        } else {
+            this.volume = volume;
+        }
     }
 
     /**
@@ -102,14 +120,6 @@ public class Order implements Comparable{
         return volume;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    @Override
-    public String toString() {
-        return volume + "      " + price;
-    }
 
     @Override
     public int hashCode() {
