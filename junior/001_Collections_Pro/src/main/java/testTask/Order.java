@@ -34,6 +34,17 @@ public class Order implements Comparable{
         this.volume = volume;
     }
 
+    public Order(String action, int volume) {
+        this.action = action;
+        this.volume = volume;
+    }
+
+    public Order(Integer id, Integer price, int volume) {
+        this.id = id;
+        this.price = price;
+        this.volume = volume;
+    }
+
     public void comparePrice(Order order) {
         int v = volume;
         if ((action.equals("Buy") && price >= order.getPrice()) || action.equals("Sale") && price <= order.getPrice()) {
@@ -49,6 +60,20 @@ public class Order implements Comparable{
         } else {
             this.volume = volume;
         }
+    }
+
+    public void increaseVolume(int volume) {
+        this.volume += volume;
+    }
+
+    /**
+     * Gets id
+     *
+     * @return value of id
+     */
+
+    public Integer getId() {
+        return id;
     }
 
     /**
@@ -112,14 +137,25 @@ public class Order implements Comparable{
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Order order = (Order) obj;
-        return this.hashCode() == order.hashCode();
+        return this.hashCode() == order.hashCode() && price == order.getPrice() && volume == order.getVolume();
     }
 
+    @Override
+    public String toString() {
+        return "id: " + id + " price: " + price + " volume: " + volume;
+    }
 
     @Override
     public int compareTo(Object o) {
-        Integer a = this.hashCode();
         Order b = (Order) o;
-        return a.compareTo(b.hashCode());
+        int result;
+        Integer first = id;
+        Integer second = b.getId();
+        if (action.equals("Sale")) {
+            result = getPrice().compareTo(b.getPrice());
+        } else {
+            result = -getPrice().compareTo(b.getPrice());
+        }
+        return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
     }
 }

@@ -13,52 +13,41 @@ public class Orders {
     private String company;
     private Set<Order> sale;
     private Set<Order> buy;
-    private Set<Order> list;
+    private Map<Integer, Order> mapToReturnOrder;
+    private final static String DELETE = "Delete";
+    private final static String BUY = "Buy";
+    private final static String SALE = "Sale";
 
     public Orders(String company) {
         this.company = company;
-        sale = new TreeSet<>(new Comparator<Order>() {
-            @Override
-            public int compare(Order o1,Order o2) {
-                Integer first = o1.hashCode();
-                Integer second = o2.hashCode();
-                int result = o1.getPrice().compareTo(o2.getPrice());
-                return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
-            }
-        });
-        buy = new TreeSet<>(new Comparator<Order>() {
-            @Override
-            public int compare(Order o1,Order o2) {
-                Integer first = o1.hashCode();
-                Integer second = o2.hashCode();
-                int result = -o1.getPrice().compareTo(o2.getPrice());
-                return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
-            }
-        });
-        list = new TreeSet<>();
+        sale = new TreeSet<>();
+        buy = new TreeSet<>();
+        mapToReturnOrder = new HashMap<>();
     }
 
     public void addOrder(Order order) {
-        if (order.getType().equals("Delete")) {
+        if (DELETE.equals(order.getType())) {
             deleteOrder(order);
             return;
         }
         Set<Order> toCheck;
         Set<Order> toAdd;
-        if (order.getAction().equals("Buy")) {
+        if (BUY.equals(order.getAction())) {
             toCheck = sale;
             toAdd = buy;
         } else {
             toCheck = buy;
             toAdd = sale;
         }
-        if (checkList(order, toCheck).getVolume() != 0) {
+        if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
+            if (mapToReturnOrder.get(order.getId()) == null) {
+                mapToReturnOrder.put(order.getId(), order);
+            }
             toAdd.add(order);
-            list.add(order);
         }
     }
 
-    public Order checkList(Order order, Set<Order> list) {
+    public Order checkAndRemoveOrdersInList(Order order, Set<Order> list) {
         LinkedList<Order> toDel = new LinkedList<>();
         for (Order order1 : list) {
             order1.comparePrice(order);
@@ -76,42 +65,57 @@ public class Orders {
     }
 
     public void deleteOrder(Order order) {
-        if (order.getAction().equals("Buy")) {
+        if (BUY.equals(order.getAction())) {
             buy.remove(order);
-        } else sale.remove(order);
-        list.remove(order);
+        } else {
+            sale.remove(order);
+        }
+        mapToReturnOrder.remove(order.getId());
     }
 
-    public TreeMap<Integer, Order> toPrint() {
-        TreeMap<Integer, Order> tree = new TreeMap<>(new Comparator<Integer>() {
+    public Order getOrder(Integer id) {
+        return mapToReturnOrder.get(id);
+    }
+
+    public Map<Integer, Order> toPrint() {
+        Map<Integer, Order> treeToPrint = new TreeMap<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return -o1.compareTo(o2);
             }
         });
-        for (Order order : list) {
+        create(BUY, buy, treeToPrint);
+        create(SALE, sale, treeToPrint);
+        return treeToPrint;
+    }
+
+    public void create(String buyOrSale, Set<Order> tree, Map<Integer, Order> treeToPrint) {
+        for (Order order : tree) {
             int key = order.getPrice();
-            Order order1 = tree.get(key);
-            if (order1 != null) {
-                order1.setVolume(order1.getVolume() + order.getVolume());
-                tree.put(key, order1);
+            Order orderToPrint = treeToPrint.get(key);
+            if (orderToPrint != null) {
+                orderToPrint.setVolume(orderToPrint.getVolume() + order.getVolume());
             } else {
-                tree.put(key, order);
+                orderToPrint = new Order(buyOrSale, order.getVolume());
+                treeToPrint.put(key, orderToPrint);
             }
         }
-        return tree;
     }
 
     @Override
     public String toString() {
         Map<Integer, Order> tree = toPrint();
+        if (tree.size() == 0) {
+            return "";
+        }
         StringBuffer buffer = new StringBuffer();
-        buffer.append("Покупка Цена Продажа" + "\n");
+        buffer.append("Акции компании " + company + "\n" + "Покупка Цена Продажа" + "\n");
         for (Integer integer : tree.keySet()) {
-            if (tree.get(integer).getAction().equals("Buy")) {
-                buffer.append(tree.get(integer).getVolume()).append("      ").append(integer + "\n");
+            Order orderToPrint = tree.get(integer);
+            if (orderToPrint.getAction().equals(BUY)) {
+                buffer.append(orderToPrint.getVolume()).append("      " + integer + "\n");
             } else {
-                buffer.append("          " + integer).append(" ").append(tree.get(integer).getVolume() + "\n");
+                buffer.append("          " + integer).append(" " + orderToPrint.getVolume() + "\n");
             }
         }
         return buffer.toString();
