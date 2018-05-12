@@ -77,21 +77,16 @@ public class Orders {
         return mapToReturnOrder.get(id);
     }
 
-    public Map<Integer, Order> toPrint() {
+    public Map<Integer, Order> toPrint(Map<Integer, Order> map) {
         Map<Integer, Order> treeToPrint = new TreeMap<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return -o1.compareTo(o2);
             }
         });
-        create(BUY, buy, treeToPrint);
-        create(SALE, sale, treeToPrint);
-        return treeToPrint;
-    }
-
-    public void create(String buyOrSale, Set<Order> tree, Map<Integer, Order> treeToPrint) {
-        for (Order order : tree) {
+        for (Order order : map.values()) {
             int key = order.getPrice();
+            String buyOrSale = order.getAction();
             Order orderToPrint = treeToPrint.get(key);
             if (orderToPrint != null) {
                 orderToPrint.increaseVolume(order.getVolume());
@@ -100,11 +95,12 @@ public class Orders {
                 treeToPrint.put(key, orderToPrint);
             }
         }
+        return treeToPrint;
     }
 
     @Override
     public String toString() {
-        Map<Integer, Order> tree = toPrint();
+        Map<Integer, Order> tree = toPrint(mapToReturnOrder);
         if (tree.size() == 0) {
             return "";
         }
