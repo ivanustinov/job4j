@@ -42,8 +42,8 @@ public class Orders {
         if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
             if (mapToReturnOrder.get(order.getId()) == null) {
                 mapToReturnOrder.put(order.getId(), order);
+                toAdd.add(order);
             }
-            toAdd.add(order);
         }
     }
 
@@ -94,7 +94,7 @@ public class Orders {
             int key = order.getPrice();
             Order orderToPrint = treeToPrint.get(key);
             if (orderToPrint != null) {
-                orderToPrint.setVolume(orderToPrint.getVolume() + order.getVolume());
+                orderToPrint.increaseVolume(order.getVolume());
             } else {
                 orderToPrint = new Order(buyOrSale, order.getVolume());
                 treeToPrint.put(key, orderToPrint);

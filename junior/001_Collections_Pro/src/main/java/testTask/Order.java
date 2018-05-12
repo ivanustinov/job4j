@@ -47,7 +47,7 @@ public class Order implements Comparable{
 
     public void comparePrice(Order order) {
         int v = volume;
-        if ((action.equals("Buy") && price >= order.getPrice()) || action.equals("Sale") && price <= order.getPrice()) {
+        if ((action.equals("Buy") && price >= order.getPrice()) || (action.equals("Sale") && price <= order.getPrice())) {
             v = v - order.getVolume();
             this.setVolume(v);
             order.setVolume(-v);
