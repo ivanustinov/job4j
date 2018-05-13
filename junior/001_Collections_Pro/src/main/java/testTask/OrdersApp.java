@@ -1,7 +1,6 @@
 package testTask;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * //TODO add comments.
@@ -12,14 +11,36 @@ import java.util.HashSet;
  */
 public class OrdersApp {
     private HashMap<String, Orders> firms;
+    private HashMap<Integer, Order> orders;
 
     public OrdersApp() {
         this.firms = new HashMap<>();
+        this.orders = new HashMap<>();
     }
 
     public void putOrder(Order order) {
+        int key = order.getId();
+        String firm = order.getBook();
+        if (orders.get(key) != null) {
+            if (order.getAction().equals("Delete")) {
+                orders.remove(order.getId());
+                putOrderInFirm(order);
+            } else {
+                System.out.println("Wrong Id");
+                return;
+            }
+        } else {
+            putOrderInFirm(order);
+            Order orderToPut = firms.get(firm).getOrder(key);
+            if (orderToPut != null) {
+                orders.put(order.getId(), orderToPut);
+            }
+        }
+    }
+
+    public void putOrderInFirm(Order order) {
         String key = order.getBook();
-        if (firms.get(key) == null) {
+        if (firms.get(key) == null && !order.getAction().equals("Delete")) {
             Orders firm = new Orders(key);
             firm.addOrder(order);
             firms.put(key, firm);
@@ -28,14 +49,8 @@ public class OrdersApp {
         }
     }
 
-    /**
-     * Gets firms
-     *
-     * @return value of firms
-     */
-
-    public HashMap<String, Orders> getFirms() {
-        return firms;
+    public Order getOrder(Integer id) {
+        return orders.get(id);
     }
 
     @Override
