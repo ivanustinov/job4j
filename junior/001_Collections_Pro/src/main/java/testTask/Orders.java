@@ -16,7 +16,6 @@ public class Orders {
     private Map<Integer, Order> mapToReturnOrder;
     private final static String DELETE = "Delete";
     private final static String BUY = "Buy";
-    private final static String SALE = "Sale";
 
     public Orders(String company) {
         this.company = company;
@@ -40,10 +39,8 @@ public class Orders {
             toAdd = sale;
         }
         if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
-            if (mapToReturnOrder.get(order.getId()) == null) {
-                mapToReturnOrder.put(order.getId(), order);
-                toAdd.add(order);
-            }
+            mapToReturnOrder.put(order.getId(), order);
+            toAdd.add(order);
         }
     }
 

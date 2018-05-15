@@ -32,48 +32,44 @@ public class OrdersTest {
     }
     public void createMarketIBM() {
         //Add sail orders.
-        market.putOrder(new Order(1, IBM, "Create", "Sale", 12, 8));
-        market.putOrder(new Order(2, IBM, "Create", "Sale", 12, 11));
-        market.putOrder(new Order(3, IBM, "Create", "Sale", 11, 22));
+        market.putOrder(new Order(8, IBM, "Create", "Sale", 12, 8));
+        market.putOrder(new Order(9, IBM, "Create", "Sale", 12, 11));
+        market.putOrder(new Order(10, IBM, "Create", "Sale", 11, 22));
         //Add Buy orders.
-        market.putOrder(new Order(4, IBM, "Create", "Buy", 7, 13));
-        market.putOrder(new Order(5, IBM, "Create", "Buy", 7, 17));
+        market.putOrder(new Order(11, IBM, "Create", "Buy", 7, 13));
+        market.putOrder(new Order(12, IBM, "Create", "Buy", 7, 17));
         //Try to rewrite the Order
-        market.putOrder(new Order(5, IBM, "Create", "Buy", 8, 17));
+        market.putOrder(new Order(12, IBM, "Create", "Buy", 8, 17));
     }
 
     @Test
     public void removeOrderMethodTest() {
-        createMarketKodak();
         market.putOrder(new Order(4, KODAK, "Delete", "Buy", 10, 13));
         market.putOrder(new Order(5, KODAK, "Delete", "Buy", 10, 13));
-        Orders kodak = market.getFirms().get(KODAK);
         Order order = null;
-        assertThat(kodak.getOrder(4), is(order));
-        assertThat(kodak.getOrder(5), is(order));
+        assertThat(market.getOrder(4), is(order));
+        assertThat(market.getOrder(5), is(order));
     }
 
     @Test
     public void mustSaleTheBiggestPriceWeHave() {
         market.putOrder(new Order(4, KODAK, "Create", "Buy", 7, 13));
         market.putOrder(new Order(5, KODAK, "Create", "Buy", 6, 17));
-        Orders kodak = market.getFirms().get(KODAK);
         Order order = null;
         market.putOrder(new Order(7, KODAK, "Create", "Sale", 4, 15));
         // No order with id 7 in the list because we had done it at the time it appeared.
-        assertThat(kodak.getOrder(7), is(order));
-        assertThat(kodak.getOrder(5), is(new Order(5, 6, 15)));
+        assertThat(market.getOrder(7), is(order));
+        assertThat(market.getOrder(5), is(new Order(5, 6, 15)));
     }
     @Test
     public void mustBuyTheLowestPriceWeHaveAtFirst() {
         market.putOrder(new Order(4, KODAK, "Create", "Sale", 7, 13));
         market.putOrder(new Order(5, KODAK, "Create", "Sale", 6, 17));
         market.putOrder(new Order(7, KODAK, "Create", "Buy", 10, 20));
-        Orders kodak = market.getFirms().get(KODAK);
         Order order = null;
         // No order with id 7 in the list because we had done it at the time it appeared.
-        assertThat(kodak.getOrder(7), is(order));
-        assertThat(kodak.getOrder(4), is(new Order(4, 7, 10)));
+        assertThat(market.getOrder(7), is(order));
+        assertThat(market.getOrder(4), is(new Order(4, 7, 10)));
     }
 
     @Test
