@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Words {
     public boolean compareWords(String word, String nextWord) {
+
         Boolean result = false;
         List<Character> word1 = new ArrayList<>();
         for (char c : word.toCharArray()) {
