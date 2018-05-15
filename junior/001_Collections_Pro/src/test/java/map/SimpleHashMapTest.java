@@ -2,7 +2,6 @@ package map;
 
 import org.junit.Before;
 import org.junit.Test;
-import set.SimpleHash;
 
 import java.util.Iterator;
 

@@ -7,7 +7,7 @@ package testTask;
  * @version 1.0
  * @since 07.05.2018
  */
-public class Order implements Comparable{
+public class Order implements Comparable {
     private Integer id;
     private String book;
     private String type;
@@ -45,7 +45,7 @@ public class Order implements Comparable{
         this.volume = volume;
     }
 
-    public void comparePrice(Order order) {
+    public void substractVolumes(Order order) {
         int v = volume;
         if ((action.equals("Buy") && price >= order.getPrice()) || (action.equals("Sale") && price <= order.getPrice())) {
             v = v - order.getVolume();

@@ -25,12 +25,27 @@ public class SimpleHashSet<E extends Element> {
     public boolean add(E object) {
         modCount++;
         int index = hashFunction(object, container.length);
-        if (container[index] != null) {
-            return false;
-        } else {
-            container[index] = object;
+        while (container[index] != null) {
+            index++;
+            if (index == container.length) {
+                int oldCapacity = container.length;
+                Object[] oldMap = container;
+                int newCapacity = (int) (oldCapacity * INCREASECAPACITY);
+                Object[] newMap = new Object[newCapacity];
+                modCount++;
+                container = newMap;
+                for (int i = oldCapacity; i-- > 0; ) {
+                    E old =  (E)oldMap[i];
+                    if (old != null) {
+                        index = hashFunction(old, newCapacity);
+                        newMap[index] = old;
+                    }
+                }
+            }
         }
+        container[index] = object;
         return true;
+
     }
 
     public boolean contains(E object) {

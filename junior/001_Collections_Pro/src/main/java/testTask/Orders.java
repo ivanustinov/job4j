@@ -11,30 +11,23 @@ import java.util.*;
  */
 public class Orders {
     private String company;
-    private Set<Order> sale;
-    private Set<Order> buy;
-    private Map<Integer, Order> mapToReturnOrder;
+    private final Set<Order> sale = new TreeSet<>();
+    private final Set<Order> buy = new TreeSet<>();
+    private final Map<Integer, Order> mapToReturnOrder = new HashMap<>();
     private final static String DELETE = "Delete";
     private final static String BUY = "Buy";
 
     public Orders(String company) {
         this.company = company;
-        sale = new TreeSet<>();
-        buy = new TreeSet<>();
-        mapToReturnOrder = new HashMap<>();
     }
 
     public void addOrder(Order order) {
         if (DELETE.equals(order.getType())) {
             deleteOrder(order);
-            return;
         }
-        Set<Order> toCheck;
-        Set<Order> toAdd;
-        if (BUY.equals(order.getAction())) {
-            toCheck = sale;
-            toAdd = buy;
-        } else {
+        Set<Order> toCheck = sale;
+        Set<Order> toAdd = buy;
+        if (!BUY.equals(order.getAction())) {
             toCheck = buy;
             toAdd = sale;
         }
@@ -47,7 +40,7 @@ public class Orders {
     public Order checkAndRemoveOrdersInList(Order order, Set<Order> list) {
         LinkedList<Order> toDel = new LinkedList<>();
         for (Order order1 : list) {
-            order1.comparePrice(order);
+            order1.substractVolumes(order);
             if (order.getVolume() == 0) {
                 break;
             }
