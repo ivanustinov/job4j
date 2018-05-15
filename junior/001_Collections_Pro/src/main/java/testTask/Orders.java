@@ -24,16 +24,17 @@ public class Orders {
     public void addOrder(Order order) {
         if (DELETE.equals(order.getType())) {
             deleteOrder(order);
-        }
-        Set<Order> toCheck = sale;
-        Set<Order> toAdd = buy;
-        if (!BUY.equals(order.getAction())) {
-            toCheck = buy;
-            toAdd = sale;
-        }
-        if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
-            mapToReturnOrder.put(order.getId(), order);
-            toAdd.add(order);
+        } else {
+            Set<Order> toCheck = sale;
+            Set<Order> toAdd = buy;
+            if (!BUY.equals(order.getAction())) {
+                toCheck = buy;
+                toAdd = sale;
+            }
+            if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
+                mapToReturnOrder.put(order.getId(), order);
+                toAdd.add(order);
+            }
         }
     }
 
