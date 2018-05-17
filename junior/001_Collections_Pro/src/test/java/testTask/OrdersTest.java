@@ -30,7 +30,6 @@ public class OrdersTest {
         market.putOrder(new Order(7, KODAK, "Create", "Buy", 5, 17));
         //Try to change the Order
         market.putOrder(new Order(5, KODAK, "Create", "Buy", 8, 12));
-        System.out.println(market);
     }
 
     public void createMarketIBM() {

@@ -32,6 +32,9 @@ public class Orders {
                 toAdd = sale;
             }
             if (checkAndRemoveOrdersInList(order, toCheck).getVolume() != 0) {
+                if (mapToReturnOrder.get(order.getId()) != null) {
+                    toAdd.remove(mapToReturnOrder.get(order.getId()));
+                }
                 mapToReturnOrder.put(order.getId(), order);
                 toAdd.add(order);
             }

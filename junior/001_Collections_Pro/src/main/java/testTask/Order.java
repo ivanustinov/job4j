@@ -149,13 +149,12 @@ public class Order implements Comparable {
     public int compareTo(Object o) {
         Order b = (Order) o;
         int result;
-        Integer first = id;
-        Integer second = b.getId();
+        int comId = id.compareTo(b.getId());
         if (action.equals("Sale")) {
             result = getPrice().compareTo(b.getPrice());
         } else {
             result = -getPrice().compareTo(b.getPrice());
         }
-        return first.compareTo(second) == 0 ? 0 : result == 0 ? 1 : result;
+        return result != 0 ? result : comId;
     }
 }
