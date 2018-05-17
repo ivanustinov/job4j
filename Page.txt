@@ -1,0 +1,2 @@
+When deserializing, constructors are not called: when the object is simply restored as it is
+what he was. when
