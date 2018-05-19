@@ -25,10 +25,12 @@ public class Testw {
             this.price = price;
         }
 
+
         @Override
         public int compareTo(En o) {
-            int result = price.compareTo(o.price);
-            return anInt == o.anInt ? 0 : result == 0 ? 1 : result;
+            int id = this.anInt.compareTo(o.anInt);
+            int amount = price.compareTo(o.price);
+            return amount != 0 ? amount : id;
         }
 
 
@@ -51,12 +53,12 @@ public class Testw {
 
     // @see https://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html
     public void HashSetExample() {
-        Set<En> buy = new TreeSet<>();
+        TreeSet<En> buy = new TreeSet<>();
         buy.add(new En(1, 1));
-//        buy.add(new En(2, 2));
+        buy.add(new En(2, 2));
         buy.add(new En(3, 3));
-//        buy.add(new En(4, 4));
-        buy.add(new En(1, 5));
+        buy.add(new En(4, 4));
+        buy.add(new En(3, 1));
         System.out.println(buy);
     }
 }
