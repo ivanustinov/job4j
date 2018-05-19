@@ -1,6 +1,8 @@
 package testTask;
 
 import org.junit.Test;
+import testTask.market.Order;
+import testTask.market.OrdersApp;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -29,7 +31,8 @@ public class OrdersTest {
         market.putOrder(new Order(6, KODAK, "Create", "Buy", 5, 17));
         market.putOrder(new Order(7, KODAK, "Create", "Buy", 5, 17));
         //Try to change the Order
-        market.putOrder(new Order(5, KODAK, "Create", "Buy", 8, 12));
+        market.putOrder(new Order(1, KODAK, "Create", "Buy", 8, 12));
+        System.out.println(market.getOrder(1, KODAK));
     }
 
     public void createMarketIBM() {

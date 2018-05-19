@@ -1,4 +1,4 @@
-package testTask;
+package testTask.market;
 
 /**
  * //TODO add comments.

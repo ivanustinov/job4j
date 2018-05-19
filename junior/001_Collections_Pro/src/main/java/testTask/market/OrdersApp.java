@@ -1,7 +1,6 @@
-package testTask;
+package testTask.market;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * //TODO add comments.
