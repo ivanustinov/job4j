@@ -1,26 +1,26 @@
 package testTask.prefixtree;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import testTask.FileRead;
+
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
- * @since 14.05.2018
+ * @since 19.05.2018
  */
-
-public class TriePrefixFileRead {
+public class PrefixTree {
     private final TrieNode root = new TrieNode();
     private int count = 1;
-    private final String fileToFindIn;
 
-    public TriePrefixFileRead(String fileToFindIn) {
-        this.fileToFindIn = fileToFindIn;
+    public PrefixTree(String text) {
+        for (String s : text.split(" ")) {
+            put(s);
+            count++;
+        }
     }
 
     static class TrieNode {
@@ -29,28 +29,26 @@ public class TriePrefixFileRead {
         TreeSet<Integer> numbers = new TreeSet<>();
     }
 
-    public TrieNode loadFile() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileToFindIn));
-            String a;
-            while (!((a = reader.readLine()) == null)) {
-                for (String s : a.split(" ")) {
-                    put(s);
-                    count++;
-                }
+
+    public Set<Integer> indexOf(String stringToFind) {
+        TrieNode v = root;
+        for (char ch : stringToFind.toLowerCase().toCharArray()) {
+            if (!v.children.containsKey(ch)) {
+                return null;
+            } else {
+                v = v.children.get(ch);
             }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return root;
+        if (v.leaf == true) {
+            return v.numbers;
+        } else {
+            return null;
+        }
     }
 
     public void put(String s) {
         TrieNode v = root;
-        int n = count;
+        int number = count;
         for (char c : s.toLowerCase().toCharArray()) {
             if (c == '.' || c == ',' || c == '!' || c == '?' || c == ':') {
                 count++;
@@ -63,6 +61,11 @@ public class TriePrefixFileRead {
             count++;
         }
         v.leaf = true;
-        v.numbers.add(n);
+        v.numbers.add(number);
+    }
+
+    public static void main(String[] args) {
+        PrefixTree trie = new PrefixTree(new FileRead().readFile("Page.txt"));
+        System.out.println(trie.indexOf("when"));
     }
 }
