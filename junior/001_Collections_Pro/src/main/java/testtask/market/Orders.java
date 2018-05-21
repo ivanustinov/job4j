@@ -1,10 +1,8 @@
-package testTask.market;
+package testtask.market;
 
 import java.util.*;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 09.05.2018

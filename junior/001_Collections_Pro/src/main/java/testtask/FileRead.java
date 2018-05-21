@@ -1,4 +1,4 @@
-package testTask;
+package testtask;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

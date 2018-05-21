@@ -1,6 +1,6 @@
-package testTask.prefixtree;
+package testtask.prefixtree;
 
-import testTask.FileRead;
+import testtask.FileRead;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,14 +19,13 @@ public class PrefixTree {
     public PrefixTree(String text) {
         for (String s : text.split(" ")) {
             put(s);
-            count++;
         }
     }
 
     static class TrieNode {
         Map<Character, TrieNode> children = new TreeMap<>();
         boolean leaf;
-        TreeSet<Integer> numbers = new TreeSet<>();
+        Set<Integer> numbers = new TreeSet<>();
     }
 
 
@@ -39,11 +38,7 @@ public class PrefixTree {
                 v = v.children.get(ch);
             }
         }
-        if (v.leaf == true) {
-            return v.numbers;
-        } else {
-            return null;
-        }
+        return v.leaf == true ? v.numbers : null;
     }
 
     public void put(String s) {
@@ -60,6 +55,7 @@ public class PrefixTree {
             v = v.children.get(c);
             count++;
         }
+        count++;
         v.leaf = true;
         v.numbers.add(number);
     }

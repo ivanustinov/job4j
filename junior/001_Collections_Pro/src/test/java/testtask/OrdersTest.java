@@ -1,8 +1,8 @@
-package testTask;
+package testtask;
 
 import org.junit.Test;
-import testTask.market.Order;
-import testTask.market.OrdersApp;
+import testtask.market.Order;
+import testtask.market.OrdersApp;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

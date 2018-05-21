@@ -1,17 +1,11 @@
-package testTask.prefixtree;
-
-import org.junit.Test;
-import testTask.FileRead;
-import testTask.hashtree.Cashe;
-
-import java.util.Set;
+package testtask.hashtree;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 20.05.2018
  */
-public class PrefixTreeTest {
+public class CasheTest {
 //    String fileName = ClassLoader.
 
 

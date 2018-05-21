@@ -1,4 +1,4 @@
-package testTask;
+package testtask;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ import java.util.*;
 public class Testw {
     public static void main(String[] args) {
         Testw t = new Testw();
-        t.HashSetExample();
+        t.hashSetExample();
     }
 
 
@@ -52,7 +52,7 @@ public class Testw {
     }
 
     // @see https://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html
-    public void HashSetExample() {
+    public void hashSetExample() {
         TreeSet<En> buy = new TreeSet<>();
         buy.add(new En(1, 1));
         buy.add(new En(2, 2));

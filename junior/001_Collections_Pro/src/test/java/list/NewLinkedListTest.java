@@ -1,6 +1,5 @@
 package list;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -32,9 +31,9 @@ public class NewLinkedListTest {
     @Test
     public void testCycleMethodWhenFalse() {
         NewLinkedList<Integer> list = new NewLinkedList<>();
-        list.add(new Node<>(1)) ;
-        list.add(new Node<>(2)) ;
-        list.add(new Node<>(3)) ;
+        list.add(new Node<>(1));
+        list.add(new Node<>(2));
+        list.add(new Node<>(3));
         assertThat(list.hasCycle(), is(false));
     }
 }

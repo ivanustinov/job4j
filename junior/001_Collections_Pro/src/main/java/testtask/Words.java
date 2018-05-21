@@ -1,4 +1,4 @@
-package testTask;
+package testtask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.List;
  * @since 15.05.2018
  */
 public class Words {
-    public boolean compareWords(String word, String nextWord) {
 
+    public boolean compareWords(String word, String nextWord) {
         Boolean result = false;
         List<Character> word1 = new ArrayList<>();
         for (char c : word.toCharArray()) {

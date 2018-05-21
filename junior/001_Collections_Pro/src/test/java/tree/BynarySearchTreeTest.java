@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Iterator;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * //TODO add comments.
@@ -17,6 +17,7 @@ import static org.junit.Assert.*;
  */
 public class BynarySearchTreeTest {
     BynarySearchTree<Integer> tree = new BynarySearchTree<>(1);
+
     @Before
     public void initTree() {
         tree.add(10);
@@ -34,7 +35,7 @@ public class BynarySearchTreeTest {
         assertThat(it.next(), is(5));
         assertThat(it.next(), is(20));
         for (Integer integer : tree) {
-            System.out.print(integer +" ");
+            System.out.print(integer + " ");
         }
     }
 

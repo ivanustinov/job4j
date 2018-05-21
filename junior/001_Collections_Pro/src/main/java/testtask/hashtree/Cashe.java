@@ -1,6 +1,6 @@
-package testTask.hashtree;
+package testtask.hashtree;
 
-import testTask.FileRead;
+import testtask.FileRead;
 
 import java.util.*;
 
@@ -16,8 +16,7 @@ public class Cashe {
 
     public Cashe(String text) {
         for (Character character : text.toLowerCase().toCharArray()) {
-            numbersOfCharacters.put(count, character);
-            count++;
+            numbersOfCharacters.put(count++, character);
         }
     }
 

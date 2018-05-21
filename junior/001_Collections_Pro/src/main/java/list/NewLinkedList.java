@@ -39,7 +39,8 @@ public class NewLinkedList<E> {
                 }
                 nextInststance = nextInststance.next;
             }
-            if ((inststance = inststance.next) != null) {
+            inststance = inststance.next;
+            if (inststance != null) {
                 nextInststance = inststance.next;
             }
         }

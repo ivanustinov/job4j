@@ -45,7 +45,9 @@ public class SimpleHashMap<K, V> implements Iterable {
                         newInst = i;
                         ifElse--;
                         return (V) table[newInst++].value;
-                    } else continue;
+                    } else {
+                        continue;
+                    }
                 }
                 throw new NoSuchElementException();
             }
@@ -128,7 +130,7 @@ public class SimpleHashMap<K, V> implements Iterable {
         modCount++;
         threshold = (int) (newCapacity * loadFactor);
         table = newMap;
-        for (int i = oldCapacity; i-- > 0; ) {
+        for (int i = oldCapacity; i-- > 0;) {
             Entry<K, V> old = (Entry<K, V>) oldMap[i];
             if (old != null) {
                 int index = (old.hash & 0x7FFFFFFF) % newCapacity;

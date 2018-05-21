@@ -1,7 +1,5 @@
 package set;
 
-import java.util.Arrays;
-
 /**
  * //TODO add comments.
  *
@@ -34,8 +32,8 @@ public class SimpleHashSet<E extends Element> {
                 Object[] newMap = new Object[newCapacity];
                 modCount++;
                 container = newMap;
-                for (int i = oldCapacity; i-- > 0; ) {
-                    E old =  (E)oldMap[i];
+                for (int i = oldCapacity; i-- > 0;) {
+                    E old = (E) oldMap[i];
                     if (old != null) {
                         index = hashFunction(old, newCapacity);
                         newMap[index] = old;
@@ -50,9 +48,7 @@ public class SimpleHashSet<E extends Element> {
 
     public boolean contains(E object) {
         int index = hashFunction(object, container.length);
-        if (container[index] != null) {
-            return true;
-        } else return false;
+        return container[index] != null;
     }
 
     public boolean remove(E object) {
@@ -60,7 +56,9 @@ public class SimpleHashSet<E extends Element> {
         if (contains(object)) {
             container[index] = null;
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     public int hashFunction(E object, int arrsize) {

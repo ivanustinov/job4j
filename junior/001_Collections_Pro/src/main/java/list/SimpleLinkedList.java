@@ -149,10 +149,12 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         size++;
         return true;
     }
+
     public boolean contains(E object) {
         for (E e : this) {
-            if(e.equals(object))
+            if (e.equals(object)) {
                 return true;
+            }
         }
         return false;
     }

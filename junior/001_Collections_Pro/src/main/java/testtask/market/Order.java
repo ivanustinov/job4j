@@ -1,8 +1,6 @@
-package testTask.market;
+package testtask.market;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 07.05.2018
@@ -134,8 +132,12 @@ public class Order implements Comparable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         Order order = (Order) obj;
         return this.hashCode() == order.hashCode() && price == order.getPrice() && volume == order.getVolume();
     }
