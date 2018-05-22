@@ -1,7 +1,6 @@
 package testtask;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -14,17 +13,13 @@ public class FileRead {
 
     public String readFile(String fileName) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String a;
+        String a;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             while ((a = reader.readLine()) != null) {
                 builder.append(a);
             }
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException y) {
+            y.printStackTrace();
         }
         return builder.toString();
     }
