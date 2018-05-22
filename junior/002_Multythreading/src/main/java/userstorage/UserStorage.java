@@ -3,6 +3,7 @@ package userstorage;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,7 +17,7 @@ import java.util.TreeMap;
 @ThreadSafe
 public class UserStorage {
     @GuardedBy("this")
-    private final Map<Integer, User> storage = new TreeMap<>();
+    private final Map<Integer, User> storage = Collections.synchronizedMap(new TreeMap<>());
 
     public static class User {
         private int id;
@@ -46,7 +47,7 @@ public class UserStorage {
     }
 
 
-    public synchronized boolean add(User user) {
+    public boolean add(User user) {
         if (storage.get(user.id) == null) {
             storage.put(user.id, user);
             return true;
@@ -54,7 +55,7 @@ public class UserStorage {
         return false;
     }
 
-    public synchronized boolean update(User user) {
+    public boolean update(User user) {
         if (storage.get(user.id) != null) {
             storage.put(user.id, user);
             return true;
@@ -62,7 +63,7 @@ public class UserStorage {
         return false;
     }
 
-    public synchronized boolean delete(User user) {
+    public boolean delete(User user) {
         if (storage.get(user.id) != null) {
             storage.remove(user.id);
             return true;
@@ -70,15 +71,16 @@ public class UserStorage {
         return false;
     }
 
-    public synchronized void transfer(int fromId, int toId, int amount) {
+    public void transfer(int fromId, int toId, int amount) {
         User from = storage.get(fromId);
         User to = storage.get(toId);
-        if (from.amount - amount < 0) {
+        if (from.amount < amount) {
+            to.amount += from.amount;
             from.amount = 0;
         } else {
             from.amount -= amount;
+            to.amount += amount;
         }
-        to.amount += amount;
     }
 
     public int getSize() {
