@@ -1,5 +1,8 @@
 package list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,9 +14,9 @@ import java.util.NoSuchElementException;
  * @since 25.04.2018
  */
 
-
+@ThreadSafe
 public class SimpleLinkedList<E> implements Iterable<E> {
-
+    @GuardedBy("this")
     private transient int size;
     transient Node<E> first;
     transient Node<E> last;
@@ -80,7 +83,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         return modCount;
     }
 
-    public boolean remove(Object o) {
+    public synchronized boolean remove(Object o) {
         if (o == null) {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (x.item == null) {
@@ -136,7 +139,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         }
     }
 
-    public boolean add(E e) {
+    public synchronized boolean add(E e) {
         modCount++;
         final Node<E> l = last;
         final Node<E> newNode = new Node<>(l, e, null);
@@ -150,7 +153,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         return true;
     }
 
-    public boolean contains(E object) {
+    public synchronized boolean contains(E object) {
         for (E e : this) {
             if (e.equals(object)) {
                 return true;
@@ -160,7 +163,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
     }
 
 
-    public E get(int index) {
+    public synchronized E get(int index) {
         if (index >= 0 && index < size) {
             return node(index).item;
         } else {

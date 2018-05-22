@@ -1,6 +1,9 @@
 package list;
 
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -13,7 +16,9 @@ import java.util.NoSuchElementException;
  * @version 1.0
  * @since 25.04.2018
  */
+@ThreadSafe
 public class SimpleList<E> implements Iterable<E> {
+    @GuardedBy("this")
     private Object[] container  = new Object[5];
     private int position = 0;
     private static final double INCREASECAPACITY = 1.5;
@@ -35,9 +40,9 @@ public class SimpleList<E> implements Iterable<E> {
      *
      * @param object E.
      */
-    public void add(E object) {
+    public synchronized void add(E object) {
         modCount++;
-        int f = position, newLength = 0;
+        int f = position, newLength;
         if (++f >= container.length) {
             newLength = (int) (container.length * INCREASECAPACITY);
             container = Arrays.copyOf(container, newLength);
@@ -47,7 +52,7 @@ public class SimpleList<E> implements Iterable<E> {
         }
     }
 
-    public boolean contains(E object) {
+    public synchronized boolean contains(E object) {
         for (E e : this) {
             if (e.equals(object)) {
                 return true;
@@ -60,7 +65,7 @@ public class SimpleList<E> implements Iterable<E> {
      * @param index int.
      * @return the element with index.
      */
-    public E get(int index) {
+    public synchronized E get(int index) {
         if (index <= position && index >= 0) {
             return (E) container[index];
         }
