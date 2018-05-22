@@ -46,5 +46,6 @@ public class CountTest {
         second.join();
         //Проверяем результат.
         assertThat(count.get(), is(400000));
+
     }
 }

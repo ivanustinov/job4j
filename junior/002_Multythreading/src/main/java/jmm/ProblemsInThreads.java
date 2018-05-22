@@ -10,25 +10,23 @@ package jmm;
 public class ProblemsInThreads {
     private volatile int a = 0;
 
+    public void increase() {
+        a++;
+    }
+
     public void createThreads() {
         new Thread(() -> {
-            for (int i = 0; i != 1000000; i++) {
-                a++;
+            for (int i = 0; i != 20000; i++) {
+                increase();
             }
-            System.out.println("Done");
+            System.out.println("Done " + a);
         }).start();
         new Thread(() -> {
-            for (int i = 0; i != 1000000; i++) {
-                a++;
+            for (int i = 0; i != 20000; i++) {
+                increase();
             }
-            System.out.println("Done");
+            System.out.println("Done " + a);
         }).start();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(a);
     }
 
     public static void main(String[] args) {
