@@ -10,22 +10,16 @@ import javafx.scene.shape.Rectangle;
 
 public class RectangleMove implements Runnable {
     private final Rectangle rect;
-    private boolean isContinue = true;
 
     public RectangleMove(Rectangle rect) {
         this.rect = rect;
-    }
-
-
-    public void setisContinue() {
-        isContinue = false;
     }
 
     @Override
     public void run() {
         int x = 1;
         int y = 1;
-        while (isContinue) {
+        while (true) {
             rect.setX(rect.getX() + x);
             rect.setY(rect.getY() + y);
             if (rect.getX() == 300 || rect.getX() == 0) {
@@ -37,7 +31,7 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                return;
             }
         }
     }

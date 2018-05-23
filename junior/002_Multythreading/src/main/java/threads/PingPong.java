@@ -26,14 +26,15 @@ public class PingPong extends Application {
         Rectangle rect = new Rectangle(50, 100, 10, 10);
         group.getChildren().add(rect);
         RectangleMove rectangleMove = new RectangleMove(rect);
-        new Thread(rectangleMove).start();
+        Thread rectangle = new Thread(rectangleMove);
+        rectangle.start();
         stage.setScene(new Scene(group, limitX, limitY));
         stage.setTitle(JOB4J);
         stage.setResizable(false);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                rectangleMove.setisContinue();
+                rectangle.interrupt();
             }
         });
         stage.show();
