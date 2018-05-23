@@ -17,19 +17,15 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
-        if (a >= 9) {
-            queue.notifyAll();
-            return;
-        }
         synchronized (queue) {
+            if (a >= 9) {
+                queue.notifyAll();
+                return;
+            }
             try {
-                System.out.print("Thread produser: " + "\n");
                 while (queue.ifElse()) {
-                    System.out.print(a + " ");
                     queue.offer(a++);
-                    Thread.sleep(100);
                 }
-                System.out.println();
                 queue.notifyAll();
                 queue.wait();
                 run();

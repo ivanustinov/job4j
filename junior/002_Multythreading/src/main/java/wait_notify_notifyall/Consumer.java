@@ -20,13 +20,9 @@ public class Consumer implements Runnable {
             try {
                 Integer a = queue.poll();
                 while (true) {
-                    System.out.print("Thread consumer: " + "\n");
                     while (a != null) {
-                        System.out.print(a + " ");
-                        Thread.sleep(100);
                         a = queue.poll();
                     }
-                    System.out.println();
                     queue.notify();
                     queue.wait();
                     if ((a = queue.poll()) != null) {
