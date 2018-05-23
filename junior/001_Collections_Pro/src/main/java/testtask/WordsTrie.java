@@ -1,22 +1,20 @@
 package testtask;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * //TODO add comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
- * @since 15.05.2018
+ * @since 23.05.2018
  */
-public class Words {
-
+public class WordsTrie {
     public boolean compareWords(String word, String nextWord) {
         Boolean result = false;
         int a = 0;
-        Map<Integer, Character> word1 = new HashMap();
+        TreeMap<Integer, Character> word1 = new TreeMap<>();
         for (char c : word.toCharArray()) {
             word1.put(a++, c);
         }

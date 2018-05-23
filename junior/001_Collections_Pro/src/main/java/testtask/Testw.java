@@ -1,6 +1,6 @@
 package testtask;
 
-import java.util.*;
+import java.util.TreeSet;
 
 /**
  *
@@ -58,7 +58,7 @@ public class Testw {
         buy.add(new En(2, 2));
         buy.add(new En(3, 3));
         buy.add(new En(4, 4));
-        buy.add(new En(3, 1));
+        buy.add(new En(4, 6));
         System.out.println(buy);
     }
 }
