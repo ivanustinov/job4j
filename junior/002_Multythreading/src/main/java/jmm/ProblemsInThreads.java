@@ -11,7 +11,9 @@ public class ProblemsInThreads {
     private volatile int a = 0;
 
     public void increase() {
-        a++;
+        synchronized (this) {
+            a++;
+        }
     }
 
     public void createThreads() {

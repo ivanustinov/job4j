@@ -21,7 +21,8 @@ public class Count {
         }
     }
 
-    public int get() {
+
+    public synchronized int get() {
         return this.value;
     }
 }
