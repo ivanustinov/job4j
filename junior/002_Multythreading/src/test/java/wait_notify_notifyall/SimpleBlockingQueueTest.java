@@ -20,11 +20,10 @@ public class SimpleBlockingQueueTest {
         Thread producer = new Thread(new Producer(queue));
         Thread consumer = new Thread(new Consumer(queue));
         producer.start();
-        Thread.sleep(1000);
+        Thread.sleep(50);
         assertThat(queue.getSize(), is(10));
         consumer.start();
-        consumer.join();
-        assertThat(queue.getSize(), is(0));
+        producer.interrupt();
+        consumer.interrupt();
     }
-
 }

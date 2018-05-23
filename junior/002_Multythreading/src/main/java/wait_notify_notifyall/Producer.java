@@ -18,17 +18,14 @@ public class Producer implements Runnable {
     @Override
     public void run() {
         synchronized (queue) {
-            if (a >= 9) {
-                queue.notifyAll();
-                return;
-            }
             try {
-                while (queue.ifElse()) {
-                    queue.offer(a++);
+                while (true) {
+                    while (queue.ifElse()) {
+                        queue.offer(a++);
+                    }
+                    queue.notifyAll();
+                    queue.wait();
                 }
-                queue.notifyAll();
-                queue.wait();
-                run();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

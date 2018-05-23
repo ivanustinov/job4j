@@ -43,6 +43,7 @@ public class SimpleBlockingQueue<T> {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
         new Thread(new Producer(queue)).start();
         new Thread(new Consumer(queue)).start();
+
     }
 
 }

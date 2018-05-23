@@ -18,16 +18,13 @@ public class Consumer implements Runnable {
     public void run() {
         synchronized (queue) {
             try {
-                Integer a = queue.poll();
                 while (true) {
+                    Integer a = queue.poll();
                     while (a != null) {
                         a = queue.poll();
                     }
                     queue.notify();
                     queue.wait();
-                    if ((a = queue.poll()) != null) {
-                        continue;
-                    } else return;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
