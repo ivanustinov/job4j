@@ -74,7 +74,7 @@ public class SimpleList<E> implements Iterable<E> {
 
 
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = modCount;
             int newInst = 0;
