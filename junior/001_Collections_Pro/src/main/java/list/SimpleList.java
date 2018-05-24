@@ -31,7 +31,7 @@ public class SimpleList<E> implements Iterable<E> {
      * @return value of container
      */
 
-    public Object[] getContainer() {
+    public synchronized Object[] getContainer() {
         return container;
     }
 
