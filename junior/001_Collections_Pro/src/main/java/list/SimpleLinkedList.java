@@ -79,7 +79,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
      * @return value of modCount
      */
 
-    public int getModCount() {
+    public synchronized int getModCount() {
         return modCount;
     }
 
@@ -102,7 +102,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         return false;
     }
 
-    E unlink(Node<E> x) {
+    public synchronized E unlink(Node<E> x) {
         // assert x != null;
         final E element = x.item;
         final Node<E> next = x.next;
@@ -172,7 +172,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
     }
 
 
-    Node<E> node(int index) {
+    public synchronized Node<E> node(int index) {
         // assert isElementIndex(index);
         if (index < (size >> 1)) {
             Node<E> x = first;
