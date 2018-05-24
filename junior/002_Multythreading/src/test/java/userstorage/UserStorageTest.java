@@ -42,8 +42,8 @@ public class UserStorageTest {
     public void testingStorage() throws InterruptedException {
         Thread.sleep(100);
         assertThat(storage.getSize(), is(40000));
-        storage.transfer(1, 40, 100);
-        assertThat(storage.getUser(1), is(new User(1, 0)));
-        assertThat(storage.getUser(40), is(new User(40, 200)));
+        storage.transfer(1, 40, 20);
+        assertThat(storage.getUser(1), is(new User(1, 80)));
+        assertThat(storage.getUser(40), is(new User(40, 120)));
     }
 }
