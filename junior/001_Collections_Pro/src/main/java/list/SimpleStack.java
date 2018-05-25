@@ -17,8 +17,7 @@ public class SimpleStack<E> extends SimpleLinkedList<E> {
         if (getSize() == 0) {
             throw new EmptyStackException();
         }
-        int index = getSize() - 1;
-        E obj = get(index);
+        E obj = last.item;
         remove(obj);
         return obj;
     }

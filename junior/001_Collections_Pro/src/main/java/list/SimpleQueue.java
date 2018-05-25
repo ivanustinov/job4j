@@ -17,7 +17,7 @@ public class SimpleQueue<E> extends SimpleLinkedList<E> {
         if (getSize() == 0) {
             throw new EmptyStackException();
         }
-        E obj = get(0);
+        E obj = first.item;
         remove(obj);
         return obj;
     }
