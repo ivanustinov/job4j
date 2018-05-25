@@ -19,7 +19,7 @@ public class RectangleMove implements Runnable {
     public void run() {
         int x = 1;
         int y = 1;
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             rect.setX(rect.getX() + x);
             rect.setY(rect.getY() + y);
             if (rect.getX() == 300 || rect.getX() == 0) {
@@ -31,10 +31,7 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // Here!
-                if (Thread.currentThread().isInterrupted()) {
-                    break;
-                }
+                Thread.currentThread().interrupt();
             }
         }
     }
