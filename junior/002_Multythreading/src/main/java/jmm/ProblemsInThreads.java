@@ -44,6 +44,7 @@ public class ProblemsInThreads {
 
     public int getA() {
         return a;
+
     }
 
     public static void main(String[] args) {
