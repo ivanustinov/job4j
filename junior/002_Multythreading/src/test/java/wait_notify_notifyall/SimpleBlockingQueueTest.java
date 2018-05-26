@@ -2,9 +2,6 @@ package wait_notify_notifyall;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 /**
  * //TODO add comments.
  *
@@ -20,9 +17,9 @@ public class SimpleBlockingQueueTest {
         Thread producer = new Thread(new Producer(queue));
         Thread consumer = new Thread(new Consumer(queue));
         producer.start();
-        Thread.sleep(50);
-        assertThat(queue.getSize(), is(10));
         consumer.start();
+//        assertThat(queue.getSize(), is(1));
+        Thread.sleep(1000);
         producer.interrupt();
         consumer.interrupt();
     }

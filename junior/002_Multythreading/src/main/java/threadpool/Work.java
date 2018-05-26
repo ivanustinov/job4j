@@ -18,8 +18,8 @@ public class Work implements Runnable {
     public void run() {
         pool.getThread();
         try {
-            System.out.println(Thread.currentThread().getId() + " starts working");
-            Thread.sleep(2000); //do some work
+            System.out.println(Thread.currentThread().getId() + " is starting to work");
+            Thread.sleep(1000); //do some work
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

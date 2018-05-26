@@ -15,19 +15,19 @@ public class Producer implements Runnable {
         this.queue = queue;
     }
 
+
     @Override
     public void run() {
         synchronized (queue) {
             try {
                 while (true) {
-                    while (queue.ifElse()) {
-                        queue.offer(a++);
-                    }
-                    queue.notifyAll();
+                    queue.offer(a++);
+                    Thread.sleep(100);
+                    queue.notify();
                     queue.wait();
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Interrupted");
             }
         }
     }

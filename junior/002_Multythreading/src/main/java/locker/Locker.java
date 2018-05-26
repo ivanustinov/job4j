@@ -19,14 +19,14 @@ public class Locker {
                 e.printStackTrace();
             }
         }
-        System.out.println((currentThread = Thread.currentThread().getName()) + " have got the log.");
+        System.out.println((currentThread = Thread.currentThread().getName()) + " has got the log.");
         isLocked = true;
     }
 
     public synchronized void unlock() {
         if (currentThread.equals(Thread.currentThread().getName())) {
             isLocked = false;
-            System.out.println(Thread.currentThread().getName() + " have returned the log.");
+            System.out.println(Thread.currentThread().getName() + " has returned the log.");
             notify();
         }
     }

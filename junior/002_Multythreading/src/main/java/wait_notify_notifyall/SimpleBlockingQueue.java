@@ -24,26 +24,19 @@ public class SimpleBlockingQueue<T> {
     }
 
     public void offer(T value) {
+        String val = String.valueOf(value);
         queue.offer(value);
+        System.out.println("Value " + val + " added");
     }
 
     public T poll() {
-        return queue.poll();
-    }
-
-    public boolean ifElse() {
-        return queue.size() < capacity;
+        T val = queue.poll();
+        System.out.println("Value " + val + " have got");
+        return val;
     }
 
     public int getSize() {
         return queue.size();
-    }
-
-    public static void main(String[] args) {
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
-        new Thread(new Producer(queue)).start();
-        new Thread(new Consumer(queue)).start();
-
     }
 
 }

@@ -27,6 +27,7 @@ public class ThreadPool {
     }
 
     public synchronized void putThread() {
+        System.out.println("Thread has been put");
         cores++;
         notify();
     }

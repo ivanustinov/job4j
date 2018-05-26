@@ -19,15 +19,13 @@ public class Consumer implements Runnable {
         synchronized (queue) {
             try {
                 while (true) {
-                    Integer a = queue.poll();
-                    while (a != null) {
-                        a = queue.poll();
-                    }
+                    queue.poll();
+                    Thread.sleep(100);
                     queue.notify();
                     queue.wait();
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Interrupted");
             }
         }
     }

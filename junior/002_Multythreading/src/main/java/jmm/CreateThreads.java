@@ -5,48 +5,38 @@ package jmm;
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
- * @since 21.05.2018
+ * @since 26.05.2018
  */
-public class ProblemsInThreads {
-    private int a = 0;
+public class CreateThreads {
 
-    public void increase() {
-        a++;
+    private ProblemsInThreads problemsInThreads;
+
+    public CreateThreads(ProblemsInThreads problemsInThreads) {
+        this.problemsInThreads = problemsInThreads;
     }
 
-    public void low() {
-        a--;
-    }
     public void createThreads() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (this) {
+                synchronized (problemsInThreads) {
                     for (int i = 0; i != 20000; i++) {
-                        increase();
+                        problemsInThreads.increase();
                     }
                 }
-                System.out.println("Done increase " + a);
+                System.out.println("Done increase " + problemsInThreads.getA());
             }
         }).start();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized (this) {
+                synchronized (problemsInThreads) {
                     for (int i = 0; i != 20000; i++) {
-                        low();
+                        problemsInThreads.low();
                     }
                 }
-                System.out.println("Done low " + a);
+                System.out.println("Done low " + problemsInThreads.getA());
             }
         }).start();
-    }
-
-    public int getA() {
-        return a;
-    }
-
-    public static void main(String[] args) {
-        new ProblemsInThreads().createThreads();
     }
 }
