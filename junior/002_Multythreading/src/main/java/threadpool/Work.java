@@ -1,22 +1,15 @@
 package threadpool;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 25.05.2018
  */
 public class Work implements Runnable {
-    ThreadPool pool;
-
-    public Work(ThreadPool pool) {
-        this.pool = pool;
-    }
-
     @Override
     public void run() {
-        pool.getThread();
         try {
             System.out.println(Thread.currentThread().getId() + " is starting to work");
             Thread.sleep(1000); //do some work
@@ -24,6 +17,5 @@ public class Work implements Runnable {
             e.printStackTrace();
         }
         System.out.println(Thread.currentThread().getId() + "  has done the job");
-        pool.putThread();
     }
 }

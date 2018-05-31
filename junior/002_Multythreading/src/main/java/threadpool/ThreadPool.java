@@ -1,48 +1,57 @@
 package threadpool;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 24.05.2018
  */
 public class ThreadPool {
-    private int cores;
+    private int size = Runtime.getRuntime().availableProcessors();
+    private final List<Thread> threads = new LinkedList<>();
+    private final Queue<Runnable> tasks = new LinkedBlockingQueue<>();
 
-    public ThreadPool(int cores) {
-        this.cores = cores;
-    }
-
-    public synchronized void getThread() {
-        while (cores < 1) {
-            try {
-                System.out.println(Thread.currentThread().getId() + " is waiting");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public ThreadPool() {
+        System.out.println("Cores " + size);
+        while (size > 0) {
+            threads.add(new MyThread(tasks));
+            size--;
         }
-        cores--;
+        for (Thread thread : threads) {
+            thread.start();
+        }
     }
 
-    public synchronized void putThread() {
-        System.out.println("Thread has been put");
-        cores++;
-        notify();
+    public void work(Work work) {
+        synchronized (tasks) {
+            tasks.offer(work);
+            tasks.notify();
+        }
     }
 
-
-    public void add(Work work) {
-        new Thread(work).start();
+    public void shutdown() {
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
     }
 
 
     public static void main(String[] args) {
-        ThreadPool pool = new ThreadPool(4);
+        ThreadPool pool = new ThreadPool();
         for (int i = 0; i < 6; i++) {
-            Work work = new Work(pool);
-            pool.add(work);
+            pool.work(new Work());
         }
+        try {
+            Thread.sleep(2200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        pool.shutdown();
     }
 }
