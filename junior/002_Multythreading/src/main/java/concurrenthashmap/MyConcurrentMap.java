@@ -18,7 +18,7 @@ public class MyConcurrentMap {
     public void add(Base model) {
         int key = model.getId();
         if (map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() > 1) {
+            if (model.getVersion() - oldBase.getVersion() != 1) {
                 throw new OptimisticExeption();
             } else {
                 return model;
@@ -31,7 +31,7 @@ public class MyConcurrentMap {
     public void update(Base model) {
         int key = model.getId();
         map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() > 1) {
+            if (model.getVersion() - oldBase.getVersion() != 1) {
                 throw new OptimisticExeption();
             } else {
                 return model;
@@ -42,7 +42,7 @@ public class MyConcurrentMap {
     public void remove(Base model) {
         int key = model.getId();
         if (map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() > 1) {
+            if (model.getVersion() - oldBase.getVersion() != 1) {
                 throw new OptimisticExeption();
             } else {
                 return model;
