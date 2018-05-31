@@ -18,18 +18,16 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            synchronized (tasks) {
+        block:
+        {
+            while (!Thread.currentThread().isInterrupted()) {
                 while (tasks.size() == 0) {
-                    try {
-                        System.out.println(Thread.currentThread().getId() + " is waiting the task");
-                        tasks.wait();
-                    } catch (InterruptedException e) {
-                        return;
+                    if (Thread.currentThread().isInterrupted()) {
+                        break block;
                     }
                 }
+                tasks.poll().run();
             }
-            tasks.poll().run();
         }
     }
 }

@@ -29,10 +29,7 @@ public class ThreadPool {
     }
 
     public void work(Work work) {
-        synchronized (tasks) {
-            tasks.offer(work);
-            tasks.notify();
-        }
+        tasks.offer(work);
     }
 
     public void shutdown() {
