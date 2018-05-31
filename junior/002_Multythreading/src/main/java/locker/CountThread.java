@@ -1,18 +1,17 @@
 package locker;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 25.05.2018
  */
 class CountThread implements Runnable {
-    private Count count;
     private Locker locker;
+    private int a;
 
-    CountThread(Count count, Locker lock) {
-        this.count = count;
+    CountThread(Locker lock) {
         this.locker = lock;
     }
 
@@ -21,9 +20,8 @@ class CountThread implements Runnable {
         locker.lock(); // устанавливаем блокировку
         try {
             for (int i = 1; i < 5; i++) {
-                count.increment();
                 Thread.sleep(100);
-                System.out.println(Thread.currentThread().getName() + " " + count);
+                System.out.println(Thread.currentThread().getName() + " " + a++);
             }
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
@@ -33,10 +31,10 @@ class CountThread implements Runnable {
     }
 
     public static void main(String[] args) {
-        Count count = new Count();
         Locker locker = new Locker();
+        CountThread countThread = new CountThread(locker);
         for (int i = 0; i < 3; i++) {
-            Thread t = new Thread(new CountThread(count, locker));
+            Thread t = new Thread(countThread);
             t.setName("Thread " + i);
             t.start();
         }

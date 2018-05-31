@@ -1,7 +1,7 @@
 package wait_notify_notifyall;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -22,9 +22,9 @@ public class Producer implements Runnable {
             try {
                 while (true) {
                     queue.offer(a++);
-                    Thread.sleep(100);
                     queue.notify();
                     queue.wait();
+                    Thread.sleep(100);
                 }
             } catch (InterruptedException e) {
                 System.out.println("Interrupted");

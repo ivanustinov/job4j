@@ -1,7 +1,7 @@
 package testtask;
 
-import java.util.Collection;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * //TODO add comments.
@@ -14,19 +14,19 @@ public class WordsTrie {
     public boolean compareWords(String word, String nextWord) {
         Boolean result = false;
         int a = 0;
-        TreeMap<Integer, Character> word1 = new TreeMap<>();
+        List<Character> word1 = new ArrayList<>();
         for (char c : word.toCharArray()) {
-            word1.put(a++, c);
+            word1.add(c);
         }
-        Collection<Character> w = word1.values();
-        for (char c : nextWord.toCharArray()) {
-            if (w.remove(c)) {
+        for (Character c : nextWord.toCharArray()) {
+            if (word1.contains(c)) {
+                word1.remove(c);
                 continue;
             } else {
                 break;
             }
         }
-        if (w.size() == 0) {
+        if (word1.size() == 0) {
             result = true;
         }
         return result;

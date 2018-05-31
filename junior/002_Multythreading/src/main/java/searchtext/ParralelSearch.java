@@ -1,7 +1,7 @@
 package searchtext;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -41,7 +41,7 @@ public class ParralelSearch {
         this.exts = exts;
     }
 
-    class MyFileVisitor extends SimpleFileVisitor<Path> {
+    public class MyFileVisitor extends SimpleFileVisitor<Path> {
         private PathMatcher matcher;
 
         public MyFileVisitor(String pattern) {
@@ -63,24 +63,21 @@ public class ParralelSearch {
 
 
     public void init() {
-        Thread search = new Thread() {
-            @Override
-            public void run() {
-                Path pathSource = Paths.get(root);
-                for (String s : exts) {
-                    String pattern = "glob:*.".concat(s);
-                    try {
-                        Files.walkFileTree(pathSource, new MyFileVisitor(pattern));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                finish = true;
-                synchronized (files) {
-                    files.notify();
+        Thread search = new Thread(() -> {
+            Path pathSource = Paths.get(root);
+            for (String s : exts) {
+                String pattern = "glob:*.".concat(s);
+                try {
+                    Files.walkFileTree(pathSource, new MyFileVisitor(pattern));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        };
+            finish = true;
+            synchronized (files) {
+                files.notify();
+            }
+        });
         Thread read = new Thread() {
             @Override
             public void run() {

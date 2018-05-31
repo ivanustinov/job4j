@@ -19,6 +19,6 @@ public class WordsTrieTest {
         WordsTrie words = new WordsTrie();
         assertThat(words.compareWords("poct", "copt"), is(true));
         assertThat(words.compareWords("pooct", "copt"), is(false));
-        assertThat(words.compareWords("room", "moor"), is(true));
+        assertThat(words.compareWords("room", "mooooor"), is(false));
     }
 }

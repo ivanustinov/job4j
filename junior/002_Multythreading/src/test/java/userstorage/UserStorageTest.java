@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 import static userstorage.UserStorage.User;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0

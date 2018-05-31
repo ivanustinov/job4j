@@ -1,7 +1,7 @@
 package wait_notify_notifyall;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -19,10 +19,10 @@ public class Consumer implements Runnable {
         synchronized (queue) {
             try {
                 while (true) {
-                    queue.poll();
-                    Thread.sleep(100);
-                    queue.notify();
                     queue.wait();
+                    queue.poll();
+                    queue.notify();
+                    Thread.sleep(100);
                 }
             } catch (InterruptedException e) {
                 System.out.println("Interrupted");

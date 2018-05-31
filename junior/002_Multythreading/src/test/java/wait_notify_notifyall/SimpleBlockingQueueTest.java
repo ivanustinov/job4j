@@ -3,7 +3,7 @@ package wait_notify_notifyall;
 import org.junit.Test;
 
 /**
- * //TODO add comments.
+ * //TODO work comments.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -16,8 +16,8 @@ public class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
         Thread producer = new Thread(new Producer(queue));
         Thread consumer = new Thread(new Consumer(queue));
-        producer.start();
         consumer.start();
+        producer.start();
 //        assertThat(queue.getSize(), is(1));
         Thread.sleep(1000);
         producer.interrupt();
