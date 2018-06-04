@@ -10,9 +10,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 31.05.2018
  */
 public class Board implements Runnable {
-    private static final Cell[][] land = new Cell[5][5];
-    private static final int[] t = new int[]{-1, 0, 1, 0};
-    private static final int[] r = new int[]{0, 1, 0, -1};
+    private final Cell[][] land = new Cell[5][5];
+    private static final int[] X = new int[]{-1, 0, 1, 0};
+    private static final int[] Y = new int[]{0, 1, 0, -1};
 
     public Board() {
         for (int i = 0; i < land.length; i++) {
@@ -37,9 +37,9 @@ public class Board implements Runnable {
         Cell myCell = (Cell) cell;
         int x = myCell.getX();
         int y = myCell.getY();
-        if (checkStep(x, y, t[i], r[i])) {
-            x += t[i];
-            y += r[i];
+        if (checkStep(x, y, X[i], Y[i])) {
+            x += X[i];
+            y += Y[i];
             return land[x][y];
         } else {
             return getNextCell(cell);
