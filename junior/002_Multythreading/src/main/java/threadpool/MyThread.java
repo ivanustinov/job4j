@@ -18,16 +18,13 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        block:
-        {
-            while (!Thread.currentThread().isInterrupted()) {
-                while (tasks.size() == 0) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        break block;
-                    }
+        while (!Thread.currentThread().isInterrupted()) {
+            while (tasks.size() == 0) {
+                if (Thread.currentThread().isInterrupted()) {
+                    return;
                 }
-                tasks.poll().run();
             }
+            tasks.poll().run();
         }
     }
 }
