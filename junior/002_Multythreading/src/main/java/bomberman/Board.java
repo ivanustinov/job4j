@@ -60,8 +60,11 @@ public class Board implements Runnable {
                 Thread.currentThread().interrupt();
             }
             System.out.println(sourse);
+            long a = System.currentTimeMillis();
             while (!dist.tryLock()) {
-                dist = getNextCell(sourse);
+                if (System.currentTimeMillis() - a > 500) {
+                    dist = getNextCell(sourse);
+                }
             }
             sourse.unlock();
             move(dist, getNextCell(dist));
