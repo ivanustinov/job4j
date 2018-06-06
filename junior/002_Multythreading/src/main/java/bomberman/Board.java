@@ -1,5 +1,7 @@
 package bomberman;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -10,15 +12,43 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 31.05.2018
  */
 public class Board implements Runnable {
-    private final Cell[][] land = new Cell[5][5];
+    private final Cell[][] land;
+    private int size;
+    private int monsterNumber;
     private static final int[] X = new int[]{-1, 0, 1, 0};
     private static final int[] Y = new int[]{0, 1, 0, -1};
+    private final Queue<Thread> monsters = new LinkedList<>();
 
     public Board() {
+        while (size < 5) {
+            size = (int) (Math.random() * 10);
+        }
+        System.out.println("Size of the Board is " + size);
+        while (monsterNumber < 1) {
+            monsterNumber = (int) (Math.random() * 5);
+        }
+        System.out.println("Number of monsters is " + monsterNumber);
+        land = new Cell[size][size];
         for (int i = 0; i < land.length; i++) {
             for (int j = 0; j < land[i].length; j++) {
                 land[i][j] = new Cell(i, j);
             }
+        }
+        int blocks = (int) (0.25 * size * size);
+        System.out.println("The number of blocks is " + blocks);
+        for (int i = 0; i < blocks; i++) {
+            int x = (int) (Math.random() * size);
+            int y = (int) (Math.random() * size);
+            Cell block = land[x][y];
+            while (!block.tryLock()) {
+                block = getNextCell(block);
+            }
+        }
+        for (int i = 0; i < monsterNumber; i++) {
+            Thread monster = new Thread(this);
+            monster.setName("Monster" + i);
+            monsters.add(monster);
+            monster.start();
         }
     }
 
@@ -47,8 +77,8 @@ public class Board implements Runnable {
     }
 
     public Cell create() {
-        int x = (int) (Math.random() * 5);
-        int y = (int) (Math.random() * 5);
+        int x = (int) (Math.random() * size);
+        int y = (int) (Math.random() * size);
         return land[x][y];
     }
 
@@ -59,10 +89,11 @@ public class Board implements Runnable {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println(sourse);
+            System.out.println(Thread.currentThread().getName() + " Cell: " + sourse);
             long a = System.currentTimeMillis();
             while (!dist.tryLock()) {
-                if (System.currentTimeMillis() - a > 500) {
+                if ((System.currentTimeMillis() - a) > 500) {
+                    System.out.println("Invalid Cell " + dist);
                     dist = getNextCell(sourse);
                 }
             }
@@ -70,6 +101,12 @@ public class Board implements Runnable {
             move(dist, getNextCell(dist));
         }
         return Thread.currentThread().isInterrupted();
+    }
+
+    public void interrupt() {
+        for (Thread monster : monsters) {
+            monster.interrupt();
+        }
     }
 
     @Override
@@ -83,15 +120,15 @@ public class Board implements Runnable {
 
     public static void main(String[] args) {
         Board board = new Board();
-        Thread move = new Thread(board);
-        move.start();
+        Thread bomberman = new Thread(board);
+        bomberman.setName("BomberMan");
+        bomberman.start();
         try {
             Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        move.interrupt();
+        bomberman.interrupt();
+        board.interrupt();
     }
-
-
 }
