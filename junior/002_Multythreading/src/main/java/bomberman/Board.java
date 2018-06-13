@@ -1,8 +1,9 @@
 package bomberman;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 /**
  * //TODO add comments.
@@ -12,30 +13,35 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 31.05.2018
  */
 public class Board implements Runnable {
-    private final Cell[][] land;
+    private Cell[][] land;
     private int size;
     private int monsterNumber;
+    private int blocks;
     private static final int[] X = new int[]{-1, 0, 1, 0};
     private static final int[] Y = new int[]{0, 1, 0, -1};
-    private final Queue<Thread> monsters = new LinkedList<>();
+    private ExecutorService monsters;
+    private static final Logger logger =
+            Logger.getLogger(Board.class.getName());
 
-    public Board() {
+
+    public void init() {
         while (size < 5) {
             size = (int) (Math.random() * 10);
         }
-        System.out.println("Size of the Board is " + size);
+        land = new Cell[size][size];
+        logger.info("Size of the Board is " + size + "x" + size);
         while (monsterNumber < 1) {
             monsterNumber = (int) (Math.random() * 5);
         }
-        System.out.println("Number of monsters is " + monsterNumber);
-        land = new Cell[size][size];
+        monsters = Executors.newFixedThreadPool(monsterNumber + 1);
+        logger.info("Number of monsters is " + monsterNumber);
+        blocks = (int) (0.25 * size * size);
+        logger.info("The number of blocks is " + blocks);
         for (int i = 0; i < land.length; i++) {
             for (int j = 0; j < land[i].length; j++) {
                 land[i][j] = new Cell(i, j);
             }
         }
-        int blocks = (int) (0.25 * size * size);
-        System.out.println("The number of blocks is " + blocks);
         for (int i = 0; i < blocks; i++) {
             int x = (int) (Math.random() * size);
             int y = (int) (Math.random() * size);
@@ -45,11 +51,11 @@ public class Board implements Runnable {
             }
         }
         for (int i = 0; i < monsterNumber; i++) {
-            Thread monster = new Thread(this);
-            monster.setName("Monster" + i);
-            monsters.add(monster);
-            monster.start();
+            monsters.execute(this);
         }
+        Thread bomberman = new Thread(this);
+        bomberman.setName("BomberMan");
+        monsters.execute(bomberman);
     }
 
     public boolean checkStep(int x, int y, int stepX, int stepY) {
@@ -82,31 +88,29 @@ public class Board implements Runnable {
         return land[x][y];
     }
 
-    public boolean move(Cell sourse, Cell dist) {
+    public void move(Cell sourse, Cell dist) {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println(Thread.currentThread().getName() + " Cell: " + sourse);
+            logger.info(Thread.currentThread().getName() + " Cell: " + sourse);
             long a = System.currentTimeMillis();
             while (!dist.tryLock()) {
                 if ((System.currentTimeMillis() - a) > 500) {
-                    System.out.println("Invalid Cell " + dist);
+                    logger.info("Invalid Cell " + dist);
                     dist = getNextCell(sourse);
                 }
             }
             sourse.unlock();
-            move(dist, getNextCell(dist));
+            sourse = dist;
+            dist = getNextCell(sourse);
         }
-        return Thread.currentThread().isInterrupted();
     }
 
-    public void interrupt() {
-        for (Thread monster : monsters) {
-            monster.interrupt();
-        }
+    public void stop() {
+        monsters.shutdownNow();
     }
 
     @Override
@@ -120,15 +124,12 @@ public class Board implements Runnable {
 
     public static void main(String[] args) {
         Board board = new Board();
-        Thread bomberman = new Thread(board);
-        bomberman.setName("BomberMan");
-        bomberman.start();
+        board.init();
         try {
             Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        bomberman.interrupt();
-        board.interrupt();
+        board.stop();
     }
 }
