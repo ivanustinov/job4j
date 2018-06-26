@@ -1,49 +1,43 @@
 package tasksinterview;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 14.06.2018
  */
-public class DeadLock {
-    private Object first = new Object();
-    private Object second = new Object();
-    private boolean isStarted;
-    private boolean isStartedSecond;
+public class DeadLock extends Thread {
+    private Object first;
+    private Object second;
+    private CountDownLatch lock;
 
-    public void firstThread() {
-        while (!isStarted) {
-        }
-        synchronized (first) {
-            System.out.println("First thread locks first object");
-            isStartedSecond = true;
-            System.out.println("First thread deadlock");
-            synchronized (second) {
-            }
-        }
+
+    public DeadLock(Object first, Object second, CountDownLatch lock) {
+        this.first = first;
+        this.second = second;
+        this.lock = lock;
     }
 
-    public void secondThread() {
-        synchronized (second) {
-            System.out.println("Second thread locks second object");
-            isStarted = true;
-            while (!isStartedSecond) {
+    @Override
+    public void run() {
+        synchronized (first) {
+            try {
+                lock.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Interrupted");
             }
-            System.out.println("Second thread deadlock");
-            synchronized (first) {
+            synchronized (second) {
+                System.out.println("Finished");
             }
         }
     }
 
     public static void main(String[] args) {
-        DeadLock deadLock = new DeadLock();
-        Thread one = new Thread(() -> {
-            deadLock.firstThread();
-        });
-        Thread two = new Thread(() -> {
-            deadLock.secondThread();
-        });
-        one.start();
-        two.start();
+        Object one = new Object();
+        Object two = new Object();
+        CountDownLatch lock = new CountDownLatch(2);
+        new DeadLock(one, two, lock).start();
+        new DeadLock(two, one, lock).start();
     }
 }
