@@ -21,7 +21,7 @@ public class Tracker implements AutoCloseable {
 
     private static final String[] NAMES = {"Ivan", "Petr", "Konstantin", "Roman"};
 
-    // JDBC variables for opening and managing connection
+    //JDBC variables for opening and managing connection
     private static Connection connection;
     private static Statement stmt;
 
@@ -31,9 +31,10 @@ public class Tracker implements AutoCloseable {
         URL = ur[0];
         USER = ur[1];
         PASSWORD = ur[2];
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            stmt = connection.createStatement();
+        try (Connection connectio_n = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stm_t = connectio_n.createStatement()) {
+            connection = connectio_n;
+            stmt = stm_t;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,6 +66,7 @@ public class Tracker implements AutoCloseable {
     @Override
     public void close() throws Exception {
         connection.close();
+        stmt.close();
     }
 
     public void checkTable() throws SQLException {
@@ -72,7 +74,6 @@ public class Tracker implements AutoCloseable {
                 "id SERIAL PRIMARY KEY," +
                 "name text);");
     }
-
 
 
     public void setInsertNames() {
@@ -94,7 +95,6 @@ public class Tracker implements AutoCloseable {
             tracker.setInsertNames();
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 }
