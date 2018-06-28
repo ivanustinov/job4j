@@ -1,6 +1,8 @@
 package jdbc;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 
 /**
@@ -17,14 +19,14 @@ public class Tracker implements AutoCloseable {
     private static final String PASSWORD;
     private static final String FILENAME = "CreateDB";
 
-    private static final String[] NAMES = {"Ivan", "Petr", "Konstantin"};
+    private static final String[] NAMES = {"Ivan", "Petr", "Konstantin", "Roman"};
 
     // JDBC variables for opening and managing connection
     private static Connection connection;
     private static Statement stmt;
 
     static {
-        String urlUserPassword = readFile(initFile());
+        String urlUserPassword = readFile(FILENAME);
         String[] ur = urlUserPassword.split(" ");
         URL = ur[0];
         USER = ur[1];
@@ -36,6 +38,15 @@ public class Tracker implements AutoCloseable {
             e.printStackTrace();
         }
     }
+
+//    public static String initFile() {
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILENAME))) {
+//            writer.write("jdbc:postgresql://localhost:5432/trackerdb postgres password");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return FILENAME;
+//    }
 
     public static String readFile(String fileName) {
         StringBuilder builder = new StringBuilder();
@@ -53,7 +64,7 @@ public class Tracker implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 
     public void checkTable() throws SQLException {
@@ -62,14 +73,7 @@ public class Tracker implements AutoCloseable {
                 "name text);");
     }
 
-    public static String initFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILENAME))) {
-            writer.write("jdbc:postgresql://localhost:5432/trackerdb postgres password");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return FILENAME;
-    }
+
 
     public void setInsertNames() {
         try (PreparedStatement insertNames = connection.prepareStatement("INSERT INTO tracker (name) VALUES (?);")) {
@@ -85,12 +89,12 @@ public class Tracker implements AutoCloseable {
 
 
     public static void main(String[] args) {
-        Tracker tracker = new Tracker();
-        try {
+        try (Tracker tracker = new Tracker()) {
             tracker.checkTable();
             tracker.setInsertNames();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 }
