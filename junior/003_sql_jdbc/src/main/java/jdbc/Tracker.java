@@ -83,12 +83,12 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public HashMap<String, String> findAll() {
-        HashMap<String, String> items = new HashMap<>();
+    public HashMap<Integer, String> findAll() {
+        HashMap<Integer, String> items = new HashMap<>();
         try (Statement prp = connection.createStatement()) {
             ResultSet rs = prp.executeQuery(conf.get("select"));
             while (rs.next()) {
-                items.put(rs.getString("id"), rs.getString("name"));
+                items.put(rs.getInt("id"), rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,13 +96,13 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public HashMap<String, String> findByName(String name) {
-        HashMap<String, String> items = new HashMap<>();
+    public HashMap<Integer, String> findByName(String name) {
+        HashMap<Integer, String> items = new HashMap<>();
         try (PreparedStatement prp = connection.prepareStatement(conf.get("select by name"))) {
             prp.setString(1, name);
             ResultSet rs = prp.executeQuery();
             while (rs.next()) {
-                items.put(rs.getString("id"), rs.getString("name"));
+                items.put(rs.getInt("id"), rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,7 +117,7 @@ public class Tracker implements AutoCloseable {
             ResultSet rs = prp.executeQuery();
             while (rs.next()) {
                 item = new Item(rs.getString("name"));
-                item.setId(Integer.valueOf(rs.getString("id")));
+                item.setId(rs.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
