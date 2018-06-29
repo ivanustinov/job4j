@@ -2,7 +2,7 @@ package threadpool;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -14,32 +14,38 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ThreadPool {
     private int size = Runtime.getRuntime().availableProcessors();
-    private final List<Thread> threads = new LinkedList<>();
-    private final Queue<Runnable> tasks = new LinkedBlockingQueue<>();
+    private final List<MyThread> threads = new LinkedList<>();
+    private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
+    private boolean isStopped = false;
+
 
     public ThreadPool() {
         System.out.println("Cores " + size);
-        while (size > 0) {
+        for (int i = 0; i < size; i++) {
             threads.add(new MyThread(tasks));
-            size--;
         }
         for (Thread thread : threads) {
             thread.start();
         }
     }
 
-    public void work(Work work) {
+
+    public synchronized void work(Work work) throws Exception {
+        if (isStopped) {
+            throw new IllegalStateException("ThreadPool is stopped");
+        }
         tasks.offer(work);
     }
 
     public void shutdown() {
-        for (Thread thread : threads) {
-            thread.interrupt();
+        this.isStopped = true;
+        for (MyThread thread : threads) {
+            thread.doStop();
         }
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ThreadPool pool = new ThreadPool();
         for (int i = 0; i < 6; i++) {
             pool.work(new Work());

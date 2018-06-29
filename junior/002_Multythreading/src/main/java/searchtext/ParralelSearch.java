@@ -11,8 +11,6 @@ package searchtext;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -82,9 +80,8 @@ public class ParralelSearch {
             @Override
             public void run() {
                 String fileName;
-                String a;
+                String content = "";
                 while (!finish) {
-                    StringBuilder builder = new StringBuilder();
                     synchronized (files) {
                         if ((fileName = files.poll()) == null) {
                             try {
@@ -96,15 +93,12 @@ public class ParralelSearch {
                         }
                     }
                     System.out.println(fileName);
-                    try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-                        while ((a = reader.readLine()) != null) {
-                            builder.append(a);
-                        }
-                    } catch (IOException y) {
-                        y.printStackTrace();
+                    try {
+                        content = new String(Files.readAllBytes(Paths.get(fileName)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                    if (builder.toString().contains(text)) {
+                    if (content.contains(text)) {
                         paths.add(fileName);
                     }
                 }

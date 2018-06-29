@@ -1,6 +1,6 @@
 package threadpool;
 
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * //TODO add comments.
@@ -10,21 +10,31 @@ import java.util.Queue;
  * @since 30.05.2018
  */
 public class MyThread extends Thread {
-    private final Queue<Runnable> tasks;
+    private final BlockingQueue<Runnable> tasks;
+    private boolean isStopped = false;
 
-    public MyThread(Queue<Runnable> tasks) {
+    public MyThread(BlockingQueue<Runnable> tasks) {
         this.tasks = tasks;
     }
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            while (tasks.size() == 0) {
-                if (Thread.currentThread().isInterrupted()) {
-                    return;
-                }
+        while (!isStopped()) {
+            try {
+                Runnable runnable = tasks.take();
+                runnable.run();
+            } catch (Exception e) {
+                interrupt();
             }
-            tasks.poll().run();
         }
+    }
+
+    public synchronized void doStop() {
+        isStopped = true;
+        interrupt(); //break pool thread out of dequeue() call.
+    }
+
+    public synchronized boolean isStopped() {
+        return isStopped;
     }
 }

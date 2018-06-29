@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MyConcurrentMap {
     private ConcurrentHashMap<Integer, Base> map;
-    private int key;
 
     public MyConcurrentMap() {
         this.map = new ConcurrentHashMap<>();
@@ -17,38 +16,41 @@ public class MyConcurrentMap {
 
     public void add(Base model) {
         int key = model.getId();
-        if (map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() != 1) {
+        Base b = map.computeIfPresent(key, (k, oldBase) -> {
+            int oldVersion = model.version.get() - 1;
+            int currentVersion = model.version.get();
+            if (!oldBase.version.compareAndSet(oldVersion, currentVersion)) {
                 throw new OptimisticExeption();
-            } else {
-                return model;
             }
-        }) == null) {
+            oldBase = model;
+            return oldBase;
+        });
+        if (b == null) {
             map.put(key, model);
         }
     }
 
     public void update(Base model) {
         int key = model.getId();
-        map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() != 1) {
+        map.computeIfPresent(key, (k, oldBase) -> {
+            int oldVersion = model.version.get() - 1;
+            if (!oldBase.version.compareAndSet(oldVersion, oldVersion + 1)) {
                 throw new OptimisticExeption();
-            } else {
-                return model;
             }
+            oldBase = model;
+            return oldBase;
         });
     }
 
-    public void remove(Base model) {
+    public void delete(Base model) {
         int key = model.getId();
-        if (map.computeIfPresent(key, (Integer key1, Base oldBase) -> {
-            if (model.getVersion() - oldBase.getVersion() != 1) {
+        Base b = map.computeIfPresent(key, (k, oldBase) -> {
+            int oldVersion = oldBase.version.get();
+            if (!oldBase.version.compareAndSet(oldVersion, oldVersion + 1)) {
                 throw new OptimisticExeption();
-            } else {
-                return model;
             }
-        }) != null) {
-            map.remove(key, model);
-        }
+            map.remove(key);
+            return oldBase;
+        });
     }
 }
