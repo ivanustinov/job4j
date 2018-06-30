@@ -1,7 +1,9 @@
 package jdbc;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
@@ -32,6 +34,11 @@ public class Tracker implements AutoCloseable {
 
         public String getName() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return name + id;
         }
     }
 
@@ -83,12 +90,14 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public HashMap<Integer, String> findAll() {
-        HashMap<Integer, String> items = new HashMap<>();
+    public List<Item> findAll() {
+        List<Item> items = new ArrayList<>();
         try (Statement prp = connection.createStatement()) {
             ResultSet rs = prp.executeQuery(conf.get("select"));
             while (rs.next()) {
-                items.put(rs.getInt("id"), rs.getString("name"));
+                Item item = new Item(rs.getString("name"));
+                item.setId(rs.getInt("id"));
+                items.add(item);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,13 +105,15 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public HashMap<Integer, String> findByName(String name) {
-        HashMap<Integer, String> items = new HashMap<>();
+    public List<Item> findByName(String name) {
+        List<Item> items = new ArrayList<>();
         try (PreparedStatement prp = connection.prepareStatement(conf.get("select by name"))) {
             prp.setString(1, name);
             ResultSet rs = prp.executeQuery();
             while (rs.next()) {
-                items.put(rs.getInt("id"), rs.getString("name"));
+                Item item = new Item(rs.getString("name"));
+                item.setId(rs.getInt("id"));
+                items.add(item);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,25 +143,23 @@ public class Tracker implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-
         try (Tracker tracker = new Tracker(new Conf())) {
-            Item first = new Item("Alex");
-            Item second = new Item("Ivan");
-            Item third = new Item("Ivan");
-            Item forth = new Item("Ivan");
-            first.setId(tracker.generateId());
-            second.setId(tracker.generateId());
-            third.setId(tracker.generateId());
-            forth.setId(tracker.generateId());
-            tracker.add(first);
-            tracker.add(second);
-            tracker.add(forth);
-            tracker.delete(second);
-            tracker.replace(first.getId(), third);
+            List<Item> list = new ArrayList<>();
+            list.add(new Item("Alex"));
+            list.add(new Item("Ivan"));
+            list.add(new Item("Ivan"));
+            list.add(new Item("Ivan"));
+            for (Item item : list) {
+                item.setId(tracker.generateId());
+                tracker.add(item);
+            }
+            tracker.delete(list.get(3));
+            Item jora = new Item("Jora");
+            jora.setId(tracker.generateId());
+            tracker.replace(list.get(0).getId(), jora);
             System.out.println(tracker.findAll());
             System.out.println(tracker.findByName("Ivan"));
-            System.out.println(second.getId());
-            System.out.println(tracker.findById(third.getId()));
+            System.out.println(tracker.findById(jora.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
