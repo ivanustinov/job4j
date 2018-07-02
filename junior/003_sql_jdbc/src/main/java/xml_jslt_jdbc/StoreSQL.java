@@ -1,9 +1,8 @@
 package xml_jslt_jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
@@ -18,7 +17,7 @@ public class StoreSQL implements AutoCloseable {
         this.config = config;
     }
 
-    public void run() {
+    public void connect() {
         try {
             Class.forName(config.DRIVERNAME);
         } catch (ClassNotFoundException e) {
@@ -40,22 +39,38 @@ public class StoreSQL implements AutoCloseable {
         connection.close();
     }
 
-    public void fillAllTable() throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(config.CREATETABLE);
-        stmt.execute(config.DELETE);
-        for (int i = 1; i < 10000; i++) {
-            stmt.execute(config.INSERT);
-        }
-        stmt.close();
-    }
-
-    public static void main(String[] args) {
-        try (StoreSQL store = new StoreSQL(new Config())) {
-            store.run();
-            store.fillAllTable();
-        } catch (Exception e) {
+    public void createTable() {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(config.CREATETABLE);
+            stmt.execute(config.DELETE);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void generate(int n) {
+        try (PreparedStatement prp = connection.prepareStatement(config.INSERT)) {
+            for (int i = 1; i < n; i++) {
+                prp.setInt(1, i);
+                prp.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<StoreXML.Field> selectTable() {
+        List<StoreXML.Field> values = new ArrayList<>();
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(config.SELECT)) {
+            while (rs.next()) {
+                values.add(new StoreXML.Field(Integer.valueOf(rs.getString(1))));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return values;
+    }
+
+
 }
