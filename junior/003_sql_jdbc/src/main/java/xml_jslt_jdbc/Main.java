@@ -15,8 +15,10 @@ public class Main {
             store.connect();
             store.createTable();
             store.generate(20);
-            StoreXML xml = new StoreXML(new File("File"));
+            StoreXML xml = new StoreXML(new File("file"));
             xml.save(store.selectTable());
+            ConverterXSLT.initFile();
+            ConverterXSLT.convert(new File("file"), new File("dest"), new File("scheme.xsl"));
         } catch (Exception e) {
             e.printStackTrace();
         }
