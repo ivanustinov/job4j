@@ -1,4 +1,4 @@
-package xml_jslt_jdbc;
+package xmljsltjdbc;
 
 import java.io.File;
 
@@ -17,8 +17,6 @@ public class Main {
             store.generate(20);
             StoreXML xml = new StoreXML(new File("file"));
             xml.save(store.selectTable());
-            ConverterXSLT.initFile();
-            ConverterXSLT.convert(new File("file"), new File("dest"), new File("scheme.xsl"));
         } catch (Exception e) {
             e.printStackTrace();
         }

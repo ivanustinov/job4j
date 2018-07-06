@@ -1,7 +1,8 @@
-package xml_jslt_jdbc;
+package xmljsltjdbc;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -11,22 +12,22 @@ import java.util.List;
  */
 public class StoreSQL implements AutoCloseable {
     private Connection connection;
-    private Config config;
+    private final HashMap<String, String> conf;
 
     public StoreSQL(Config config) {
-        this.config = config;
+        this.conf = config.getConfig();
     }
 
     public void connect() {
         try {
-            Class.forName(config.DRIVERNAME);
+            Class.forName(conf.get("drivername"));
         } catch (ClassNotFoundException e) {
             System.out.println("Can't get class. No driver found");
             e.printStackTrace();
             return;
         }
         try {
-            connection = DriverManager.getConnection(config.CONNECTIONSTRING);
+            connection = DriverManager.getConnection(conf.get("connectionstring"));
         } catch (SQLException e) {
             System.out.println("Can't get connection. Incorrect URL");
             e.printStackTrace();
@@ -41,16 +42,16 @@ public class StoreSQL implements AutoCloseable {
 
     public void createTable() {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(config.CREATETABLE);
-            stmt.execute(config.DELETE);
+            stmt.execute(conf.get("createtable"));
+            stmt.execute(conf.get("delete"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void generate(int n) {
-        try (PreparedStatement prp = connection.prepareStatement(config.INSERT)) {
-            for (int i = 1; i < n; i++) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("insert"))) {
+            for (int i = 1; i <= n; i++) {
                 prp.setInt(1, i);
                 prp.executeUpdate();
             }
@@ -62,7 +63,7 @@ public class StoreSQL implements AutoCloseable {
     public List<StoreXML.Field> selectTable() {
         List<StoreXML.Field> values = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(config.SELECT)) {
+             ResultSet rs = stmt.executeQuery(conf.get("select"))) {
             while (rs.next()) {
                 values.add(new StoreXML.Field(Integer.valueOf(rs.getString(1))));
             }
@@ -71,6 +72,4 @@ public class StoreSQL implements AutoCloseable {
         }
         return values;
     }
-
-
 }

@@ -1,4 +1,4 @@
-package xml_jslt_jdbc;
+package xmljsltjdbc;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
