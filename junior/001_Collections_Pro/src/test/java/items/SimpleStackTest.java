@@ -1,4 +1,4 @@
-package list;
+package items;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Iterator;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)

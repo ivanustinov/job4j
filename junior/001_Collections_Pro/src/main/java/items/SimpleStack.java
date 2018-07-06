@@ -1,4 +1,4 @@
-package list;
+package items;
 
 import java.util.EmptyStackException;
 
@@ -7,7 +7,7 @@ import java.util.EmptyStackException;
  * @version 1.0
  * @since 25.04.2018
  */
-public class SimpleQueue<E> extends SimpleLinkedList<E> {
+public class SimpleStack<E> extends SimpleLinkedList<E> {
     public E push(E item) {
         add(item);
         return item;
@@ -17,7 +17,7 @@ public class SimpleQueue<E> extends SimpleLinkedList<E> {
         if (getSize() == 0) {
             throw new EmptyStackException();
         }
-        E obj = first.item;
+        E obj = last.item;
         remove(obj);
         return obj;
     }

@@ -20,7 +20,7 @@ public class Board implements Runnable {
     private static final int[] X = new int[]{-1, 0, 1, 0};
     private static final int[] Y = new int[]{0, 1, 0, -1};
     private ExecutorService monsters;
-    private static final Logger logger =
+    private static final Logger LOGGER =
             Logger.getLogger(Board.class.getName());
 
 
@@ -29,14 +29,14 @@ public class Board implements Runnable {
             size = (int) (Math.random() * 10);
         }
         land = new Cell[size][size];
-        logger.info("Size of the Board is " + size + "x" + size);
+        LOGGER.info("Size of the Board is " + size + "x" + size);
         while (monsterNumber < 1) {
             monsterNumber = (int) (Math.random() * 5);
         }
         monsters = Executors.newFixedThreadPool(monsterNumber + 1);
-        logger.info("Number of monsters is " + monsterNumber);
+        LOGGER.info("Number of monsters is " + monsterNumber);
         blocks = (int) (0.25 * size * size);
-        logger.info("The number of blocks is " + blocks);
+        LOGGER.info("The number of blocks is " + blocks);
         for (int i = 0; i < land.length; i++) {
             for (int j = 0; j < land[i].length; j++) {
                 land[i][j] = new Cell(i, j);
@@ -61,11 +61,7 @@ public class Board implements Runnable {
     public boolean checkStep(int x, int y, int stepX, int stepY) {
         x += stepX;
         y += stepY;
-        if ((x < land.length && x >= 0) && (y < land.length && y >= 0)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (x < land.length && x >= 0) && (y < land.length && y >= 0);
     }
 
     public Cell getNextCell(ReentrantLock cell) {
@@ -95,11 +91,11 @@ public class Board implements Runnable {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            logger.info(Thread.currentThread().getName() + " Cell: " + sourse);
+            LOGGER.info(Thread.currentThread().getName() + " Cell: " + sourse);
             long a = System.currentTimeMillis();
             while (!dist.tryLock()) {
                 if ((System.currentTimeMillis() - a) > 500) {
-                    logger.info("Invalid Cell " + dist);
+                    LOGGER.info("Invalid Cell " + dist);
                     dist = getNextCell(sourse);
                 }
             }

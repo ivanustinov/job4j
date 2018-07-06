@@ -64,7 +64,7 @@ public class OrdersTest {
         market.putOrder(new Order(5, KODAK, "Create", "Buy", 6, 17));
         Order order = null;
         market.putOrder(new Order(7, KODAK, "Create", "Sale", 4, 15));
-        // No order with id 7 in the list because we had done it at the time it appeared.
+        // No order with id 7 in the items because we had done it at the time it appeared.
         assertThat(market.getOrder(7, KODAK), is(order));
         assertThat(market.getOrder(5, KODAK), is(new Order(5, 6, 15)));
     }
@@ -75,7 +75,7 @@ public class OrdersTest {
         market.putOrder(new Order(5, KODAK, "Create", "Sale", 6, 17));
         market.putOrder(new Order(7, KODAK, "Create", "Buy", 10, 20));
         Order order = null;
-        // No order with id 7 in the list because we had done it at the time it appeared.
+        // No order with id 7 in the items because we had done it at the time it appeared.
         assertThat(market.getOrder(7, KODAK), is(order));
         assertThat(market.getOrder(4, KODAK), is(new Order(4, 7, 10)));
     }

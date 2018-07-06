@@ -1,4 +1,4 @@
-package list;
+package items;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;

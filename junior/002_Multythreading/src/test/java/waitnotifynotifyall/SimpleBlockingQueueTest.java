@@ -1,4 +1,4 @@
-package wait_notify_notifyall;
+package waitnotifynotifyall;
 
 import org.junit.Test;
 

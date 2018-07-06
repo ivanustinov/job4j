@@ -1,6 +1,6 @@
 package set;
 
-import list.SimpleList;
+import items.SimpleList;
 
 import java.util.Iterator;
 

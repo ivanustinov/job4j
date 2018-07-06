@@ -1,4 +1,4 @@
-package wait_notify_notifyall;
+package waitnotifynotifyall;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;

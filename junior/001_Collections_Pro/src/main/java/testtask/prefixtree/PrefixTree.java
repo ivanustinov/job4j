@@ -38,7 +38,7 @@ public class PrefixTree {
                 v = v.children.get(ch);
             }
         }
-        return v.leaf == true ? v.numbers : null;
+        return v.leaf ? v.numbers : null;
     }
 
     public void put(String s) {

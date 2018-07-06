@@ -43,6 +43,11 @@ public class UserStorage {
             User user = (User) obj;
             return id == user.id && amount == user.amount;
         }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
     }
 
 

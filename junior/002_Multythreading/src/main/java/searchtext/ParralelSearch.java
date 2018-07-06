@@ -83,7 +83,8 @@ public class ParralelSearch {
                 String content = "";
                 while (!finish) {
                     synchronized (files) {
-                        if ((fileName = files.poll()) == null) {
+                        fileName = files.poll();
+                        if (fileName == null) {
                             try {
                                 files.wait();
                             } catch (InterruptedException e) {

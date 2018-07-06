@@ -1,4 +1,4 @@
-package list;
+package items;
 
 
 import net.jcip.annotations.GuardedBy;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Exersise for leaning list generics.
+ * Exersise for leaning items generics.
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
@@ -36,7 +36,7 @@ public class SimpleList<E> implements Iterable<E> {
     }
 
     /**
-     * Add the new element to the list, if nesessary increases it's size.
+     * Add the new element to the items, if nesessary increases it's size.
      *
      * @param object E.
      */

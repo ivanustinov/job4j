@@ -2,8 +2,6 @@ package set;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,11 +29,10 @@ public class SimpleHashSetTest {
     @Test
     public void testIncreaseCapasityMethod() {
         SimpleHashSet<Element> hashSet = new SimpleHashSet<>(7);
-        hashSet.add(new Element(0));
+        for (int i = 0; i < hashSet.size(); i++) {
+            hashSet.add(new Element(i));
+        }
         hashSet.add(new Element(1));
-        hashSet.add(new Element(2));
-        hashSet.add(new Element(6));
-        hashSet.add(new Element(7));
         assertThat(hashSet.size(), is(10));
     }
 
