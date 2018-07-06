@@ -38,7 +38,7 @@ public class Tracker implements AutoCloseable {
 
         @Override
         public String toString() {
-            return name + id;
+            return String.format("%s %d", name, id);
         }
     }
 
@@ -90,14 +90,12 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public List<Item> findAll() {
-        List<Item> items = new ArrayList<>();
+    public List<String> findAll() {
+        List<String> items = new ArrayList<>();
         try (Statement prp = connection.createStatement()) {
             ResultSet rs = prp.executeQuery(conf.get("select"));
             while (rs.next()) {
-                Item item = new Item(rs.getString("name"));
-                item.setId(rs.getInt("id"));
-                items.add(item);
+                items.add(String.format("%s %d", rs.getString("name"), rs.getInt("id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,15 +103,13 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public List<Item> findByName(String name) {
-        List<Item> items = new ArrayList<>();
+    public List<String> findByName(String name) {
+        List<String> items = new ArrayList<>();
         try (PreparedStatement prp = connection.prepareStatement(conf.get("select by name"))) {
             prp.setString(1, name);
             ResultSet rs = prp.executeQuery();
             while (rs.next()) {
-                Item item = new Item(rs.getString("name"));
-                item.setId(rs.getInt("id"));
-                items.add(item);
+                items.add(String.format("%s %d", rs.getString("name"), rs.getInt("id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,15 +117,13 @@ public class Tracker implements AutoCloseable {
         return items;
     }
 
-    public Item findById(int id) {
-        Item item = null;
+    public String findById(int id) {
+        String item = "";
         try (PreparedStatement prp = connection.prepareStatement(conf.get("select by id"))) {
             prp.setInt(1, id);
             ResultSet rs = prp.executeQuery();
-            while (rs.next()) {
-                item = new Item(rs.getString("name"));
-                item.setId(rs.getInt("id"));
-            }
+            rs.next();
+            item = String.format("%s %d", rs.getString("name"), rs.getInt("id"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
