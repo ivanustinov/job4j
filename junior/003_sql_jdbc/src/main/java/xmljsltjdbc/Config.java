@@ -3,7 +3,6 @@ package xmljsltjdbc;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
@@ -21,23 +20,8 @@ public class Config {
 
 
     public HashMap<String, String> getConfig() {
-        initFile();
         readFile("CreateSQLDB");
         return config;
-    }
-
-
-    public void initFile() {
-        try (PrintWriter out = new PrintWriter("CreateSQLDB")) {
-            out.print("org.sqlite.JDBC\n"
-                    + "jdbc:sqlite:test.db\n"
-                    + "CREATE TABLE IF NOT EXISTS entry(field int NOT NULL PRIMARY KEY AUTOINCREMENT)\n"
-                    + "DELETE FROM entry\n"
-                    + "SELECT * FROM entry\n"
-                    + "INSERT INTO entry  VALUES (?)\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void readFile(String filename) {
