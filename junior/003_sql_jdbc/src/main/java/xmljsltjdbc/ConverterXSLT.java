@@ -16,27 +16,7 @@ import java.io.*;
  */
 public class ConverterXSLT {
 
-    public void initFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("scheme.xsl"))) {
-            writer.write("<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n"
-                    + "<xsl:template match=\"/\">\n"
-                    + "<entries>\n"
-                    + "   <xsl:for-each select=\"entries/entry\">\n"
-                    + "       <entry>\n"
-                    + "           <xsl:attribute name=\"href\">\n"
-                    + "               <xsl:value-of select=\"field\"/>\n"
-                    + "           </xsl:attribute>\n"
-                    + "       </entry>\n"
-                    + "   </xsl:for-each>\n"
-                    + " </entries>\n"
-                    + "</xsl:template>\n"
-                    + "</xsl:stylesheet>\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convert(File sourse, File dest, File scheme) {
+    public void convert(String sourse, String dest, String scheme) {
         String xsl = "";
         String xml = "";
         try (FileInputStream sours = new FileInputStream(sourse);

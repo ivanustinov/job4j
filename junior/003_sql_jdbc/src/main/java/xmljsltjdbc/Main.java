@@ -11,12 +11,15 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args) {
-        try (StoreSQL store = new StoreSQL(new Config())) {
+        try (StoreSQL store = new StoreSQL(new Config("sqlite.properties"))) {
             store.connect();
             store.createTable();
-            store.generate(20);
+            store.generate(30);
             StoreXML xml = new StoreXML(new File("file"));
             xml.save(store.selectTable());
+            new ConverterXSLT().convert("file", "dest", "scheme.xsl");
+            ParseXML parseXML = new ParseXML();
+            parseXML.parse("dest");
         } catch (Exception e) {
             e.printStackTrace();
         }

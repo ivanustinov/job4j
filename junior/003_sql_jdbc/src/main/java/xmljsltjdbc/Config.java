@@ -1,9 +1,8 @@
 package xmljsltjdbc;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * //TODO add comments.
@@ -13,26 +12,25 @@ import java.util.HashMap;
  * @since 30.06.2018
  */
 public class Config {
+    String drivername;
+    String connectionString;
+    String insert;
+    String delete;
+    String select;
+    String createTable;
+    Properties property = new Properties();
 
-    private final String[] keys = new String[]{"drivername", "connectionstring", "createtable",
-            "delete", "select", "insert"};
-    private final HashMap<String, String> config = new HashMap<>();
-
-
-    public HashMap<String, String> getConfig() {
-        readFile("CreateSQLDB");
-        return config;
-    }
-
-    public void readFile(String filename) {
-        String a;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            int i = 0;
-            while ((a = reader.readLine()) != null) {
-                config.put(keys[i++], a);
-            }
-        } catch (IOException y) {
-            y.printStackTrace();
+    public Config(String file) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(file)) {
+            property.load(inputStream);
+            drivername = property.getProperty("drivername");
+            connectionString = property.getProperty("connectionstring");
+            insert = property.getProperty("insert");
+            delete = property.getProperty("delete");
+            select = property.getProperty("select");
+            createTable = property.getProperty("createtable");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

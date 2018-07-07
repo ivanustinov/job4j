@@ -2,7 +2,6 @@ package xmljsltjdbc;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,22 +11,22 @@ import java.util.List;
  */
 public class StoreSQL implements AutoCloseable {
     private Connection connection;
-    private final HashMap<String, String> conf;
+    private final Config conf;
 
     public StoreSQL(Config config) {
-        this.conf = config.getConfig();
+        this.conf = config;
     }
 
     public void connect() {
         try {
-            Class.forName(conf.get("drivername"));
+            Class.forName(conf.drivername);
         } catch (ClassNotFoundException e) {
             System.out.println("Can't get class. No driver found");
             e.printStackTrace();
             return;
         }
         try {
-            connection = DriverManager.getConnection(conf.get("connectionstring"));
+            connection = DriverManager.getConnection(conf.connectionString);
         } catch (SQLException e) {
             System.out.println("Can't get connection. Incorrect URL");
             e.printStackTrace();
@@ -42,15 +41,15 @@ public class StoreSQL implements AutoCloseable {
 
     public void createTable() {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(conf.get("createtable"));
-            stmt.execute(conf.get("delete"));
+            stmt.execute(conf.createTable);
+            stmt.execute(conf.delete);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void generate(int n) {
-        try (PreparedStatement prp = connection.prepareStatement(conf.get("insert"))) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.insert)) {
             for (int i = 1; i <= n; i++) {
                 prp.setInt(1, i);
                 prp.executeUpdate();
@@ -63,7 +62,7 @@ public class StoreSQL implements AutoCloseable {
     public List<StoreXML.Field> selectTable() {
         List<StoreXML.Field> values = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(conf.get("select"))) {
+             ResultSet rs = stmt.executeQuery(conf.select)) {
             while (rs.next()) {
                 values.add(new StoreXML.Field(Integer.valueOf(rs.getString(1))));
             }
