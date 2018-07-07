@@ -1,6 +1,5 @@
 package jdbc;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,16 +17,14 @@ public class TrackerTest {
     List<Integer> id = new ArrayList<>();
     List<String> stringItems = new ArrayList<>();
     List<Tracker.Item> items = new ArrayList<>();
-    Conf conf = new Conf();
+    Conf conf = new Conf("postgres.properties");
 
-    @Before
-    public void setUp() throws Exception {
-        try (Tracker tracker = new Tracker(conf)) {
+    public void setUp(Tracker tracker) {
+        try {
             items.add(new Tracker.Item("Alex"));
             items.add(new Tracker.Item("Ivan"));
             items.add(new Tracker.Item("Ivan"));
             items.add(new Tracker.Item("Ivan"));
-            int a = 0;
             for (Tracker.Item item : items) {
                 int id = tracker.generateId();
                 this.id.add(id);
@@ -35,9 +32,6 @@ public class TrackerTest {
                 stringItems.add(item.toString());
                 tracker.add(item);
             }
-//            System.out.println(tracker.findAll());
-//            System.out.println(tracker.findByName("Ivan"));
-//            System.out.println(tracker.findById(id.get(0)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,9 +40,8 @@ public class TrackerTest {
     @Test
     public void findAll() {
         try (Tracker tracker = new Tracker(conf)) {
+            setUp(tracker);
             List<String> items = tracker.findAll();
-            System.out.println(stringItems);
-            System.out.println(items);
             assertThat(stringItems.containsAll(items), is(true));
             assertThat(stringItems.size() == items.size(), is(true));
         } catch (Exception e) {
@@ -59,6 +52,7 @@ public class TrackerTest {
     @Test
     public void findById() {
         try (Tracker tracker = new Tracker(conf)) {
+            setUp(tracker);
             int id = this.id.get(3);
             assertThat(tracker.findById(id), is(items.get(3).toString()));
         } catch (Exception e) {
@@ -72,12 +66,9 @@ public class TrackerTest {
             List<String> items = tracker.findByName("Ivan");
             List<String> names = new ArrayList<>();
             for (Tracker.Item item : this.items) {
-                if (item.getName().equals("Ivan")) {
-                    names.add(String.format("%s %d", item.getName(), item.getId()));
-                }
+                if (item.getName().equals("Ivan"))
+                    names.add(item.toString());
             }
-            System.out.println(names);
-            System.out.println(items);
             assertThat(names.containsAll(items), is(true));
             assertThat(names.size() == items.size(), is(true));
         } catch (Exception e) {

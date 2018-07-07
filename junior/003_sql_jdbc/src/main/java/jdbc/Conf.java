@@ -1,9 +1,8 @@
 package jdbc;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 /**
@@ -12,27 +11,37 @@ import java.util.HashMap;
  * @since 28.06.2018
  */
 public class Conf {
-    private final String[] keys = new String[]{"url", "user", "password", "update", "insert", "delete",
-            "select", "select by id", "select by name", "checkTable"};
-    private final HashMap<String, String> config = new HashMap<>();
+    String url;
+    String user;
+    String password;
+    String update;
+    String drivername;
+    String connectionString;
+    String createTable;
+    String delete;
+    String select;
+    String selectByName;
+    String selectById;
+    String insert;
+    Properties property = new Properties();
 
-
-    public HashMap<String, String> getConfig() {
-        readFile("CreateDB");
-        return config;
-    }
-
-
-
-    public void readFile(String filename) {
-        String a;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            int i = 0;
-            while ((a = reader.readLine()) != null) {
-                config.put(keys[i++], a);
-            }
-        } catch (IOException y) {
-            y.printStackTrace();
+    public Conf(String file) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(file)) {
+            property.load(inputStream);
+            url = property.getProperty("url");
+            user = property.getProperty("user");
+            password = property.getProperty("password");
+            update = property.getProperty("update");
+            drivername = property.getProperty("drivername");
+            connectionString = property.getProperty("connectionstring");
+            createTable = property.getProperty("createtable");
+            delete = property.getProperty("delete");
+            select = property.getProperty("select");
+            selectById = property.getProperty("selectById");
+            selectByName = property.getProperty("selectByName");
+            insert = property.getProperty("insert");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
