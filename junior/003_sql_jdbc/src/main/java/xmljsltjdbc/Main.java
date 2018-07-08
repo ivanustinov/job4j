@@ -11,7 +11,7 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args) {
-        try (StoreSQL store = new StoreSQL(new Config("sqlite.properties"))) {
+        try (StoreSQL store = new StoreSQL(new Config("/sqlite.properties"))) {
             store.connect();
             store.createTable();
             store.generate(30);

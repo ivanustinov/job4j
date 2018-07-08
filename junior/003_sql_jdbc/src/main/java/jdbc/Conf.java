@@ -11,22 +11,22 @@ import java.util.Properties;
  * @since 28.06.2018
  */
 public class Conf {
-    String url;
-    String user;
-    String password;
-    String update;
-    String drivername;
-    String connectionString;
-    String createTable;
-    String delete;
-    String select;
-    String selectByName;
-    String selectById;
-    String insert;
+    private String url;
+    private String user;
+    private String password;
+    private String update;
+    private String drivername;
+    private String connectionString;
+    private String createTable;
+    private String delete;
+    private String select;
+    private String selectByName;
+    private String selectById;
+    private String insert;
     Properties property = new Properties();
 
     public Conf(String file) {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(file)) {
+        try (InputStream inputStream = getClass().getResourceAsStream(file)) {
             property.load(inputStream);
             url = property.getProperty("url");
             user = property.getProperty("user");
@@ -43,5 +43,45 @@ public class Conf {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String get(String key) {
+        switch (key) {
+            case "url": {
+                return url;
+            }
+            case "user": {
+                return user;
+            }
+            case "password": {
+                return password;
+            }
+            case "update": {
+                return update;
+            }
+            case "drivername": {
+                return drivername;
+            }
+            case "connectionstring": {
+                return connectionString;
+            }
+            case "createtable": {
+                return createTable;
+            }
+            case "delete": {
+                return delete;
+            }
+            case "selectById": {
+                return selectById;
+            }
+            case "selectByName": {
+                return selectByName;
+            }
+            case "insert": {
+                return insert;
+            }
+
+        }
+        return null;
     }
 }

@@ -17,7 +17,7 @@ public class TrackerTest {
     List<Integer> id = new ArrayList<>();
     List<String> stringItems = new ArrayList<>();
     List<Tracker.Item> items = new ArrayList<>();
-    Conf conf = new Conf("postgres.properties");
+    Conf conf = new Conf("/postgres.properties");
 
     public void setUp(Tracker tracker) {
         try {

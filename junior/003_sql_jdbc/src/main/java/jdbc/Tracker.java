@@ -47,9 +47,9 @@ public class Tracker implements AutoCloseable {
     public Tracker(Conf config) {
         conf = config;
         try {
-            connection = DriverManager.getConnection(conf.url, conf.user, conf.password);
+            connection = DriverManager.getConnection(conf.get("url"), conf.get("user"), conf.get("password"));
             checkTable = connection.createStatement();
-            checkTable.execute(conf.createTable);
+            checkTable.execute(conf.get("createtable"));
             checkTable.execute("DELETE FROM tracker");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class Tracker implements AutoCloseable {
 
 
     public Item add(Item item) {
-        try (PreparedStatement prp = connection.prepareStatement(conf.insert)) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("insert"))) {
             prp.setInt(1, item.getId());
             prp.setString(2, item.getName());
             prp.executeUpdate();
@@ -69,7 +69,7 @@ public class Tracker implements AutoCloseable {
     }
 
     public void delete(Item item) {
-        try (PreparedStatement prp = connection.prepareStatement(conf.delete)) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("delete"))) {
             prp.setInt(1, item.getId());
             prp.executeUpdate();
         } catch (SQLException e) {
@@ -78,7 +78,7 @@ public class Tracker implements AutoCloseable {
     }
 
     public void replace(int id, Item item) {
-        try (PreparedStatement prp = connection.prepareStatement(conf.update)) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("update"))) {
             prp.setString(1, item.getName());
             prp.setInt(2, item.getId());
             prp.setInt(3, id);
@@ -91,7 +91,7 @@ public class Tracker implements AutoCloseable {
     public List<String> findAll() {
         List<String> items = new ArrayList<>();
         try (Statement prp = connection.createStatement()) {
-            ResultSet rs = prp.executeQuery(conf.select);
+            ResultSet rs = prp.executeQuery(conf.get("select"));
             while (rs.next()) {
                 items.add(String.format("%s %d", rs.getString("name"), rs.getInt("id")));
             }
@@ -103,7 +103,7 @@ public class Tracker implements AutoCloseable {
 
     public List<String> findByName(String name) {
         List<String> items = new ArrayList<>();
-        try (PreparedStatement prp = connection.prepareStatement(conf.selectByName)) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("selectByName"))) {
             prp.setString(1, name);
             ResultSet rs = prp.executeQuery();
             while (rs.next()) {
@@ -117,7 +117,7 @@ public class Tracker implements AutoCloseable {
 
     public String findById(int id) {
         String item = "";
-        try (PreparedStatement prp = connection.prepareStatement(conf.selectById)) {
+        try (PreparedStatement prp = connection.prepareStatement(conf.get("selectById"))) {
             prp.setInt(1, id);
             ResultSet rs = prp.executeQuery();
             rs.next();
@@ -135,7 +135,7 @@ public class Tracker implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        try (Tracker tracker = new Tracker(new Conf("postgres.properties"))) {
+        try (Tracker tracker = new Tracker(new Conf("/postgres.properties"))) {
             List<Item> list = new ArrayList<>();
             list.add(new Item("Alex"));
             list.add(new Item("Ivan"));

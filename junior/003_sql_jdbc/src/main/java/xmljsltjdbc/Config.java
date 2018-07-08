@@ -21,7 +21,7 @@ public class Config {
     Properties property = new Properties();
 
     public Config(String file) {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(file)) {
+        try (InputStream inputStream = getClass().getResourceAsStream(file)) {
             property.load(inputStream);
             drivername = property.getProperty("drivername");
             connectionString = property.getProperty("connectionstring");
