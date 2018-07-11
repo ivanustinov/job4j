@@ -13,8 +13,6 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -53,22 +51,16 @@ public class SQLRUParser {
         try (Connection connection = DriverManager.getConnection(this.url, user, password);
              Statement stm = connection.createStatement();
              PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers (url, vocancy)"
-                     + "VALUES (?, ?)");
-             PreparedStatement select = connection.prepareStatement("SELECT url, vocancy FROM javadevelopers")) {
+                     + "VALUES (?, ?)")) {
             Document doc = Jsoup.connect(url).get();
             Elements eelements = doc.getElementsByAttributeValue("class", "postslisttopic");
             stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers(id SERIAL, url text primary key, vocancy text)");
-            List<String> urls = new ArrayList<>();
-            ResultSet rs = select.executeQuery();
-            while (rs.next()) {
-                urls.add(rs.getString("url"));
-                LOGGER.info(rs.getString("vocancy"));
-            }
+            stm.execute("DELETE FROM javadevelopers");
             for (Element eelement : eelements) {
                 Element element = eelement.child(0);
                 String ur_l = element.attr("href");
                 String job = element.text();
-                if ((job.contains("Java") || job.contains("java")) && !urls.contains(ur_l)) {
+                if ((job.contains("Java") || job.contains("java"))) {
                     LOGGER.info(job);
                     insert.setString(1, ur_l);
                     insert.setString(2, job);
