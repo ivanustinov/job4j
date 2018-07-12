@@ -13,7 +13,11 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.Properties;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -29,6 +33,7 @@ public class SQLRUParser {
     private String user;
     private String password;
     private String cronExpression;
+    private ArrayList<String> vocancies;
     private static final Logger LOGGER = LogManager.getLogger(SQLRUParser.class.getName());
 
     public SQLRUParser(String fileProperties) {
@@ -43,33 +48,65 @@ public class SQLRUParser {
         }
     }
 
-    public String getCronExpression() {
-        return cronExpression;
+
+    public void parse() {
+        vocancies = new ArrayList<>();
+        java.util.Calendar c = new GregorianCalendar();
+        c.setTime(new Date());
+        c.add(Calendar.YEAR, -1);
+        Date date = c.getTime();
+        Date last = new Date();
+        int i = 0;
+        do {
+            try {
+                Document doci = Jsoup.connect(String.format("http://www.sql.ru/forum/job-offers/%s", ++i)).get();
+                Elements eelements = doci.getElementsByTag("tr");
+                Elements el = new Elements(eelements.subList(7, eelements.size() - 3));
+                SimpleDateFormat formatForDate = new SimpleDateFormat("d MMM yy");
+                for (Element element : el) {
+                    try {
+                        String ddata = element.children().get(5).text();
+                        if (ddata.contains("сегодня") || ddata.contains("вчера")) {
+                            vocancies.add(element.child(1).child(0).text());
+                            continue;
+                        }
+                        last = formatForDate.parse(ddata);
+                        if (date.before(last)) {
+                            vocancies.add(element.child(1).child(0).text());
+                        } else {
+                            break;
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        while (date.before(last));
+        insert(vocancies);
     }
 
-    public void parse(String url) {
+    public void insert(List<String> list) {
         try (Connection connection = DriverManager.getConnection(this.url, user, password);
              Statement stm = connection.createStatement();
-             PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers (url, vocancy)"
+             PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
                      + "VALUES (?, ?)")) {
-            Document doc = Jsoup.connect(url).get();
-            Elements eelements = doc.getElementsByAttributeValue("class", "postslisttopic");
-            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers(id SERIAL, url text primary key, vocancy text)");
-            stm.execute("DELETE FROM javadevelopers");
-            for (Element eelement : eelements) {
-                Element element = eelement.child(0);
-                String ur_l = element.attr("href");
-                String job = element.text();
+            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text)");
+            stm.execute("DELETE FROM javadevelopers2");
+            int i = 1;
+            for (String job : list) {
                 if ((job.contains("Java") || job.contains("java"))) {
                     LOGGER.info(job);
-                    insert.setString(1, ur_l);
+                    insert.setInt(1, i++);
                     insert.setString(2, job);
                     insert.executeUpdate();
                 } else {
                     continue;
                 }
             }
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -79,9 +116,9 @@ public class SQLRUParser {
         BasicConfigurator.configure();
         SchedulerFactory factory = new StdSchedulerFactory();
         Scheduler scheduler = factory.getScheduler();
-        JobDetail job = JobBuilder.newJob(Job.class).build();
+        JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0 0 12 * * ?"))
+                .withSchedule(cronSchedule("0/5 * * * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);

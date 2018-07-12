@@ -1,5 +1,6 @@
 package vocancyparcer;
 
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -10,10 +11,10 @@ import org.quartz.JobExecutionException;
  * @version 1.0
  * @since 10.07.2018
  */
-public class Job implements org.quartz.Job {
+public class ParsingRepeat implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         SQLRUParser parser = new SQLRUParser("/vocansyparser.properties");
-        parser.parse("http://www.sql.ru/forum/job-offers");
+        parser.parse();
     }
 }
