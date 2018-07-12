@@ -59,28 +59,24 @@ public class SQLRUParser {
         int i = 0;
         do {
             try {
-                Document doci = Jsoup.connect(String.format("http://www.sql.ru/forum/job-offers/%s", ++i)).get();
-                Elements eelements = doci.getElementsByTag("tr");
+                Document doc = Jsoup.connect(String.format("http://www.sql.ru/forum/job-offers/%s", ++i)).get();
+                Elements eelements = doc.getElementsByTag("tr");
                 Elements el = new Elements(eelements.subList(7, eelements.size() - 3));
                 SimpleDateFormat formatForDate = new SimpleDateFormat("d MMM yy");
                 for (Element element : el) {
-                    try {
-                        String ddata = element.children().get(5).text();
-                        if (ddata.contains("сегодня") || ddata.contains("вчера")) {
-                            vocancies.add(element.child(1).child(0).text());
-                            continue;
-                        }
-                        last = formatForDate.parse(ddata);
-                        if (date.before(last)) {
-                            vocancies.add(element.child(1).child(0).text());
-                        } else {
-                            break;
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    String ddata = element.children().get(5).text();
+                    if (ddata.contains("сегодня") || ddata.contains("вчера")) {
+                        vocancies.add(element.child(1).child(0).text());
+                        continue;
+                    }
+                    last = formatForDate.parse(ddata);
+                    if (date.before(last)) {
+                        vocancies.add(element.child(1).child(0).text());
+                    } else {
+                        break;
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         }
@@ -118,7 +114,7 @@ public class SQLRUParser {
         Scheduler scheduler = factory.getScheduler();
         JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0/5 * * * * ?"))
+                .withSchedule(cronSchedule("0 0 12 * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);
