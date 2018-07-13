@@ -67,11 +67,10 @@ public class SQLRUParser {
                     String ddata = element.children().get(5).text().split(",")[0];
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy");
                     date = checkDate(ddata, formatter);
-                    if (this.i != 1) {
-                        if (lastDayParsing.isBefore(date)) {
-                            vocancies.add(vocancy);
-                            continue;
-                        }
+                    if (this.i != 1 && lastDayParsing.isBefore(date)) {
+                        firstDay = lastDayParsing;
+                        vocancies.add(vocancy);
+                        continue;
                     } else {
                         if (firstDay.isBefore(date)) {
                             vocancies.add(vocancy);
