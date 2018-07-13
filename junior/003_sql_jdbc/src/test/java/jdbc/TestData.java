@@ -21,7 +21,9 @@ public class TestData {
     @Test
     public void createLocalData() {
         String date = "13 июн 18";
+        String may = "13 май 18";
         System.out.println(LocalDate.parse(date, formatter));
         assertThat(date, is(LocalDate.parse(date, formatter).toString()));
+        assertThat(date, is(LocalDate.parse(may, formatter).toString()));
     }
 }
