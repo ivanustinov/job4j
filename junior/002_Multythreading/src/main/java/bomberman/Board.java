@@ -53,8 +53,7 @@ public class Board implements Runnable {
         for (int i = 0; i < monsterNumber; i++) {
             monsters.execute(this);
         }
-        Thread bomberman = new Thread(this);
-        bomberman.setName("BomberMan");
+        Thread bomberman = new Thread(this, "BomberName");
         monsters.execute(bomberman);
     }
 

@@ -13,12 +13,13 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -33,8 +34,9 @@ public class SQLRUParser {
     private String user;
     private String password;
     private String cronExpression;
-    private ArrayList<String> vocancies;
     private static final Logger LOGGER = LogManager.getLogger(SQLRUParser.class.getName());
+    private static LocalDate lastDayParsing = LocalDate.now();
+    private static int i = 1;
 
     public SQLRUParser(String fileProperties) {
         try (InputStream inputStream = getClass().getResourceAsStream(fileProperties)) {
@@ -50,39 +52,54 @@ public class SQLRUParser {
 
 
     public void parse() {
-        vocancies = new ArrayList<>();
-        java.util.Calendar c = new GregorianCalendar();
-        c.setTime(new Date());
-        c.add(Calendar.YEAR, -1);
-        Date date = c.getTime();
-        Date last = new Date();
+        System.out.println(lastDayParsing);
+        ArrayList<String> vocancies = new ArrayList<>();
+        LocalDate firstDay = LocalDate.now().with(firstDayOfYear());
+        LocalDate date = LocalDate.now();
         int i = 0;
-        do {
+        while (firstDay.isBefore(date)) {
             try {
                 Document doc = Jsoup.connect(String.format("http://www.sql.ru/forum/job-offers/%s", ++i)).get();
                 Elements eelements = doc.getElementsByTag("tr");
                 Elements el = new Elements(eelements.subList(7, eelements.size() - 3));
-                SimpleDateFormat formatForDate = new SimpleDateFormat("d MMM yy");
                 for (Element element : el) {
-                    String ddata = element.children().get(5).text();
-                    if (ddata.contains("сегодня") || ddata.contains("вчера")) {
-                        vocancies.add(element.child(1).child(0).text());
-                        continue;
-                    }
-                    last = formatForDate.parse(ddata);
-                    if (date.before(last)) {
-                        vocancies.add(element.child(1).child(0).text());
+                    String vocancy = element.child(1).child(0).text();
+                    String ddata = element.children().get(5).text().split(",")[0];
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy");
+                    date = checkDate(ddata, formatter);
+                    if (this.i != 1) {
+                        if (lastDayParsing.isBefore(date)) {
+                            vocancies.add(vocancy);
+                            continue;
+                        }
                     } else {
-                        break;
+                        if (firstDay.isBefore(date)) {
+                            vocancies.add(vocancy);
+                        } else {
+                            break;
+                        }
                     }
                 }
-            } catch (IOException | ParseException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        while (date.before(last));
+        lastDayParsing = LocalDate.now();
         insert(vocancies);
     }
+
+    public LocalDate checkDate(String date, DateTimeFormatter formatter) {
+        if (date.contains("сегодня")) {
+            return LocalDate.now();
+        }
+        if (date.contains("вчера")) {
+            return LocalDate.now().minusDays(1);
+        }
+        if (date.contains("май")) {
+            return LocalDate.now().minusDays(60);
+        } else return LocalDate.parse(date, formatter);
+    }
+
 
     public void insert(List<String> list) {
         try (Connection connection = DriverManager.getConnection(this.url, user, password);
@@ -90,8 +107,7 @@ public class SQLRUParser {
              PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
                      + "VALUES (?, ?)")) {
             stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text)");
-            stm.execute("DELETE FROM javadevelopers2");
-            int i = 1;
+//            stm.execute("DELETE FROM javadevelopers2");
             for (String job : list) {
                 if ((job.contains("Java") || job.contains("java"))) {
                     LOGGER.info(job);
@@ -107,14 +123,13 @@ public class SQLRUParser {
         }
     }
 
-
     public static void main(String[] args) throws SchedulerException {
         BasicConfigurator.configure();
         SchedulerFactory factory = new StdSchedulerFactory();
         Scheduler scheduler = factory.getScheduler();
         JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0 0 12 * * ?"))
+                .withSchedule(cronSchedule("0/7 * * * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);
