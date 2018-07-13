@@ -91,13 +91,13 @@ public class SQLRUParser {
     public LocalDate checkDate(String date, DateTimeFormatter formatter) {
         if (date.contains("сегодня")) {
             return LocalDate.now();
-        }
-        if (date.contains("вчера")) {
+        } else if (date.contains("вчера")) {
             return LocalDate.now().minusDays(1);
-        }
-        if (date.contains("май")) {
+        } else if (date.contains("май")) {
             return LocalDate.now().minusDays(60);
-        } else return LocalDate.parse(date, formatter);
+        } else {
+            return LocalDate.parse(date, formatter);
+        }
     }
 
 
@@ -106,7 +106,7 @@ public class SQLRUParser {
              Statement stm = connection.createStatement();
              PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
                      + "VALUES (?, ?)")) {
-            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer, vocancy text PRIMARY KEY)");
+            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text )");
 //            stm.execute("DELETE FROM javadevelopers2");
             for (String job : list) {
                 if ((job.contains("Java") || job.contains("java"))) {
@@ -129,7 +129,7 @@ public class SQLRUParser {
         Scheduler scheduler = factory.getScheduler();
         JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0/7 * * * * ?"))
+                .withSchedule(cronSchedule("0 0 12 * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);
