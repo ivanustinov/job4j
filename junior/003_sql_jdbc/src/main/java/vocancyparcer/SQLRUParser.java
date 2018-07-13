@@ -67,10 +67,11 @@ public class SQLRUParser {
                     String ddata = element.children().get(5).text().split(",")[0];
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy");
                     date = checkDate(ddata, formatter);
-                    if (this.i != 1 && lastDayParsing.isBefore(date)) {
+                    if (this.i != 1) {
                         firstDay = lastDayParsing;
-                        vocancies.add(vocancy);
-                        continue;
+                        if (lastDayParsing.isBefore(date)) {
+                            vocancies.add(vocancy);
+                        } else break;
                     } else {
                         if (firstDay.isBefore(date)) {
                             vocancies.add(vocancy);
@@ -105,7 +106,7 @@ public class SQLRUParser {
              Statement stm = connection.createStatement();
              PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
                      + "VALUES (?, ?)")) {
-            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text)");
+            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer, vocancy text PRIMARY KEY)");
 //            stm.execute("DELETE FROM javadevelopers2");
             for (String job : list) {
                 if ((job.contains("Java") || job.contains("java"))) {
