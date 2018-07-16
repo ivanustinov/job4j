@@ -1,8 +1,6 @@
 package vocancyparcer;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,13 +9,10 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.*;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -29,26 +24,11 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * @since 09.07.2018
  */
 public class SQLRUParser {
-    private final Properties property = new Properties();
-    private String url;
-    private String user;
-    private String password;
-    private String cronExpression;
-    private static final Logger LOGGER = LogManager.getLogger(SQLRUParser.class.getName());
-    private static LocalDate lastDayParsing = LocalDate.now();
-    private static int i = 1;
 
-    public SQLRUParser(String fileProperties) {
-        try (InputStream inputStream = getClass().getResourceAsStream(fileProperties)) {
-            property.load(inputStream);
-            url = property.getProperty("jdbc.url");
-            user = property.getProperty("jdbc.user");
-            password = property.getProperty("jdbc.password");
-            cronExpression = property.getProperty("cron.time");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static LocalDate lastDayParsing = LocalDate.now();
+    private static boolean isFirstParsing = true;
+    private static DataBase base = new DataBase("/vocansyparser.properties");
+
 
 
     public void parse() {
@@ -67,7 +47,7 @@ public class SQLRUParser {
                     String ddata = element.children().get(5).text().split(",")[0];
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy");
                     date = checkDate(ddata, formatter);
-                    if (this.i != 1) {
+                    if (!isFirstParsing) {
                         firstDay = lastDayParsing;
                         if (lastDayParsing.isBefore(date)) {
                             vocancies.add(vocancy);
@@ -85,43 +65,25 @@ public class SQLRUParser {
             }
         }
         lastDayParsing = LocalDate.now();
-        insert(vocancies);
+        isFirstParsing = false;
+        base.insert(vocancies);
     }
 
     public LocalDate checkDate(String date, DateTimeFormatter formatter) {
+        LocalDate localDate;
         if (date.contains("сегодня")) {
-            return LocalDate.now();
+            localDate = LocalDate.now();
         } else if (date.contains("вчера")) {
-            return LocalDate.now().minusDays(1);
+            localDate = LocalDate.now().minusDays(1);
         } else if (date.contains("май")) {
-            return LocalDate.now().minusDays(60);
+            String[] d = date.split(" ");
+            localDate = LocalDate.of(Integer.parseInt(d[2]) + 2000, Month.MAY, Integer.parseInt(d[0]));
         } else {
-            return LocalDate.parse(date, formatter);
+            localDate = LocalDate.parse(date, formatter);
         }
+        return localDate;
     }
 
-
-    public void insert(List<String> list) {
-        try (Connection connection = DriverManager.getConnection(this.url, user, password);
-             Statement stm = connection.createStatement();
-             PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
-                     + "VALUES (?, ?)")) {
-            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text )");
-//            stm.execute("DELETE FROM javadevelopers2");
-            for (String job : list) {
-                if ((job.contains("Java") || job.contains("java"))) {
-                    LOGGER.info(job);
-                    insert.setInt(1, i++);
-                    insert.setString(2, job);
-                    insert.executeUpdate();
-                } else {
-                    continue;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String[] args) throws SchedulerException {
         BasicConfigurator.configure();
@@ -129,7 +91,7 @@ public class SQLRUParser {
         Scheduler scheduler = factory.getScheduler();
         JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0 0 12 * * ?"))
+                .withSchedule(cronSchedule("0/7 * * * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);

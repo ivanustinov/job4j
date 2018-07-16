@@ -12,7 +12,7 @@ import org.quartz.JobExecutionException;
  * @since 10.07.2018
  */
 public class ParsingRepeat implements Job {
-    SQLRUParser parser = new SQLRUParser("/vocansyparser.properties");
+    SQLRUParser parser = new SQLRUParser();
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
