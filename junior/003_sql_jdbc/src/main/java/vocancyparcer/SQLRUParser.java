@@ -10,6 +10,8 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
  */
 public class SQLRUParser {
 
-    private static LocalDate lastDayParsing = LocalDate.now();
+    private static LocalDateTime lastDayParsing = LocalDateTime.now();
     private static boolean isFirstParsing = true;
     private static DataBase base = new DataBase("/vocansyparser.properties");
 
@@ -34,8 +36,8 @@ public class SQLRUParser {
     public void parse() {
         System.out.println(lastDayParsing);
         ArrayList<String> vocancies = new ArrayList<>();
-        LocalDate firstDay = LocalDate.now().with(firstDayOfYear());
-        LocalDate date = LocalDate.now();
+        LocalDateTime firstDay = LocalDateTime.now().with(firstDayOfYear());
+        LocalDateTime date = LocalDateTime.now();
         int i = 0;
         while (firstDay.isBefore(date)) {
             try {
@@ -45,8 +47,9 @@ public class SQLRUParser {
                 for (Element element : el) {
                     String vocancy = element.child(1).child(0).text();
                     String ddata = element.children().get(5).text().split(",")[0];
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy");
-                    date = checkDate(ddata, formatter);
+                    String time = element.children().get(5).text().split(",")[1];
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy k:mm");
+                    date = checkDate(ddata, time, formatter);
                     if (!isFirstParsing) {
                         firstDay = lastDayParsing;
                         if (lastDayParsing.isBefore(date)) {
@@ -64,22 +67,29 @@ public class SQLRUParser {
                 e.printStackTrace();
             }
         }
-        lastDayParsing = LocalDate.now();
+        lastDayParsing = LocalDateTime.now();
         isFirstParsing = false;
         base.insert(vocancies);
     }
 
-    public LocalDate checkDate(String date, DateTimeFormatter formatter) {
-        LocalDate localDate;
+    public LocalDateTime checkDate(String date, String time, DateTimeFormatter formatter) {
+        LocalDateTime localDate;
         if (date.contains("сегодня")) {
-            localDate = LocalDate.now();
+            localDate = LocalDateTime.now();
         } else if (date.contains("вчера")) {
-            localDate = LocalDate.now().minusDays(1);
+            String[] t = time.split(":");
+            t[0] = t[0].trim();
+            LocalDate da = LocalDate.now().minusDays(1);
+            LocalTime ta = LocalTime.of(Integer.parseInt(t[0]), Integer.parseInt(t[1]));
+            localDate = LocalDateTime.of(da, ta);
         } else if (date.contains("май")) {
             String[] d = date.split(" ");
-            localDate = LocalDate.of(Integer.parseInt(d[2]) + 2000, Month.MAY, Integer.parseInt(d[0]));
+            String[] t = time.split(":");
+            t[0] = t[0].trim();
+            localDate = LocalDateTime.of(Integer.parseInt(d[2]) + 2000, Month.MAY, Integer.parseInt(d[0]),
+                    Integer.parseInt(t[0]), Integer.parseInt(t[1]));
         } else {
-            localDate = LocalDate.parse(date, formatter);
+            localDate = LocalDateTime.parse(String.format("%s%s", date, time), formatter);
         }
         return localDate;
     }
@@ -91,7 +101,7 @@ public class SQLRUParser {
         Scheduler scheduler = factory.getScheduler();
         JobDetail job = JobBuilder.newJob(ParsingRepeat.class).build();
         Trigger trigger = newTrigger()
-                .withSchedule(cronSchedule("0/7 * * * * ?"))
+                .withSchedule(cronSchedule("0 0 12 * * ?"))
                 .build();
         scheduler.start();
         scheduler.scheduleJob(job, trigger);

@@ -44,7 +44,7 @@ public class DataBase {
             stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text )");
 //            stm.execute("DELETE FROM javadevelopers2");
             for (String job : list) {
-                if ((job.contains("Java") || job.contains("java"))) {
+                if ((job.contains("Java") || job.contains("java") || job.contains("JAVA"))) {
                     LOGGER.info(job);
                     insert.setInt(1, i++);
                     insert.setString(2, job);
