@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -34,8 +35,7 @@ public class SQLRUParser {
 
 
     public void parse() {
-        System.out.println(lastDayParsing);
-        ArrayList<String> vocancies = new ArrayList<>();
+        Map<String, String> vocancies = new HashMap<>();
         LocalDateTime firstDay = LocalDateTime.now().with(firstDayOfYear());
         LocalDateTime date = LocalDateTime.now();
         int i = 0;
@@ -46,6 +46,7 @@ public class SQLRUParser {
                 Elements el = new Elements(eelements.subList(7, eelements.size() - 3));
                 for (Element element : el) {
                     String vocancy = element.child(1).child(0).text();
+                    String url = element.child(1).child(0).attr("href");
                     String ddata = element.children().get(5).text().split(",")[0];
                     String time = element.children().get(5).text().split(",")[1];
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yy k:mm");
@@ -53,11 +54,11 @@ public class SQLRUParser {
                     if (!isFirstParsing) {
                         firstDay = lastDayParsing;
                         if (lastDayParsing.isBefore(date)) {
-                            vocancies.add(vocancy);
+                            vocancies.put(url, vocancy);
                         } else break;
                     } else {
                         if (firstDay.isBefore(date)) {
-                            vocancies.add(vocancy);
+                            vocancies.put(url, vocancy);
                         } else {
                             break;
                         }
@@ -68,6 +69,7 @@ public class SQLRUParser {
             }
         }
         lastDayParsing = LocalDateTime.now();
+        System.out.println(lastDayParsing);
         isFirstParsing = false;
         base.insert(vocancies);
     }

@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -18,11 +18,11 @@ import java.util.Properties;
  */
 public class DataBase {
     private static final Logger LOGGER = LogManager.getLogger(SQLRUParser.class.getName());
-    private static int i = 1;
     private final Properties property = new Properties();
     private String url;
     private String user;
     private String password;
+    private PrefixJava prefixJava = new PrefixJava();
 
 
     public DataBase(String fileProperties) {
@@ -36,17 +36,18 @@ public class DataBase {
         }
     }
 
-    public void insert(List<String> list) {
+    public void insert(Map<String, String> list) {
         try (Connection connection = DriverManager.getConnection(this.url, user, password);
              Statement stm = connection.createStatement();
-             PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2 (id, vocancy)"
+             PreparedStatement insert = connection.prepareStatement("INSERT INTO javadevelopers2(url, vocancy)"
                      + "VALUES (?, ?)")) {
-            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(id integer PRIMARY KEY, vocancy text )");
+            stm.execute("CREATE TABLE IF NOT EXISTS javadevelopers2(url text PRIMARY KEY, vocancy text )");
 //            stm.execute("DELETE FROM javadevelopers2");
-            for (String job : list) {
-                if ((job.contains("Java") || job.contains("java") || job.contains("JAVA"))) {
+            for (String url : list.keySet()) {
+                String job = list.get(url);
+                if (prefixJava.put(job)) {
                     LOGGER.info(job);
-                    insert.setInt(1, i++);
+                    insert.setString(1, url);
                     insert.setString(2, job);
                     insert.executeUpdate();
                 } else {
