@@ -3,20 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <artifactId>junior</artifactId>
         <groupId>ru.job4j</groupId>
-        <artifactId>job4j</artifactId>
         <version>2.0</version>
     </parent>
-
-    <artifactId>junior</artifactId>
-    <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
 
-    <modules>
-        <module>001_Collections_Pro</module>
-        <module>002_Multythreading</module>
-        <module>003_sql_jdbc</module>
-        <module>004_Servlet_JSP</module>
-    </modules>
+    <artifactId>004_Servlet_JSP</artifactId>
+    <dependencies>
+
+    </dependencies>
+
 
 </project>
