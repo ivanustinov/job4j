@@ -22,17 +22,23 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
-        String str = logic.doAction(par.get("action")[0], par);
         Writer writer = response.getWriter();
-        writer.write(str);
+        if (par.size() == 0) {
+            writer.write("Insert some parameters");
+        } else {
+            String str = logic.doPostAction(par.get("action")[0], par);
+            writer.write(str);
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
-        if (par.size() != 0) {
-            String str = logic.doAction(par.get("action")[0], par);
-            Writer writer = response.getWriter();
+        Writer writer = response.getWriter();
+        if (par.size() == 0) {
+            writer.write("Insert some parameters");
+        } else {
+            String str = logic.doGetAction(par.get("action")[0], par);
             writer.write(str);
         }
     }

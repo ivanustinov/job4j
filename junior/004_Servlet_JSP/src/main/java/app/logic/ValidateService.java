@@ -1,6 +1,5 @@
 package app.logic;
 
-import app.entities.User;
 import app.persistent.MemoryStore;
 
 import java.util.HashMap;
@@ -18,32 +17,31 @@ public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final MemoryStore store = MemoryStore.getInstance();
     private final Map<String, Function<Map, String>> dispatch = new HashMap<>();
+    private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
 
 
     public static ValidateService getInstance() {
         return INSTANCE;
     }
 
-    public String doAction(String action, Map map) {
-        return dispatch.get(action).apply(map);
+    public String doPostAction(String action, Map map) {
+        Function<Map, String> ans = dispatch.get(action);
+        return ans == null ? "There is no such action for the POST request" : ans.apply(map);
+    }
+
+    public String doGetAction(String action, Map map) {
+        Function<Map, String> ans = getDispatch.get(action);
+        return ans == null ? "There is no such action for the GET request" : ans.apply(map);
     }
 
 
     private ValidateService() {
-        init();
+        initPost();
+        initGet();
     }
 
 
-    public Function<Map, String> findById() {
-        return new Function<Map, String>() {
-            @Override
-            public String apply(Map map) {
-                int[] id = (int[]) map.get("id");
-                User user = store.findById(id[0]);
-                return user == null ? "there is no user with such id in the store" : user.toString();
-            }
-        };
-    }
+
 
     public Function<Map, String> findAll() {
         return new Function<Map, String>() {
@@ -66,14 +64,31 @@ public class ValidateService {
         };
     }
 
+    public Function<Map, String> findById() {
+        return new Function<Map, String>() {
+            @Override
+            public String apply(Map map) {
+                String[] id = (String[]) map.get("id");
+                if (id != null && id.length != 0) {
+                    int i = Integer.parseInt(id[0]);
+                    return store.findById(i);
+                }
+                return "Insert id parameter";
+            }
+        };
+    }
+
     public Function<Map, String> update() {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
                 String[] newName = (String[]) map.get("name");
                 String[] id = (String[]) map.get("id");
-                return newName != null ? (id != null ? store.update(Integer.parseInt(id[0]), newName[0]) :
-                        "insert id parameter") : "insert name parameter";
+                if (id != null && id.length != 0 && newName != null && newName.length != 0) {
+                    int i = Integer.parseInt(id[0]);
+                    return store.update(i, newName[0]);
+                }
+                return "insert id or/and name parameter";
             }
         };
     }
@@ -94,12 +109,15 @@ public class ValidateService {
      *
      * @return current object.
      */
-    public void init() {
+    public void initPost() {
         dispatch.put("add", add());
         dispatch.put("update", update());
         dispatch.put("delete", delete());
-        dispatch.put("findByID", findById());
-        dispatch.put("findAll", findAll());
+    }
+
+    public void initGet() {
+        getDispatch.put("findById", findById());
+        getDispatch.put("findAll", findAll());
     }
 
 }

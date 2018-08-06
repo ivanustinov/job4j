@@ -51,7 +51,8 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public User findById(int id) {
-        return map.get(id);
+    public String findById(int id) {
+        User user = map.get(id);
+        return user != null ? user.toString() : "no user in the store with such id";
     }
 }

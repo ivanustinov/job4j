@@ -1,7 +1,5 @@
 package app.persistent;
 
-import app.entities.User;
-
 /**
  * //TODO add comments.
  *
@@ -18,5 +16,5 @@ public interface Store {
 
     String findAll();
 
-    User findById(int id);
+    String findById(int id);
 }
