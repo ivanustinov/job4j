@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final MemoryStore store = MemoryStore.getInstance();
-    private final Map<String, Function<Map, String>> dispatch = new HashMap<>();
+    private final Map<String, Function<Map, String>> postDispatch = new HashMap<>();
     private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
 
 
@@ -24,23 +24,20 @@ public class ValidateService {
         return INSTANCE;
     }
 
-    public String doPostAction(String action, Map map) {
-        Function<Map, String> ans = dispatch.get(action);
-        return ans == null ? "There is no such action for the POST request" : ans.apply(map);
+    public String doAction(String method, String action, Map map) {
+        Function<Map, String> ans = null;
+        if (method.equals("POST")) {
+            ans = postDispatch.get(action);
+        } else {
+            ans = getDispatch.get(action);
+        }
+        return ans == null ? "There is no such action for the " + method + " request" : ans.apply(map);
     }
-
-    public String doGetAction(String action, Map map) {
-        Function<Map, String> ans = getDispatch.get(action);
-        return ans == null ? "There is no such action for the GET request" : ans.apply(map);
-    }
-
 
     private ValidateService() {
         initPost();
         initGet();
     }
-
-
 
 
     public Function<Map, String> findAll() {
@@ -105,14 +102,14 @@ public class ValidateService {
 
 
     /**
-     * Init's dispatch.
+     * Init's postDispatch.
      *
      * @return current object.
      */
     public void initPost() {
-        dispatch.put("add", add());
-        dispatch.put("update", update());
-        dispatch.put("delete", delete());
+        postDispatch.put("add", add());
+        postDispatch.put("update", update());
+        postDispatch.put("delete", delete());
     }
 
     public void initGet() {

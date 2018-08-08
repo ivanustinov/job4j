@@ -23,11 +23,14 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
         Writer writer = response.getWriter();
-        if (par.size() == 0) {
-            writer.write("Insert some parameters");
-        } else {
-            String str = logic.doPostAction(par.get("action")[0], par);
+        String[] action = null;
+        if (!par.isEmpty() && (action = par.get("action")) != null && action.length != 0) {
+            String actonValue = action[0];
+            String method = request.getMethod();
+            String str = logic.doAction(method, actonValue, par);
             writer.write(str);
+        } else {
+            writer.write("Insert some parameters or correct parameter's names");
         }
     }
 
@@ -35,11 +38,14 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
         Writer writer = response.getWriter();
-        if (par.size() == 0) {
-            writer.write("Insert some parameters");
-        } else {
-            String str = logic.doGetAction(par.get("action")[0], par);
+        String[] action = null;
+        if (!par.isEmpty() && (action = par.get("action")) != null && action.length != 0) {
+            String actonValue = action[0];
+            String method = request.getMethod();
+            String str = logic.doAction(method, actonValue, par);
             writer.write(str);
+        } else {
+            writer.write("Insert some parameters or correct parameter's names");
         }
     }
 }
