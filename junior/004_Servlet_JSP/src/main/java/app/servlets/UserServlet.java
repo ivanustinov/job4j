@@ -18,34 +18,31 @@ import java.util.Map;
 public class UserServlet extends HttpServlet {
     private final ValidateService logic = ValidateService.getInstance();
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
+        String action = request.getParameter("action");
         Writer writer = response.getWriter();
-        String[] action = null;
-        if (!par.isEmpty() && (action = par.get("action")) != null && action.length != 0) {
-            String actonValue = action[0];
-            String method = request.getMethod();
-            String str = logic.doAction(method, actonValue, par);
+        String method = request.getMethod();
+        if (!par.isEmpty()) {
+            String str = logic.doAction(method, action, par);
             writer.write(str);
         } else {
-            writer.write("Insert some parameters or correct parameter's names");
+            writer.write("Insert some parameters");
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
+        String action = request.getParameter("action");
         Writer writer = response.getWriter();
-        String[] action = null;
-        if (!par.isEmpty() && (action = par.get("action")) != null && action.length != 0) {
-            String actonValue = action[0];
-            String method = request.getMethod();
-            String str = logic.doAction(method, actonValue, par);
+        String method = request.getMethod();
+        if (!par.isEmpty()) {
+            String str = logic.doAction(method, action, par);
             writer.write(str);
         } else {
-            writer.write("Insert some parameters or correct parameter's names");
+            writer.write("Insert some parameters");
         }
     }
 }

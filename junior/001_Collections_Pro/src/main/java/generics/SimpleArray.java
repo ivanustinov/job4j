@@ -31,7 +31,7 @@ public class SimpleArray<T> implements Iterable {
     }
 
     /**
-     * Assign a reference value model to an array cell with a number position.
+     * Assign a reference value logic to an array cell with a number position.
      *
      * @param position int.
      * @param model    T.
