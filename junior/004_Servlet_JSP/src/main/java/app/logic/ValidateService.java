@@ -1,7 +1,9 @@
 package app.logic;
 
+import app.entities.User;
 import app.persistent.MemoryStore;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -44,10 +46,36 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String list = store.findAll();
-                return list == null ? "there ara no users in the store" : list;
+                Collection<User> users = store.findAll();
+                return users == null ? "<p align = 'center'> there are no users in the store</p>" : createUsersTable(users);
             }
         };
+    }
+
+    public String createUsersTable(Collection<User> users) {
+        StringBuffer buffer = new StringBuffer("<table align='center' border='2' cellspacing='0' cellpadding='2'>" +
+                "<caption>users in the store</caption>" +
+                "<tr><th>ID</th><th>NAME</th><th colspan='2'>ACTIONS</th></tr>");
+        for (User user : users) {
+            String name = user.getName();
+            String login = user.getLogin();
+            int id = user.getId();
+            buffer.append("<tr><td>" + id + "</td><td>" + name + "</td><td>" +
+                    "<form action='/edit' method='post'>" +
+                    "<input type='hidden' name='login' value ='" + login + "'>" +
+                    "<input type='hidden' name='name' value = '" + name + "'>" +
+                    "<input type='hidden' name='id' value = '" + id + "'>" +
+                    "<button type='submit'>UPDATE</button></td><td>" +
+                    "</form>" +
+                    "<form method='post'>" +
+                    "<input type='hidden' name='action' value = 'delete'>" +
+                    "<input type='hidden' name='id' value = '" + id + "'>" +
+                    "<button type='submit'>DELETE</button>" +
+                    "</form>" +
+                    "</td></tr>");
+        }
+        buffer.append("</table>");
+        return buffer.toString();
     }
 
 
@@ -55,8 +83,9 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String[] name = (String[]) map.get("name");
-                return name != null ? store.add((name[0])) : "insert name parameter";
+                String[] names = (String[]) map.get("name");
+                String[] logins = (String[]) map.get("login");
+                return store.add(names[0], logins[0]);
             }
         };
     }
@@ -80,12 +109,13 @@ public class ValidateService {
             @Override
             public String apply(Map map) {
                 String[] newName = (String[]) map.get("name");
+                String[] newLogin = (String[]) map.get("login");
                 String[] id = (String[]) map.get("id");
-                if (id != null && id.length != 0 && newName != null && newName.length != 0) {
+                if (!newName[0].equals("") && !newLogin[0].equals("")) {
                     int i = Integer.parseInt(id[0]);
-                    return store.update(i, newName[0]);
+                    return store.update(i, newName[0], newLogin[0]);
                 }
-                return "insert id or/and name parameter";
+                return "<p align='center'>insert name or/and login parameter</p>";
             }
         };
     }
@@ -95,7 +125,7 @@ public class ValidateService {
             @Override
             public String apply(Map map) {
                 String[] id = (String[]) map.get("id");
-                return id != null ? store.delete(Integer.parseInt(id[0])) : "insert id parameter";
+                return !id[0].equals("") ? store.delete(Integer.parseInt(id[0])) : "insert id parameter";
             }
         };
     }

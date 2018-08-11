@@ -1,5 +1,9 @@
 package app.persistent;
 
+import app.entities.User;
+
+import java.util.Collection;
+
 /**
  * //TODO add comments.
  *
@@ -8,13 +12,13 @@ package app.persistent;
  * @since 03.08.2018
  */
 public interface Store {
-    String add(String name);
+    String add(String name, String login);
 
     String delete(int id);
 
-    String update(int id, String newName);
+    String update(int id, String newName, String newLogin);
 
-    String findAll();
+    Collection<User> findAll();
 
     String findById(int id);
 }

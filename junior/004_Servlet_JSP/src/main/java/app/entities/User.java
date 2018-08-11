@@ -23,6 +23,12 @@ public class User {
         this.createDate = LocalDateTime.now();
     }
 
+    public User(int id, String name, String login) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.createDate = LocalDateTime.now();
+    }
 
     public String getName() {
         return name;
@@ -54,6 +60,10 @@ public class User {
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

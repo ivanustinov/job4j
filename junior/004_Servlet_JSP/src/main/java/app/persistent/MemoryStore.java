@@ -2,6 +2,7 @@ package app.persistent;
 
 import app.entities.User;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,33 +23,37 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public String add(String name) {
-        int number = id++;
-        User user = new User(number, name);
-        map.put(number, user);
-        return "user with name " + name + " has been add";
+    public String add(String name, String login) {
+        String result = "<p align=center>insert name or/and login field</p>";
+        if (!name.equals("") && !login.equals("")) {
+            int number = id++;
+            User user = new User(number, name, login);
+            map.put(number, user);
+            result = "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
+        }
+        return result;
     }
 
     @Override
     public String delete(int id) {
-        return map.remove(id) == null ? "no user with such id in the store" : "user with id " + id + " has been deleted";
+        return map.remove(id) == null ? "<p align='center'>no user with such id in the store</p>" :
+                "<p align='center'> user with id " + id +
+                        " has been deleted</p>";
     }
 
     @Override
-    public String update(int id, String newName) {
+    public String update(int id, String newName, String newLogin) {
         User user = map.get(id);
-        String answer = "no user in the store with such id";
-        if (user != null) {
-            user.setName(newName);
-            answer = "user with id " + id + " has been updated";
-        }
-        return answer;
+        user.setName(newName);
+        user.setLogin(newLogin);
+        return "<p align='center'> user with id " + id + " has been updated</p>";
     }
 
     @Override
-    public String findAll() {
-        return map.size() == 0 ? null : map.toString();
+    public Collection<User> findAll() {
+        return map.size() == 0 ? null : map.values();
     }
+
 
     @Override
     public String findById(int id) {

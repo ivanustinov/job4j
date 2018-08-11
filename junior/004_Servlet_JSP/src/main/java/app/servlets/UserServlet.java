@@ -25,8 +25,8 @@ public class UserServlet extends HttpServlet {
         Writer writer = response.getWriter();
         String method = request.getMethod();
         if (!par.isEmpty()) {
-            String str = logic.doAction(method, action, par);
-            writer.write(str);
+            logic.doAction(method, action, par);
+            doGet(request, response);
         } else {
             writer.write("Insert some parameters");
         }
@@ -34,15 +34,22 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, String[]> par = request.getParameterMap();
-        String action = request.getParameter("action");
         Writer writer = response.getWriter();
-        String method = request.getMethod();
-        if (!par.isEmpty()) {
-            String str = logic.doAction(method, action, par);
-            writer.write(str);
-        } else {
-            writer.write("Insert some parameters");
-        }
+        Map<String, String[]> par = request.getParameterMap();
+        String list = logic.doAction("GET", "findAll", par);
+        writer.write("<!DOCTYPE html>" +
+                "<html lang='en'>" +
+                "<head>" +
+                "<meta charset='UTF-8'>" +
+                "<title>UserStore</title>" +
+                "</head>" +
+                "<body>" +
+                "<h1 align='center'>UserStore App!</h1>" +
+                list +
+                "<form action='" + request.getContextPath() + "/create' method='get'>" +
+                "<p align='center'><button type='submit'>CREATE USER</button></p>" +
+                "</form>" +
+                "</body>" +
+                "</html>");
     }
 }
