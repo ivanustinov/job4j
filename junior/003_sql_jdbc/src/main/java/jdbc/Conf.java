@@ -2,6 +2,8 @@ package jdbc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -23,6 +25,7 @@ public class Conf {
     private String selectByName;
     private String selectById;
     private String insert;
+    private Map<String, String> data = new HashMap<>();
     Properties property = new Properties();
 
     public Conf(String file) {
@@ -45,43 +48,22 @@ public class Conf {
         }
     }
 
-    public String get(String key) {
-        switch (key) {
-            case "url": {
-                return url;
-            }
-            case "user": {
-                return user;
-            }
-            case "password": {
-                return password;
-            }
-            case "update": {
-                return update;
-            }
-            case "drivername": {
-                return drivername;
-            }
-            case "connectionstring": {
-                return connectionString;
-            }
-            case "createtable": {
-                return createTable;
-            }
-            case "delete": {
-                return delete;
-            }
-            case "selectById": {
-                return selectById;
-            }
-            case "selectByName": {
-                return selectByName;
-            }
-            case "insert": {
-                return insert;
-            }
+    public void init() {
+        data.put("url", url);
+        data.put("user", user);
+        data.put("password", password);
+        data.put("update", update);
+        data.put("drivername", drivername);
+        data.put("connectionstring", connectionString);
+        data.put("createtable", createTable);
+        data.put("delete", delete);
+        data.put("select", select);
+        data.put("selectById", selectById);
+        data.put("selectByName", selectByName);
+        data.put("insert", insert);
+    }
 
-        }
-        return null;
+    public String get(String key) {
+        return data.get(key);
     }
 }
