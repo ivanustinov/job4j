@@ -3,33 +3,60 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-    <display-name>SERVLETS_SRARTS</display-name>
+    <display-name>SERVLETS_STARTS</display-name>
     <description>This is first servlet</description>
+    <!--<servlet>-->
+    <!--<servlet-name>UserServlet</servlet-name>-->
+    <!--<servlet-class>app.servlets.UserServlet</servlet-class>-->
+    <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>UserServlet</servlet-name>-->
+    <!--<url-pattern>/list</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet>-->
+    <!--<servlet-name>UserCreateServlet</servlet-name>-->
+    <!--<servlet-class>app.servlets.UserCreateServlet</servlet-class>-->
+    <!--<load-on-startup>2</load-on-startup>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>UserCreateServlet</servlet-name>-->
+    <!--<url-pattern>/create</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet>-->
+    <!--<servlet-name>UserUpdateServlet</servlet-name>-->
+    <!--<servlet-class>app.servlets.UserUpdateServlet</servlet-class>-->
+    <!--<load-on-startup>3</load-on-startup>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>UserUpdateServlet</servlet-name>-->
+    <!--<url-pattern>/edit</url-pattern>-->
+    <!--</servlet-mapping>-->
     <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>app.servlets.UserServlet</servlet-class>
+        <servlet-name>UserServletJSP</servlet-name>
+        <servlet-class>appjsp.servlets.UserServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
+        <servlet-name>UserServletJSP</servlet-name>
         <url-pattern>/list</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserCreateServlet</servlet-name>
-        <servlet-class>app.servlets.UserCreateServlet</servlet-class>
+        <servlet-name>UserCreateServletJSP</servlet-name>
+        <servlet-class>appjsp.servlets.UserCreateServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserCreateServlet</servlet-name>
+        <servlet-name>UserCreateServletJSP</servlet-name>
         <url-pattern>/create</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>app.servlets.UserUpdateServlet</servlet-class>
+        <servlet-name>UserUpdateServletJSP</servlet-name>
+        <servlet-class>appjsp.servlets.UserUpdateServlet</servlet-class>
         <load-on-startup>3</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserUpdateServlet</servlet-name>
+        <servlet-name>UserUpdateServletJSP</servlet-name>
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
 </web-app>
