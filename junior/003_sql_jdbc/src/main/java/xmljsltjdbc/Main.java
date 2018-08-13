@@ -15,12 +15,11 @@ public class Main {
             store.connect();
             store.createTable();
             store.generate(30);
-            StoreXML xml = new StoreXML(new File("junior\\003_sql_jdbc\\file"));
+            StoreXML xml = new StoreXML(new File("file"));
             xml.save(store.selectTable());
-            new ConverterXSLT().convert("junior\\003_sql_jdbc\\file", "junior\\003_sql_jdbc\\dest",
-                    "junior\\003_sql_jdbc\\scheme.xsl");
+            new ConverterXSLT().convert("file", "dest", "scheme.xsl");
             ParseXML parseXML = new ParseXML();
-            parseXML.parse("junior\\003_sql_jdbc\\dest");
+            parseXML.parse("dest");
         } catch (Exception e) {
             e.printStackTrace();
         }

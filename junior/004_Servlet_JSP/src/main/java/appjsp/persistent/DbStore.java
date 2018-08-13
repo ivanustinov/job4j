@@ -21,7 +21,7 @@ public class DbStore implements Store<User> {
     //jdbc:sqlite:junior//004_Servlet_JSP/users.db
     //jdbc:postgresql://localhost:5432/usersdb
     private DbStore() {
-        SOURCE.setUrl("jdbc:sqlite:junior//004_Servlet_JSP/users");
+        SOURCE.setUrl("jdbc:sqlite:junior//004_Servlet_JSP/users.db");
 //        SOURCE.setUsername("postgres");
 //        SOURCE.setPassword("password");
         SOURCE.setMinIdle(5);
@@ -84,11 +84,10 @@ public class DbStore implements Store<User> {
         return null;
     }
 
-//    public static void main(String[] args) {
-//        DbStore dbStore = getInstance();
-//        dbStore.add("Ivan", "Bogun");
-//        if (dbStore.findAll().size() == 0) {
-//            System.out.println("ghg");
-//        }
-//    }
+    public static void main(String[] args) {
+        DbStore dbStore = getInstance();
+        if (dbStore.findAll().size() == 0) {
+            System.out.println("ghg");
+        }
+    }
 }

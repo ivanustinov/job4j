@@ -55,9 +55,7 @@ public class SQLRUParser {
                         firstDay = lastDayParsing;
                         if (lastDayParsing.isBefore(date)) {
                             vocancies.put(url, vocancy);
-                        } else {
-                            break;
-                        }
+                        } else break;
                     } else {
                         if (firstDay.isBefore(date)) {
                             vocancies.put(url, vocancy);

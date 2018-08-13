@@ -66,9 +66,8 @@ public class TrackerTest {
             List<String> items = tracker.findByName("Ivan");
             List<String> names = new ArrayList<>();
             for (Tracker.Item item : this.items) {
-                if (item.getName().equals("Ivan")) {
+                if (item.getName().equals("Ivan"))
                     names.add(item.toString());
-                }
             }
             assertThat(names.containsAll(items), is(true));
             assertThat(names.size() == items.size(), is(true));
