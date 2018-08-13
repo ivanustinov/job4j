@@ -1,6 +1,7 @@
 package appjsp.logic;
 
-import appjsp.persistent.DbStore;
+import appjsp.persistent.MemoryStore;
+import appjsp.persistent.Store;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.function.Function;
  */
 public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
-    private final DbStore store = DbStore.getInstance();
+    private final Store store = MemoryStore.getInstance();
     private final Map<String, Function<Map, String>> postDispatch = new HashMap<>();
     private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
 
