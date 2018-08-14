@@ -1,7 +1,7 @@
 package appjsp.logic;
 
 import appjsp.entities.User;
-import appjsp.persistent.MemoryStore;
+import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
 
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.function.Function;
  */
 public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
-    private final Store<User> store = MemoryStore.getInstance();
+    private final Store<User> store = DbStore.getInstance();
     private final Map<String, Function<Map, String>> postDispatch = new HashMap<>();
     private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
 
@@ -64,7 +64,7 @@ public class ValidateService {
             public String apply(Map map) {
                 Collection<User> users = store.findAll();
                 String result = "<p align = 'center'> there are no users in the store</p>";
-                if (users != null) {
+                if (users.size() != 0) {
                     result = createUsersTable(users);
                 }
                 return result;
