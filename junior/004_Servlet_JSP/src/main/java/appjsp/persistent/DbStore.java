@@ -15,21 +15,24 @@ import java.util.Collection;
  * @since 13.08.2018
  */
 public class DbStore implements Store<User> {
-    private static final BasicDataSource SOURCE = new BasicDataSource();
-    private final static DbStore INSTANCE = new DbStore();
+    private final BasicDataSource source = new BasicDataSource();
+    private static final DbStore INSTANCE = new DbStore();
 
-    //jdbc:sqlite:junior//004_Servlet_JSP/users.db
-    //jdbc:postgresql://localhost:5432/usersdb
     private DbStore() {
-        SOURCE.setUrl("jdbc:sqlite:junior//004_Servlet_JSP/users.db");
-//        SOURCE.setUsername("postgres");
-//        SOURCE.setPassword("password");
-        SOURCE.setMinIdle(5);
-        SOURCE.setMaxIdle(10);
-        SOURCE.setMaxOpenPreparedStatements(100);
-        try (Connection connection = SOURCE.getConnection();
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        source.setUrl("jdbc:postgresql://localhost:5432/usersdb");
+        source.setUsername("postgres");
+        source.setPassword("password");
+        source.setMinIdle(5);
+        source.setMaxIdle(10);
+        source.setMaxOpenPreparedStatements(100);
+        try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users(id integer PRIMARY KEY , name text, login text)");
+            stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, name text, login text)");
             System.out.println("Table created");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,33 +44,36 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public String add(String name, String login) {
-        try (Connection connection = SOURCE.getConnection();
-             PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
-                     + "VALUES (?, ?)")) {
-            add.setString(1, name);
-            add.setString(2, login);
-            add.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public User add(String name, String login) {
+        User user = null;
+        if (!name.equals("") && !login.equals("")) {
+            try (Connection connection = source.getConnection();
+                 PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
+                         + "VALUES (?, ?)")) {
+                add.setString(1, name);
+                add.setString(2, login);
+                add.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
+        return new User(1, name, login);
     }
 
     @Override
-    public String delete(int id) {
+    public User delete(int id) {
         return null;
     }
 
     @Override
-    public String update(int id, String newName, String newLogin) {
+    public User update(int id, String newName, String newLogin) {
         return null;
     }
 
     @Override
     public Collection<User> findAll() {
         ArrayList<User> users = new ArrayList<>();
-        try (Connection connection = SOURCE.getConnection();
+        try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM users");
             while (rs.next()) {
@@ -80,14 +86,13 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public String findById(int id) {
+    public User findById(int id) {
         return null;
     }
 
-    public static void main(String[] args) {
-        DbStore dbStore = getInstance();
-        if (dbStore.findAll().size() == 0) {
-            System.out.println("ghg");
-        }
-    }
+//    public static void main(String[] args) {
+//        DbStore dbStore = getInstance();
+//            dbStore.add("Ivan", "Port");
+//            System.out.println("ghg");
+//    }
 }

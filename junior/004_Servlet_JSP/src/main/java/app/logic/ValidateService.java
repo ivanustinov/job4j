@@ -45,6 +45,16 @@ public class ValidateService {
         initGet();
     }
 
+    public void initPost() {
+        postDispatch.put("add", add());
+        postDispatch.put("update", update());
+        postDispatch.put("delete", delete());
+    }
+
+    public void initGet() {
+        getDispatch.put("findById", findById());
+        getDispatch.put("findAll", findAll());
+    }
 
     public Function<Map, String> findAll() {
         return new Function<Map, String>() {
@@ -152,22 +162,4 @@ public class ValidateService {
             }
         };
     }
-
-
-    /**
-     * Init's postDispatch.
-     *
-     * @return current object.
-     */
-    public void initPost() {
-        postDispatch.put("add", add());
-        postDispatch.put("update", update());
-        postDispatch.put("delete", delete());
-    }
-
-    public void initGet() {
-        getDispatch.put("findById", findById());
-        getDispatch.put("findAll", findAll());
-    }
-
 }

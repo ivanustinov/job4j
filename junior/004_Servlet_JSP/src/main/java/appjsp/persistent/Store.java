@@ -10,13 +10,13 @@ import java.util.Collection;
  * @since 03.08.2018
  */
 public interface Store<T> {
-    String add(String name, String login);
+    T add(String name, String login);
 
-    String delete(int id);
+    T delete(int id);
 
-    String update(int id, String newName, String newLogin);
+    T update(int id, String newName, String newLogin);
 
     Collection<T> findAll();
 
-    String findById(int id);
+    T findById(int id);
 }
