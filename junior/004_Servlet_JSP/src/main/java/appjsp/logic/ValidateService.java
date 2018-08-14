@@ -49,9 +49,10 @@ public class ValidateService {
                 String name = ((String[]) map.get("name"))[0];
                 String login = ((String[]) map.get("login"))[0];
                 String result = "<p align=center>insert name or/and login field</p>";
-                User user = store.add(name, login);
-                if (user != null) {
-                    result = "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
+                if (!name.equals("") && !login.equals("")) {
+                    if (store.add(name, login)) {
+                        result = "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
+                    }
                 }
                 return result;
             }
@@ -120,14 +121,15 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String[] newName = (String[]) map.get("name");
-                String[] newLogin = (String[]) map.get("login");
-                String[] id = (String[]) map.get("id");
+                String newName = ((String[]) map.get("name"))[0];
+                String newLogin = ((String[]) map.get("login"))[0];
+                String id = ((String[]) map.get("id"))[0];
                 String result = "<p align='center'>insert name or/and login parameter</p>";
-                if (!newName[0].equals("") && !newLogin[0].equals("")) {
-                    int i = Integer.parseInt(id[0]);
-                    store.update(i, newName[0], newLogin[0]);
-                    result = "<p align='center'> user with id " + id + " has been updated</p>";
+                if (!newName.equals("") && !newLogin.equals("")) {
+                    int i = Integer.parseInt(id);
+                    if (store.update(i, newName, newLogin)) {
+                        result = "<p align='center'> user with id " + id + " has been updated</p>";
+                    }
                 }
                 return result;
             }
@@ -140,7 +142,7 @@ public class ValidateService {
             public String apply(Map map) {
                 String id = ((String[]) map.get("id"))[0];
                 String result = "<p align='center'>no user with such id in the store</p>";
-                if (store.delete(Integer.parseInt(id)) != null) {
+                if (store.delete(Integer.parseInt(id))) {
                     result = "<p align='center'> user with id " + id + " has been deleted</p>";
                 }
                 return result;

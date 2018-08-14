@@ -8,7 +8,7 @@
 <body>
 <h1 align='center'>UserStore App!</h1>
 <%
-    final ValidateService service = ValidateService.getInstance();
+    ValidateService service = ValidateService.getInstance();
     String users = service.doAction("GET", "findAll", null);
     out.println(users);%>
 <form action='/create' method='get'>

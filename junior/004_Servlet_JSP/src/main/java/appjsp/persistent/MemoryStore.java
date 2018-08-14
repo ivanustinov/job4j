@@ -23,27 +23,28 @@ public class MemoryStore implements Store<User> {
     }
 
     @Override
-    public User add(String name, String login) {
+    public boolean add(String name, String login) {
         User user = null;
         if (!name.equals("") && !login.equals("")) {
             int number = id++;
             user = new User(number, name, login);
             map.put(number, user);
         }
-        return user;
+        return true;
     }
 
     @Override
-    public User delete(int id) {
-        return map.remove(id);
+    public boolean delete(int id) {
+        map.remove(id);
+        return true;
     }
 
     @Override
-    public User update(int id, String newName, String newLogin) {
+    public boolean update(int id, String newName, String newLogin) {
         User user = map.get(id);
         user.setName(newName);
         user.setLogin(newLogin);
-        return user;
+        return true;
     }
 
     @Override

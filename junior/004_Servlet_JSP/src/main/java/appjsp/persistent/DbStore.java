@@ -44,30 +44,44 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public User add(String name, String login) {
-        User user = null;
-        if (!name.equals("") && !login.equals("")) {
-            try (Connection connection = source.getConnection();
-                 PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
-                         + "VALUES (?, ?)")) {
-                add.setString(1, name);
-                add.setString(2, login);
-                add.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    public boolean add(String name, String login) {
+        try (Connection connection = source.getConnection();
+             PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
+                     + "VALUES (?, ?)")) {
+            add.setString(1, name);
+            add.setString(2, login);
+            add.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return new User(1, name, login);
+        return true;
     }
 
     @Override
-    public User delete(int id) {
-        return null;
+    public boolean delete(int id) {
+        try (Connection connection = source.getConnection();
+             PreparedStatement delete = connection.prepareStatement("DELETE FROM users WHERE id = ?")) {
+            delete.setInt(1, id);
+            delete.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
-    public User update(int id, String newName, String newLogin) {
-        return null;
+    public boolean update(int id, String newName, String newLogin) {
+        try (Connection connection = source.getConnection();
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET name = ?, login = ?" +
+                     "WHERE id = ?")) {
+            insert.setString(1, newName);
+            insert.setString(2, newLogin);
+            insert.setInt(3, id);
+            insert.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
