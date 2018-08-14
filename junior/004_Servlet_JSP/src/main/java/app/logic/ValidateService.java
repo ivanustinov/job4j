@@ -28,12 +28,16 @@ public class ValidateService {
 
     public String doAction(String method, String action, Map map) {
         Function<Map, String> ans = null;
+        String result = "There is no such action for the " + method + " request";
         if (method.equals("POST")) {
             ans = postDispatch.get(action);
         } else {
             ans = getDispatch.get(action);
         }
-        return ans == null ? "There is no such action for the " + method + " request" : ans.apply(map);
+        if (ans != null) {
+            result = ans.apply(map);
+        }
+        return result;
     }
 
     private ValidateService() {
@@ -47,7 +51,11 @@ public class ValidateService {
             @Override
             public String apply(Map map) {
                 Collection<User> users = store.findAll();
-                return users == null ? "<p align = 'center'> there are no users in the store</p>" : createUsersTable(users);
+                String result = "<p align = 'center'> there are no users in the store</p>";
+                if (users != null) {
+                    result = createUsersTable(users);
+                }
+                return result;
             }
         };
     }
@@ -83,9 +91,14 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String[] names = (String[]) map.get("name");
-                String[] logins = (String[]) map.get("login");
-                return store.add(names[0], logins[0]);
+                String name = ((String[]) map.get("name"))[0];
+                String login = ((String[]) map.get("login"))[0];
+                String result = "<p align=center>insert name or/and login field</p>";
+                User user = store.add(name, login);
+                if (user != null) {
+                    result = "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
+                }
+                return result;
             }
         };
     }
@@ -95,11 +108,15 @@ public class ValidateService {
             @Override
             public String apply(Map map) {
                 String[] id = (String[]) map.get("id");
+                String result = "no user in the store with such id";
+                User user = null;
                 if (id != null && id.length != 0) {
                     int i = Integer.parseInt(id[0]);
-                    return store.findById(i);
+                    user = store.findById(i);
+                } else {
+                    result = "Insert id parameter";
                 }
-                return "Insert id parameter";
+                return user == null ? result : user.toString();
             }
         };
     }
@@ -111,11 +128,13 @@ public class ValidateService {
                 String[] newName = (String[]) map.get("name");
                 String[] newLogin = (String[]) map.get("login");
                 String[] id = (String[]) map.get("id");
+                String result = "<p align='center'>insert name or/and login parameter</p>";
                 if (!newName[0].equals("") && !newLogin[0].equals("")) {
                     int i = Integer.parseInt(id[0]);
-                    return store.update(i, newName[0], newLogin[0]);
+                    store.update(i, newName[0], newLogin[0]);
+                    result = "<p align='center'> user with id " + id + " has been updated</p>";
                 }
-                return "<p align='center'>insert name or/and login parameter</p>";
+                return result;
             }
         };
     }
@@ -124,8 +143,12 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String[] id = (String[]) map.get("id");
-                return !id[0].equals("") ? store.delete(Integer.parseInt(id[0])) : "insert id parameter";
+                String id = ((String[]) map.get("id"))[0];
+                String result = "<p align='center'>no user with such id in the store</p>";
+                if (store.delete(Integer.parseInt(id)) != null) {
+                    result = "<p align='center'> user with id " + id + " has been deleted</p>";
+                }
+                return result;
             }
         };
     }

@@ -1,5 +1,5 @@
 <%@ page import="appjsp.entities.User" %>
-<%@ page import="appjsp.persistent.MemoryStore" %>
+<%@ page import="appjsp.persistent.DbStore" %>
 <%@ page import="appjsp.persistent.Store" %>
 <%@ page import="java.util.Collection" %>
 
@@ -11,9 +11,9 @@
 <body>
 <h1 align='center'>UserStore App!</h1>
 <%
-    final Store store = MemoryStore.getInstance();
+    final Store store = DbStore.getInstance();
     Collection<User> users = store.findAll();
-    if (users == null) {
+    if (users.size() == 0) {
         out.println("<p align = 'center'> there are no users in the store</p>");
     } else {
         out.println("<table align='center' border='2' cellspacing='0' cellpadding='2'>" +

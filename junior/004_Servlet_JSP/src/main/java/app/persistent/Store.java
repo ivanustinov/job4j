@@ -12,13 +12,13 @@ import java.util.Collection;
  * @since 03.08.2018
  */
 public interface Store {
-    String add(String name, String login);
+    User add(String name, String login);
 
-    String delete(int id);
+    User delete(int id);
 
-    String update(int id, String newName, String newLogin);
+    User update(int id, String newName, String newLogin);
 
     Collection<User> findAll();
 
-    String findById(int id);
+    User findById(int id);
 }

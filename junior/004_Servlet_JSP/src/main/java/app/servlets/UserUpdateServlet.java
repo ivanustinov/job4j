@@ -61,7 +61,7 @@ public class UserUpdateServlet extends HttpServlet {
                 resultparameter +
                 "</fieldset>" +
                 "</form>" +
-                "<form action='" + request.getContextPath() + "/list' method='get'>" +
+                "<form action='/list' method='get'>" +
                 "<p align='center'><button type='submit'>VIEW LIST</button></p>" +
                 "</form>" +
                 "</body>" +

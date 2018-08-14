@@ -23,30 +23,27 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public String add(String name, String login) {
-        String result = "<p align=center>insert name or/and login field</p>";
+    public User add(String name, String login) {
+        User user = null;
         if (!name.equals("") && !login.equals("")) {
             int number = id++;
-            User user = new User(number, name, login);
+            user = new User(number, name, login);
             map.put(number, user);
-            result = "<p align='center'>user with name " + name + " and login " + login + " has been add</p>";
         }
-        return result;
+        return user;
     }
 
     @Override
-    public String delete(int id) {
-        return map.remove(id) == null ? "<p align='center'>no user with such id in the store</p>" :
-                "<p align='center'> user with id " + id +
-                        " has been deleted</p>";
+    public User delete(int id) {
+        return map.remove(id);
     }
 
     @Override
-    public String update(int id, String newName, String newLogin) {
+    public User update(int id, String newName, String newLogin) {
         User user = map.get(id);
         user.setName(newName);
         user.setLogin(newLogin);
-        return "<p align='center'> user with id " + id + " has been updated</p>";
+        return user;
     }
 
     @Override
@@ -56,8 +53,7 @@ public class MemoryStore implements Store {
 
 
     @Override
-    public String findById(int id) {
-        User user = map.get(id);
-        return user != null ? user.toString() : "no user in the store with such id";
+    public User findById(int id) {
+        return map.get(id);
     }
 }

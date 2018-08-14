@@ -44,7 +44,7 @@ public class UserCreateServlet extends HttpServlet {
                 resultparameter +
                 "</fieldset>" +
                 "</form>" +
-                "<form action='" + req.getContextPath() + "/list' method='get'>" +
+                "<form action='/list' method='get'>" +
                 "<p align='center'><button align='center' type='submit'>VIEW LIST</button></p>" +
                 "</form>" +
                 "</body>" +

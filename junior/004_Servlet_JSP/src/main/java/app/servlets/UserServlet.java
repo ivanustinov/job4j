@@ -46,7 +46,7 @@ public class UserServlet extends HttpServlet {
                 "<body>" +
                 "<h1 align='center'>UserStore App!</h1>" +
                 list +
-                "<form action='" + request.getContextPath() + "/create' method='get'>" +
+                "<form action='/create' method='get'>" +
                 "<p align='center'><button type='submit'>CREATE USER</button></p>" +
                 "</form>" +
                 "</body>" +
