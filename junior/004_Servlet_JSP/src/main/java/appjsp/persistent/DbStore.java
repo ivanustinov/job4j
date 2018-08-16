@@ -33,7 +33,6 @@ public class DbStore implements Store<User> {
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, name text, login text)");
-            System.out.println("Table created");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,8 +71,8 @@ public class DbStore implements Store<User> {
     @Override
     public boolean update(int id, String newName, String newLogin) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET name = ?, login = ?" +
-                     "WHERE id = ?")) {
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET name = ?, login = ?"
+                     + "WHERE id = ?")) {
             insert.setString(1, newName);
             insert.setString(2, newLogin);
             insert.setInt(3, id);
@@ -89,7 +88,7 @@ public class DbStore implements Store<User> {
         ArrayList<User> users = new ArrayList<>();
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT * FROM users");
+            ResultSet rs = stm.executeQuery("SELECT * FROM users ");
             while (rs.next()) {
                 users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
@@ -101,7 +100,17 @@ public class DbStore implements Store<User> {
 
     @Override
     public User findById(int id) {
-        return null;
+        User user = null;
+        try (Connection connection = source.getConnection();
+             Statement stm = connection.createStatement()) {
+            ResultSet rs = stm.executeQuery("SELECT * FROM users WHERE id = " + id);
+            while (rs.next()) {
+                user = new User(id, rs.getString(2), rs.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
 //    public static void main(String[] args) {

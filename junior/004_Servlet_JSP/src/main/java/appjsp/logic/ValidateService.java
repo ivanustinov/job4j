@@ -20,26 +20,21 @@ public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final Store<User> store = DbStore.getInstance();
     private final Map<String, Function<Map, String>> postDispatch = new HashMap<>();
-    private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
+//    private final Map<String, Function<Map, String>> getDispatch = new HashMap<>();
 
 
     public static ValidateService getInstance() {
         return INSTANCE;
     }
 
-    public String doAction(String method, String action, Map map) {
-        Function<Map, String> ans;
-        if (method.equals("POST")) {
-            ans = postDispatch.get(action);
-        } else {
-            ans = getDispatch.get(action);
-        }
-        return ans == null ? "There is no such action for the " + method + " request" : ans.apply(map);
+    public String doAction(String action, Map map) {
+        Function<Map, String> ans = postDispatch.get(action);
+        String result = ans.apply(map);
+        return result;
     }
 
     private ValidateService() {
         initPost();
-        initGet();
     }
 
     public Function<Map, String> add() {
@@ -59,41 +54,37 @@ public class ValidateService {
         };
     }
 
-    public Function<Map, String> findAll() {
-        return new Function<Map, String>() {
-            @Override
-            public String apply(Map map) {
-                Collection<User> users = store.findAll();
-                String result = "<p align = 'center'> there are no users in the store</p>";
-                if (users.size() != 0) {
-                    result = createUsersTable(users);
-                }
-                return result;
-            }
-        };
+
+    public String findAll() {
+        Collection<User> users = store.findAll();
+        String result = "<p align = 'center'> there are no users in the store</p>";
+        if (users.size() != 0) {
+            result = createUsersTable(users);
+        }
+        return result;
     }
 
     public String createUsersTable(Collection<User> users) {
-        StringBuffer buffer = new StringBuffer("<table align='center' border='2' cellspacing='0' cellpadding='2'>" +
-                "<caption>users in the store</caption>" +
-                "<tr><th>ID</th><th>NAME</th><th colspan='2'>ACTIONS</th></tr>");
+        StringBuffer buffer = new StringBuffer("<table align='center' border='2' cellspacing='0' cellpadding='2'>"
+                + "<caption>users in the store</caption>"
+                + "<tr><th>ID</th><th>NAME</th><th colspan='2'>ACTIONS</th></tr>");
         for (User user : users) {
             String name = user.getName();
             String login = user.getLogin();
             int id = user.getId();
-            buffer.append("<tr><td>" + id + "</td><td>" + name + "</td><td>" +
-                    "<form action='/edit' method='post'>" +
-                    "<input type='hidden' name='login' value ='" + login + "'>" +
-                    "<input type='hidden' name='name' value = '" + name + "'>" +
-                    "<input type='hidden' name='id' value = '" + id + "'>" +
-                    "<button type='submit'>UPDATE</button></td><td>" +
-                    "</form>" +
-                    "<form method='post'>" +
-                    "<input type='hidden' name='action' value = 'delete'>" +
-                    "<input type='hidden' name='id' value = '" + id + "'>" +
-                    "<button type='submit'>DELETE</button>" +
-                    "</form>" +
-                    "</td></tr>");
+            buffer.append("<tr><td>" + id + "</td><td>" + name + "</td><td>"
+                    + "<form action='/servlet/edit' method='post'>"
+                    + "<input type='hidden' name='login' value ='" + login + "'>"
+                    + "<input type='hidden' name='name' value = '" + name + "'>"
+                    + "<input type='hidden' name='id' value = '" + id + "'>"
+                    + "<button type='submit'>UPDATE</button></td><td>"
+                    + "</form>"
+                    + "<form method='post'>"
+                    + "<input type='hidden' name='action' value = 'delete'>"
+                    + "<input type='hidden' name='id' value = '" + id + "'>"
+                    + "<button type='submit'>DELETE</button>"
+                    + "</form>"
+                    + "</td></tr>");
         }
         buffer.append("</table>");
         return buffer.toString();
@@ -103,16 +94,37 @@ public class ValidateService {
         return new Function<Map, String>() {
             @Override
             public String apply(Map map) {
-                String[] id = (String[]) map.get("id");
-                String result = "no user in the store with such id";
-                User user = null;
-                if (id != null && id.length != 0) {
-                    int i = Integer.parseInt(id[0]);
-                    user = store.findById(i);
+                String id = ((String[]) map.get("id"))[0];
+                String result = "<p align = 'center'>no user in the store with such id</p>";
+                if (!id.equals("")) {
+                    int i = Integer.parseInt(id);
+                    User user = store.findById(i);
+                    if (user != null) {
+                        String name = user.getName();
+                        String login = user.getLogin();
+                        result = "<table align='center' border='2' cellspacing='0' cellpadding='2'>"
+                                + "<caption>users in the store</caption>"
+                                + "<tr><th>ID</th><th>NAME</th><th colspan='2'>ACTIONS</th></tr>"
+                                + "<tr><td>" + id + "</td><td>" + name + "</td><td>"
+                                + "<form action='/servlet/edit' method='post'>"
+//                                + "<input type='hidden' name='action' value ='update'>"
+                                + "<input type='hidden' name='login' value ='" + login + "'>"
+                                + "<input type='hidden' name='name' value = '" + name + "'>"
+                                + "<input type='hidden' name='id' value = '" + id + "'>"
+                                + "<button type='submit'>UPDATE</button></td><td>"
+                                + "</form>"
+                                + "<form method='post'>"
+                                + "<input type='hidden' name='action' value = 'delete'>"
+                                + "<input type='hidden' name='id' value = '" + id + "'>"
+                                + "<button type='submit'>DELETE</button>"
+                                + "</form>"
+                                + "</td></tr>"
+                                + "</table>";
+                    }
                 } else {
-                    result = "Insert id parameter";
+                    result = "Insert id";
                 }
-                return user == null ? result : user.toString();
+                return result;
             }
         };
     }
@@ -143,7 +155,8 @@ public class ValidateService {
                 String id = ((String[]) map.get("id"))[0];
                 String result = "<p align='center'>no user with such id in the store</p>";
                 if (store.delete(Integer.parseInt(id))) {
-                    result = "<p align='center'> user with id " + id + " has been deleted</p>";
+                    result = findAll() + "\n"
+                            + "<p align='center'> user with id " + id + " has been deleted</p>";
                 }
                 return result;
             }
@@ -159,11 +172,8 @@ public class ValidateService {
         postDispatch.put("add", add());
         postDispatch.put("update", update());
         postDispatch.put("delete", delete());
+        postDispatch.put("findById", findById());
     }
 
-    public void initGet() {
-        getDispatch.put("findById", findById());
-        getDispatch.put("findAll", findAll());
-    }
 
 }

@@ -22,15 +22,16 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
         String action = request.getParameter("action");
-        String method = request.getMethod();
-        logic.doAction(method, action, par);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(request.getContextPath() + "/views/list.jsp");
-        requestDispatcher.forward(request, response);
+        String result = logic.doAction(action, par);
+        request.setAttribute("postResult", result);
+        doGet(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(request.getContextPath() + "/views/list.jsp");
+        String result = logic.findAll();
+        request.setAttribute("getResult", result);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("views/list.jsp");
         requestDispatcher.forward(request, response);
     }
 }

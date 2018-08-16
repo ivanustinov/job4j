@@ -33,7 +33,7 @@
         <%=resultparameter%>
     </fieldset>
 </form>
-<form action='/list' method='get'>
+<form action='/servlet/list' method='get'>
     <p align='center'>
         <button type='submit'>VIEW LIST</button>
     </p>

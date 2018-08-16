@@ -30,9 +30,8 @@ public class UserCreateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String[]> par = req.getParameterMap();
         String action = req.getParameter("action");
-        String result = logic.doAction("POST", action, par);
+        String result = logic.doAction(action, par);
         req.setAttribute("result", result);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/create.jsp");
-        requestDispatcher.forward(req, resp);
+        doGet(req, resp);
     }
 }

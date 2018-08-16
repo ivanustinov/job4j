@@ -24,12 +24,9 @@ public class MemoryStore implements Store<User> {
 
     @Override
     public boolean add(String name, String login) {
-        User user = null;
-        if (!name.equals("") && !login.equals("")) {
             int number = id++;
-            user = new User(number, name, login);
+        User user = new User(number, name, login);
             map.put(number, user);
-        }
         return true;
     }
 
@@ -55,6 +52,6 @@ public class MemoryStore implements Store<User> {
 
     @Override
     public User findById(int id) {
-        return map.get(id);
+        return null;
     }
 }

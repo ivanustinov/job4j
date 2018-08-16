@@ -14,7 +14,7 @@
 <%
     String resultparameter = (String) request.getAttribute("result");
     if (resultparameter == null) {
-        resultparameter = "<p align='center'>result of creating</p>";
+        resultparameter = "<p align='center'>Insert name and login and press create button</p>";
     }
 %>
 <form method='post'>
@@ -29,7 +29,7 @@
         <%=resultparameter%>
     </fieldset>
 </form>
-<form action='/list' method='get'>
+<form action='/servlet/list' method='get'>
     <p align='center'>
         <button align='center' type='submit'>VIEW LIST</button>
     </p>
