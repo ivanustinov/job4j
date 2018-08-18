@@ -1,6 +1,6 @@
 package appjsp.persistent;
 
-import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * //TODO add comments.
@@ -10,13 +10,13 @@ import java.util.Collection;
  * @since 03.08.2018
  */
 public interface Store<T> {
-    boolean add(String name, String login);
+    void add(String name, String login);
 
-    boolean delete(int id);
+    void delete(int id);
 
-    boolean update(int id, String newName, String newLogin);
+    void update(int id, String newName, String newLogin);
 
-    Collection<T> findAll();
+    ArrayList<T> findAll();
 
     T findById(int id);
 }

@@ -1,5 +1,6 @@
 package appjsp.servlets;
 
+import appjsp.entities.User;
 import appjsp.logic.ValidateService;
 
 import javax.servlet.RequestDispatcher;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -29,9 +31,10 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String result = logic.findAll();
-        request.setAttribute("getResult", result);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("views/list.jsp");
+        ArrayList<User> users = logic.findAll();
+        request.setAttribute("users", users);
+        request.setAttribute("size", users.size());
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/views/list.jsp");
         requestDispatcher.forward(request, response);
     }
 }

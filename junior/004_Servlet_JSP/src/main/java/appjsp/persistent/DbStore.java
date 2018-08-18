@@ -5,7 +5,6 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * //TODO add comments.
@@ -43,7 +42,7 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public boolean add(String name, String login) {
+    public void add(String name, String login) {
         try (Connection connection = source.getConnection();
              PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
                      + "VALUES (?, ?)")) {
@@ -53,11 +52,10 @@ public class DbStore implements Store<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override
-    public boolean delete(int id) {
+    public void delete(int id) {
         try (Connection connection = source.getConnection();
              PreparedStatement delete = connection.prepareStatement("DELETE FROM users WHERE id = ?")) {
             delete.setInt(1, id);
@@ -65,11 +63,10 @@ public class DbStore implements Store<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override
-    public boolean update(int id, String newName, String newLogin) {
+    public void update(int id, String newName, String newLogin) {
         try (Connection connection = source.getConnection();
              PreparedStatement insert = connection.prepareStatement("UPDATE users SET name = ?, login = ?"
                      + "WHERE id = ?")) {
@@ -80,15 +77,14 @@ public class DbStore implements Store<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override
-    public Collection<User> findAll() {
+    public ArrayList<User> findAll() {
         ArrayList<User> users = new ArrayList<>();
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT * FROM users ");
+            ResultSet rs = stm.executeQuery("SELECT * FROM users");
             while (rs.next()) {
                 users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
@@ -113,9 +109,4 @@ public class DbStore implements Store<User> {
         return user;
     }
 
-//    public static void main(String[] args) {
-//        DbStore dbStore = getInstance();
-//            dbStore.add("Ivan", "Port");
-//            System.out.println("ghg");
-//    }
 }

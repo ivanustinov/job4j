@@ -28,12 +28,13 @@ public class UserUpdateServlet extends HttpServlet {
             String result = logic.doAction(action, par);
             request.setAttribute("result", result);
         }
-        doGet(request, response);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/views/update.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("views/update.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/views/update.jsp");
         requestDispatcher.forward(request, response);
     }
 }

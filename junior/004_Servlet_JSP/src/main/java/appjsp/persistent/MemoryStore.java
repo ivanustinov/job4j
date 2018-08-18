@@ -2,7 +2,7 @@ package appjsp.persistent;
 
 import appjsp.entities.User;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,30 +23,27 @@ public class MemoryStore implements Store<User> {
     }
 
     @Override
-    public boolean add(String name, String login) {
+    public void add(String name, String login) {
             int number = id++;
         User user = new User(number, name, login);
             map.put(number, user);
-        return true;
     }
 
     @Override
-    public boolean delete(int id) {
+    public void delete(int id) {
         map.remove(id);
-        return true;
     }
 
     @Override
-    public boolean update(int id, String newName, String newLogin) {
+    public void update(int id, String newName, String newLogin) {
         User user = map.get(id);
         user.setName(newName);
         user.setLogin(newLogin);
-        return true;
     }
 
     @Override
-    public Collection<User> findAll() {
-        return map.size() == 0 ? null : map.values();
+    public ArrayList<User> findAll() {
+        return map.size() == 0 ? null : (ArrayList<User>) map.values();
     }
 
 

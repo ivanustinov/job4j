@@ -5,6 +5,9 @@
          version="4.0">
     <display-name>SERVLETS_STARTS</display-name>
     <description>This is first servlet</description>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>UserServletJSP</servlet-name>
         <servlet-class>appjsp.servlets.UserServlet</servlet-class>
