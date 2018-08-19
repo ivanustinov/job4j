@@ -35,4 +35,12 @@
         <servlet-name>UserUpdateServletJSP</servlet-name>
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
+    <!--<servlet>-->
+    <!--<servlet-name>UpdateJSP</servlet-name>-->
+    <!--<jsp-file>/WEB-INF/views/update.jsp</jsp-file>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>UpdateJSP</servlet-name>-->
+    <!--<url-pattern>/WEB-INF/views/update.jsp</url-pattern>-->
+    <!--</servlet-mapping>-->
 </web-app>

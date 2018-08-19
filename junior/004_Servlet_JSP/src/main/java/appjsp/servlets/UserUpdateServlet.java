@@ -24,10 +24,8 @@ public class UserUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String[]> par = request.getParameterMap();
         String action = request.getParameter("action");
-        if (action != null) {
-            String result = logic.doAction(action, par);
-            request.setAttribute("result", result);
-        }
+        String result = logic.doAction(action, par);
+        request.setAttribute("result", result);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/views/update.jsp");
         requestDispatcher.forward(request, response);
     }

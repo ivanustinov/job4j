@@ -24,7 +24,7 @@
                 <td>${user.name}</td>
                 <td>${user.login}</td>
                 <td>
-                    <form action='/edit' method='post'>
+                    <form action='/edit' method='get'>
                         <input type='hidden' name='id' value='${user.id}'>
                         <input type='hidden' name='name' value='${user.name}'>
                         <input type='hidden' name='login' value='${user.login}'>
