@@ -29,7 +29,6 @@ public class AuthFilter implements Filter {
         } else {
             if (session.getAttribute("login") == null) {
                 request.getRequestDispatcher("WEB-INF/views/authentification.jsp").forward(request, response);
-                System.out.println("filter");
                 return;
             }
         }

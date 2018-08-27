@@ -1,5 +1,6 @@
 package appjsp.servlets;
 
+import appjsp.logic.PageServise;
 import appjsp.logic.SessionRequestContext;
 import appjsp.logic.ValidateService;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
  */
 public class Controller extends HttpServlet {
     private final ValidateService logic = ValidateService.getInstance();
+    private final PageServise pageInit = new PageServise();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,7 +34,8 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SessionRequestContext context = new SessionRequestContext();
         context.extractValues(req);
-        String page = logic.doAction(context);
+        logic.doAction(context);
+        String page = pageInit.initPage(context);
         context.insertAttributes(req);
         req.getRequestDispatcher(page).forward(req, resp);
     }

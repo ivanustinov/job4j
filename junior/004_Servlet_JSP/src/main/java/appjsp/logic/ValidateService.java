@@ -5,7 +5,6 @@ import appjsp.entities.UsersRoles;
 import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -27,17 +26,12 @@ public class ValidateService {
         return INSTANCE;
     }
 
-    public String doAction(SessionRequestContext context) {
-        String page = context.getParameter("page");
-        if (page == null) {
-            page = homepage(context);
-        }
+    public void doAction(SessionRequestContext context) {
         String action = context.getParameter("action");
         if (action != null) {
             Consumer<SessionRequestContext> ans = userDispatch.get(action);
             ans.accept(context);
         }
-        return page;
     }
 
     private ValidateService() {
@@ -61,13 +55,9 @@ public class ValidateService {
         };
     }
 
-    public ArrayList<User> findAll() {
-        return store.findAll();
-    }
-
     public User isCredentional(String login, String password) {
         User userToLogin = null;
-        for (User user : findAll()) {
+        for (User user : store.findAll()) {
             if (user.getLogin().equals(login) && user.getPassword().equals(password)) {
                 userToLogin = user;
             }
@@ -80,7 +70,6 @@ public class ValidateService {
             @Override
             public void accept(SessionRequestContext context) {
                 String id = context.getParameter("id");
-                initAdminPage(context);
                 String result;
                 if (!id.equals("")) {
                     int i = Integer.parseInt(id);
@@ -138,34 +127,11 @@ public class ValidateService {
                 String id = context.getParameter("id");
                 String result = "user with id " + id + " has been deleted";
                 store.delete(Integer.parseInt(id));
-                initAdminPage(context);
                 context.setRequestAttribute("result", result);
             }
         };
     }
 
-    public void initUserPage(SessionRequestContext context) {
-        User user = store.findById((int) (context.getSessionAttribute("id")));
-        context.setRequestAttribute("user", user);
-    }
-
-    public void initAdminPage(SessionRequestContext context) {
-        ArrayList<User> users = findAll();
-        context.setRequestAttribute("users", users);
-        context.setRequestAttribute("size", users.size());
-    }
-
-    public String homepage(SessionRequestContext context) {
-        UsersRoles role = (UsersRoles) context.getSessionAttribute("role");
-        String page = "WEB-INF/views/userpage.jsp";
-        if (role.equals(UsersRoles.ADMIN)) {
-            page = "WEB-INF/views/list.jsp";
-            initAdminPage(context);
-        } else {
-            initUserPage(context);
-        }
-        return page;
-    }
 
     public Consumer<SessionRequestContext> logOut() {
         return new Consumer<SessionRequestContext>() {

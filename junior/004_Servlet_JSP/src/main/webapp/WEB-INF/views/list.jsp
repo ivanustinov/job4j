@@ -37,7 +37,6 @@
                 </td>
                 <td>
                     <form action="/contr" method='post'>
-                        <input type='hidden' name='page' value='WEB-INF/views/list.jsp'>
                         <input type='hidden' name='action' value='delete'>
                         <input type='hidden' name='id' value='${user.id}'>
                         <button type='submit'>DELETE</button>
@@ -58,7 +57,6 @@
 </p>
 <form action="/contr" method='post'>
     <input type='hidden' name='action' value='findById'>
-    <input type='hidden' name='page' value='WEB-INF/views/list.jsp'>
     <p align='center'>ID: <input type='text' name='id'></p>
     <p align='center'>
         <button type='submit'>Find user</button>
