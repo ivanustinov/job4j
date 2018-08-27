@@ -11,16 +11,16 @@
         <legend align='center'>Insert new Parameters</legend>
         <input type='hidden' name='action' value='adminUpdate'>
         <input type='hidden' name='page' value='WEB-INF/views/adminupdate.jsp'>
-        <input type='hidden' name='id' value='${param.id}'>
+        <input type='hidden' name='id' value='${user.id}'>
         <p align='center'>
             <select name="role">
                 <option value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
             </select>
         </p>
-        <p align='center'>LOGIN: <input type='text' name='login' value="${param.login}" placeholder=${param.login}></p>
-        <p align='center'>PASSWORD: <input type='text' name='password' value="${param.password}"
-                                           placeholder=${param.password}></p>
+        <p align='center'>LOGIN: <input type='text' name='login' value="${user.login}" placeholder=${user.login}></p>
+        <p align='center'>PASSWORD: <input type='text' name='password' value="${user.password}"
+                                           placeholder=${user.password}></p>
         <p align='center'>
             <button type='submit'>UPDATE</button>
         </p>

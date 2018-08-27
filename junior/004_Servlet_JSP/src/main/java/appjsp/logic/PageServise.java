@@ -6,6 +6,9 @@ import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * //TODO add comments.
@@ -15,40 +18,83 @@ import java.util.ArrayList;
  * @since 27.08.2018
  */
 public class PageServise {
+    private static final PageServise INSTANCE = new PageServise();
     private final Store<User> store = DbStore.getInstance();
+    private final Map<UsersRoles, String> roleDispatch = new HashMap<>();
+    private final Map<String, Consumer<SessionRequestContext>> pageDispatch = new HashMap<>();
+
 
     public String initPage(SessionRequestContext context) {
         String page = context.getParameter("page");
         if (page == null) {
-            page = homepage(context);
+            UsersRoles role = (UsersRoles) context.getSessionAttribute("role");
+            page = roleDispatch.get(role);
         }
+        Consumer<SessionRequestContext> ans = pageDispatch.get(page);
+        ans.accept(context);
         return page;
     }
 
-    public void initUserPage(SessionRequestContext context) {
-        User user = store.findById((int) (context.getSessionAttribute("id")));
-        context.setRequestAttribute("user", user);
+    public static PageServise getINSTANCE() {
+        return INSTANCE;
     }
 
-    public void initAdminPage(SessionRequestContext context) {
-        ArrayList<User> users = findAll();
-        context.setRequestAttribute("users", users);
-        context.setRequestAttribute("size", users.size());
+    private PageServise() {
+        initHomePage();
+        initRedirectPage();
     }
 
-    public String homepage(SessionRequestContext context) {
-        UsersRoles role = (UsersRoles) context.getSessionAttribute("role");
-        String page = "WEB-INF/views/userpage.jsp";
-        if (role.equals(UsersRoles.ADMIN)) {
-            page = "WEB-INF/views/list.jsp";
-            initAdminPage(context);
-        } else {
-            initUserPage(context);
-        }
-        return page;
+    public void initHomePage() {
+        roleDispatch.put(UsersRoles.USER, "WEB-INF/views/userpage.jsp");
+        roleDispatch.put(UsersRoles.ADMIN, "WEB-INF/views/list.jsp");
+
     }
 
-    public ArrayList<User> findAll() {
-        return store.findAll();
+    public void initRedirectPage() {
+        pageDispatch.put("WEB-INF/views/userpage.jsp", userPage());
+        pageDispatch.put("WEB-INF/views/list.jsp", adminPage());
+        pageDispatch.put("WEB-INF/views/update.jsp", userPage());
+        pageDispatch.put("WEB-INF/views/adminupdate.jsp", adminUpdate());
+        pageDispatch.put("WEB-INF/views/create.jsp", createPage());
+        pageDispatch.put("WEB-INF/views/authentification.jsp", createPage());
+    }
+
+    public Consumer<SessionRequestContext> userPage() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+                User user = store.findById((int) (context.getSessionAttribute("id")));
+                context.setRequestAttribute("user", user);
+            }
+        };
+    }
+
+    public Consumer<SessionRequestContext> createPage() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+            }
+        };
+    }
+
+    public Consumer<SessionRequestContext> adminUpdate() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+                User user = store.findById(Integer.parseInt(context.getParameter("id")));
+                context.setRequestAttribute("user", user);
+            }
+        };
+    }
+
+    public Consumer<SessionRequestContext> adminPage() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+                ArrayList<User> users = store.findAll();
+                context.setRequestAttribute("users", users);
+                context.setRequestAttribute("size", users.size());
+            }
+        };
     }
 }

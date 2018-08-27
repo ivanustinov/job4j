@@ -89,12 +89,11 @@ public class ValidateService {
             public void accept(SessionRequestContext context) {
                 String newLogin = context.getParameter("login");
                 String newPassword = context.getParameter("password");
-                String id = context.getParameter("id");
+                int id = (int) context.getSessionAttribute("id");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
-                    int i = Integer.parseInt(id);
-                    store.update(i, newLogin, newPassword);
-                    result = "User with id " + i + " has been updated";
+                    store.update(id, newLogin, newPassword);
+                    result = "User with id " + id + " has been updated";
                 }
                 context.setRequestAttribute("result", result);
             }

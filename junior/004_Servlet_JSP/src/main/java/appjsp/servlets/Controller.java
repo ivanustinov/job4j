@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class Controller extends HttpServlet {
     private final ValidateService logic = ValidateService.getInstance();
-    private final PageServise pageInit = new PageServise();
+    private final PageServise pageInit = PageServise.getINSTANCE();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

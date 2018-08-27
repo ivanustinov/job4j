@@ -22,10 +22,10 @@
         <td>
             <form action="/contr" method='post'>
                 <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
-                <input type='hidden' name='id' value='${user.id}'>
-                <input type='hidden' name='role' value='${user.role}'>
-                <input type='hidden' name='login' value='${user.login}'>
-                <input type='hidden' name='password' value='${user.password}'>
+                <%--<input type='hidden' name='id' value='${user.id}'>--%>
+                <%--<input type='hidden' name='role' value='${user.role}'>--%>
+                <%--<input type='hidden' name='login' value='${user.login}'>--%>
+                <%--<input type='hidden' name='password' value='${user.password}'>--%>
                 <button type='submit'>Edit</button>
             </form>
         </td>

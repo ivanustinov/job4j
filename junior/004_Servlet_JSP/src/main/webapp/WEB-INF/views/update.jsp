@@ -5,16 +5,15 @@
     <title>Update User</title>
 </head>
 <body>
-<h4 align='center'>Edit User: ${param.login}</h4>
+<h4 align='center'>Edit User: ${user.login}</h4>
 <fieldset>
     <form action="/contr" method='post'>
         <legend align='center'>Insert new Parameters</legend>
         <input type='hidden' name='action' value='update'>
         <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
-        <input type='hidden' name='id' value='${param.id}'>
-        <p align='center'>LOGIN: <input type='text' name='login' value="${param.login}" placeholder=${param.login}></p>
-        <p align='center'>PASSWORD: <input type='text' name='password' value="${param.password}"
-                                           placeholder=${param.password}></p>
+        <p align='center'>LOGIN: <input type='text' name='login' value="${user.login}" placeholder=${user.login}></p>
+        <p align='center'>PASSWORD: <input type='text' name='password' value="${user.password}"
+                                           placeholder=${user.password}></p>
         <p align='center'>
             <button type='submit'>UPDATE</button>
         </p>
