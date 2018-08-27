@@ -1,5 +1,7 @@
 package appjsp.persistent;
 
+import appjsp.entities.UsersRoles;
+
 import java.util.ArrayList;
 
 /**
@@ -10,11 +12,13 @@ import java.util.ArrayList;
  * @since 03.08.2018
  */
 public interface Store<T> {
-    void add(String name, String login);
+    void add(UsersRoles roles, String login, String password);
 
     void delete(int id);
 
-    void update(int id, String newName, String newLogin);
+    void adminUpdate(int id, String newRole, String newLogin, String newPassword);
+
+    void update(int id, String newLogin, String newPassword);
 
     ArrayList<T> findAll();
 

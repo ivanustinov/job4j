@@ -5,42 +5,34 @@
          version="4.0">
     <display-name>SERVLETS_STARTS</display-name>
     <description>This is first servlet</description>
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <!--<welcome-file-list>-->
+    <!--<welcome-file>index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
     <servlet>
-        <servlet-name>UserServletJSP</servlet-name>
-        <servlet-class>appjsp.servlets.UserServlet</servlet-class>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>appjsp.servlets.Controller</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserServletJSP</servlet-name>
-        <url-pattern>/list</url-pattern>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/contr</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserCreateServletJSP</servlet-name>
-        <servlet-class>appjsp.servlets.UserCreateServlet</servlet-class>
+        <servlet-name>Authorization</servlet-name>
+        <servlet-class>appjsp.servlets.SignIn</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserCreateServletJSP</servlet-name>
-        <url-pattern>/create</url-pattern>
+        <servlet-name>Authorization</servlet-name>
+        <url-pattern>/auth</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>UserUpdateServletJSP</servlet-name>
-        <servlet-class>appjsp.servlets.UserUpdateServlet</servlet-class>
-        <load-on-startup>3</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserUpdateServletJSP</servlet-name>
-        <url-pattern>/edit</url-pattern>
-    </servlet-mapping>
-    <!--<servlet>-->
-    <!--<servlet-name>UpdateJSP</servlet-name>-->
-    <!--<jsp-file>/WEB-INF/views/update.jsp</jsp-file>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-    <!--<servlet-name>UpdateJSP</servlet-name>-->
-    <!--<url-pattern>/WEB-INF/views/update.jsp</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>appjsp.servlets.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <!--<dispatcher>FORWARD</dispatcher>-->
+    </filter-mapping>
 </web-app>

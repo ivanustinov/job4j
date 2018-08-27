@@ -12,54 +12,40 @@ import java.util.Objects;
  */
 public class User {
     private int id;
-    private String name;
+    private UsersRoles role;
     private String login;
-    private String email;
+    private String password;
+    private int acsessLevel;
     private LocalDateTime createDate;
 
-    public User(int id, String name) {
+    public User(int id, UsersRoles role, String login, String password) {
         this.id = id;
-        this.name = name;
-        this.createDate = LocalDateTime.now();
-    }
-
-    public User(int id, String name, String login) {
-        this.id = id;
-        this.name = name;
+        this.role = role;
         this.login = login;
+        this.password = password;
         this.createDate = LocalDateTime.now();
+        this.acsessLevel = role.getAcsessLevel();
     }
 
-    public String getName() {
-        return name;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public UsersRoles getRole() {
+        return role;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setLogin(String login) {
         this.login = login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
+    public int getAcsessLevel() {
+        return acsessLevel;
     }
 
     public int getId() {
@@ -75,19 +61,22 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(name, user.name)
-                && Objects.equals(login, user.login)
-                && Objects.equals(email, user.email);
+        return Objects.equals(login, user.login)
+                && Objects.equals(role, user.role);
     }
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, login, email, createDate);
+        return Objects.hash(login, createDate);
     }
 
     @Override
     public String toString() {
-        return id + " " + name + " " + login;
+        return String.format("id: %s\nrole: %s\nlogin: %s\n", id, role, login);
     }
 
+    public static void main(String[] args) {
+        System.out.println(new User(1, UsersRoles.ADMIN, "Petr", "rtre"));
+    }
 }

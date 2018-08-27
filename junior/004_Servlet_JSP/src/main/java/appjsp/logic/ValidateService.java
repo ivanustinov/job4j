@@ -1,13 +1,14 @@
 package appjsp.logic;
 
 import appjsp.entities.User;
+import appjsp.entities.UsersRoles;
 import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * //TODO add comments.
@@ -19,104 +20,168 @@ import java.util.function.Function;
 public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final Store<User> store = DbStore.getInstance();
-    private final Map<String, Function<Map, String>> postDispatch = new HashMap<>();
+    private final Map<String, Consumer<SessionRequestContext>> userDispatch = new HashMap<>();
 
 
     public static ValidateService getInstance() {
         return INSTANCE;
     }
 
-    public String doAction(String action, Map map) {
-        Function<Map, String> ans = postDispatch.get(action);
-        String result = ans.apply(map);
-        return result;
+    public String doAction(SessionRequestContext context) {
+        String page = context.getParameter("page");
+        if (page == null) {
+            page = homepage(context);
+        }
+        String action = context.getParameter("action");
+        if (action != null) {
+            Consumer<SessionRequestContext> ans = userDispatch.get(action);
+            ans.accept(context);
+        }
+        return page;
     }
 
     private ValidateService() {
-        initPost();
+        init();
     }
 
-    public Function<Map, String> add() {
-        return new Function<Map, String>() {
+    public Consumer<SessionRequestContext> add() {
+        return new Consumer<SessionRequestContext>() {
             @Override
-            public String apply(Map map) {
-                String name = ((String[]) map.get("name"))[0];
-                String login = ((String[]) map.get("login"))[0];
-                String result = "Enter values for the name or/and login fields";
-                if (!name.equals("") && !login.equals("")) {
-                    store.add(name, login);
-                    result = "User with name " + name + " and login " + login + " has been created";
+            public void accept(SessionRequestContext context) {
+                String login = context.getParameter("login");
+                String password = context.getParameter("password");
+                UsersRoles role = UsersRoles.valueOf(context.getParameter("role"));
+                String result = "Enter values for the login or/and password fields";
+                if (!login.equals("") && !password.equals("")) {
+                    store.add(role, login, password);
+                    result = "User with login " + login + " has been created";
                 }
-                return result;
+                context.setRequestAttribute("result", result);
             }
         };
     }
-
 
     public ArrayList<User> findAll() {
         return store.findAll();
     }
 
+    public User isCredentional(String login, String password) {
+        User userToLogin = null;
+        for (User user : findAll()) {
+            if (user.getLogin().equals(login) && user.getPassword().equals(password)) {
+                userToLogin = user;
+            }
+        }
+        return userToLogin;
+    }
 
-    public Function<Map, String> findById() {
-        return new Function<Map, String>() {
+    public Consumer<SessionRequestContext> findById() {
+        return new Consumer<SessionRequestContext>() {
             @Override
-            public String apply(Map map) {
-                String id = ((String[]) map.get("id"))[0];
-                String result = "no user in the store with such id";
+            public void accept(SessionRequestContext context) {
+                String id = context.getParameter("id");
+                initAdminPage(context);
+                String result;
                 if (!id.equals("")) {
                     int i = Integer.parseInt(id);
                     User user = store.findById(i);
-                    return user != null ? user.toString() : result;
+                    result = (user == null ? "no user in the store with such id" : user.toString());
                 } else {
                     result = "Insert id";
                 }
-                return result;
+                context.setRequestAttribute("result", result);
             }
         };
     }
 
-    public Function<Map, String> update() {
-        return new Function<Map, String>() {
+    public Consumer<SessionRequestContext> userUpdate() {
+        return new Consumer<SessionRequestContext>() {
             @Override
-            public String apply(Map map) {
-                String newName = ((String[]) map.get("name"))[0];
-                String newLogin = ((String[]) map.get("login"))[0];
-                String id = ((String[]) map.get("id"))[0];
+            public void accept(SessionRequestContext context) {
+                String newLogin = context.getParameter("login");
+                String newPassword = context.getParameter("password");
+                String id = context.getParameter("id");
                 String result = "Enter values for the name or/and login fields";
-                if (!newName.equals("") && !newLogin.equals("")) {
+                if (!newLogin.equals("") && !newLogin.equals("")) {
                     int i = Integer.parseInt(id);
-                    store.update(i, newName, newLogin);
+                    store.update(i, newLogin, newPassword);
                     result = "User with id " + i + " has been updated";
                 }
-                return result;
+                context.setRequestAttribute("result", result);
             }
         };
     }
 
-    public Function<Map, String> delete() {
-        return new Function<Map, String>() {
+    public Consumer<SessionRequestContext> adminUpdate() {
+        return new Consumer<SessionRequestContext>() {
             @Override
-            public String apply(Map map) {
-                String id = ((String[]) map.get("id"))[0];
+            public void accept(SessionRequestContext context) {
+                String newRole = context.getParameter("role");
+                String newLogin = context.getParameter("login");
+                String newPassword = context.getParameter("password");
+                String id = context.getParameter("id");
+                String result = "Enter values for the name or/and login fields";
+                if (!newLogin.equals("") && !newLogin.equals("")) {
+                    int i = Integer.parseInt(id);
+                    store.adminUpdate(i, newRole, newLogin, newPassword);
+                    result = "User with id " + i + " has been updated";
+                }
+                context.setRequestAttribute("result", result);
+            }
+        };
+    }
+
+    public Consumer<SessionRequestContext> delete() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+                String id = context.getParameter("id");
                 String result = "user with id " + id + " has been deleted";
                 store.delete(Integer.parseInt(id));
-                return result;
+                initAdminPage(context);
+                context.setRequestAttribute("result", result);
             }
         };
     }
 
-    /**
-     * Init's postDispatch.
-     *
-     * @return current object.
-     */
-    public void initPost() {
-        postDispatch.put("add", add());
-        postDispatch.put("update", update());
-        postDispatch.put("delete", delete());
-        postDispatch.put("findById", findById());
+    public void initUserPage(SessionRequestContext context) {
+        User user = store.findById((int) (context.getSessionAttribute("id")));
+        context.setRequestAttribute("user", user);
     }
 
+    public void initAdminPage(SessionRequestContext context) {
+        ArrayList<User> users = findAll();
+        context.setRequestAttribute("users", users);
+        context.setRequestAttribute("size", users.size());
+    }
 
+    public String homepage(SessionRequestContext context) {
+        UsersRoles role = (UsersRoles) context.getSessionAttribute("role");
+        String page = "WEB-INF/views/userpage.jsp";
+        if (role.equals(UsersRoles.ADMIN)) {
+            page = "WEB-INF/views/list.jsp";
+            initAdminPage(context);
+        } else {
+            initUserPage(context);
+        }
+        return page;
+    }
+
+    public Consumer<SessionRequestContext> logOut() {
+        return new Consumer<SessionRequestContext>() {
+            @Override
+            public void accept(SessionRequestContext context) {
+                context.getSession().invalidate();
+            }
+        };
+    }
+
+    public void init() {
+        userDispatch.put("add", add());
+        userDispatch.put("update", userUpdate());
+        userDispatch.put("adminUpdate", adminUpdate());
+        userDispatch.put("delete", delete());
+        userDispatch.put("findById", findById());
+        userDispatch.put("logOut", logOut());
+    }
 }

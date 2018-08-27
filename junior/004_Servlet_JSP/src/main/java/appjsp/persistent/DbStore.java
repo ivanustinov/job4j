@@ -1,6 +1,7 @@
 package appjsp.persistent;
 
 import appjsp.entities.User;
+import appjsp.entities.UsersRoles;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 import java.sql.*;
@@ -31,7 +32,8 @@ public class DbStore implements Store<User> {
         source.setMaxOpenPreparedStatements(100);
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, name text, login text)");
+            stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, role text, login text," +
+                    "password text)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,12 +44,13 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public void add(String name, String login) {
+    public void add(UsersRoles role, String login, String password) {
         try (Connection connection = source.getConnection();
-             PreparedStatement add = connection.prepareStatement("INSERT INTO users(name, login)"
-                     + "VALUES (?, ?)")) {
-            add.setString(1, name);
+             PreparedStatement add = connection.prepareStatement("INSERT INTO users(role, login, password)"
+                     + "VALUES (?, ?, ?)")) {
+            add.setString(1, role.toString());
             add.setString(2, login);
+            add.setString(3, password);
             add.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,12 +69,29 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public void update(int id, String newName, String newLogin) {
+    public void adminUpdate(int id, String newRole, String newLogin, String newPassword) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET name = ?, login = ?"
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, login = ?, " +
+                     "password = ?"
                      + "WHERE id = ?")) {
-            insert.setString(1, newName);
+            insert.setString(1, newRole);
             insert.setString(2, newLogin);
+            insert.setString(3, newPassword);
+            insert.setInt(4, id);
+            insert.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(int id, String newLogin, String newPassword) {
+        try (Connection connection = source.getConnection();
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET login = ?, " +
+                     "password = ?"
+                     + "WHERE id = ?")) {
+            insert.setString(1, newLogin);
+            insert.setString(2, newPassword);
             insert.setInt(3, id);
             insert.executeUpdate();
         } catch (SQLException e) {
@@ -86,7 +106,8 @@ public class DbStore implements Store<User> {
              Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM users");
             while (rs.next()) {
-                users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                users.add(new User(rs.getInt(1), UsersRoles.valueOf(rs.getString(2)), rs.getString(3),
+                        rs.getString(4)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +122,8 @@ public class DbStore implements Store<User> {
              Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM users WHERE id = " + id);
             while (rs.next()) {
-                user = new User(id, rs.getString(2), rs.getString(3));
+                user = new User(id, UsersRoles.valueOf(rs.getString(2)), rs.getString(3),
+                        rs.getString(4));
             }
         } catch (SQLException e) {
             e.printStackTrace();
