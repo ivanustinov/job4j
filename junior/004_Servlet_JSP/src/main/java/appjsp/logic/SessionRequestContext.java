@@ -24,9 +24,11 @@ public class SessionRequestContext {
             this.par.put(parName, par.get(parName)[0]);
         }
         Enumeration<String> attrNames = request.getAttributeNames();
-        while (attrNames.hasMoreElements()) {
-            String element = attrNames.nextElement();
-            attributes.put(element, request.getAttribute(element));
+        if (attrNames != null) {
+            while (attrNames.hasMoreElements()) {
+                String element = attrNames.nextElement();
+                attributes.put(element, request.getAttribute(element));
+            }
         }
         session = request.getSession();
     }

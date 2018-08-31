@@ -20,18 +20,19 @@ public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final Store<User> store = DbStore.getInstance();
     private final Map<String, Consumer<SessionRequestContext>> userDispatch = new HashMap<>();
-
+    private final PageServise pageServise = new PageServise(store);
 
     public static ValidateService getInstance() {
         return INSTANCE;
     }
 
-    public void doAction(SessionRequestContext context) {
+    public String doAction(SessionRequestContext context) {
         String action = context.getParameter("action");
         if (action != null) {
             Consumer<SessionRequestContext> ans = userDispatch.get(action);
             ans.accept(context);
         }
+        return pageServise.initPage(context);
     }
 
     private ValidateService() {
@@ -70,13 +71,11 @@ public class ValidateService {
             @Override
             public void accept(SessionRequestContext context) {
                 String id = context.getParameter("id");
-                String result;
+                String result = "Insert id";
                 if (!id.equals("")) {
                     int i = Integer.parseInt(id);
                     User user = store.findById(i);
                     result = (user == null ? "no user in the store with such id" : user.toString());
-                } else {
-                    result = "Insert id";
                 }
                 context.setRequestAttribute("result", result);
             }
@@ -136,7 +135,7 @@ public class ValidateService {
         return new Consumer<SessionRequestContext>() {
             @Override
             public void accept(SessionRequestContext context) {
-                context.getSession().invalidate();
+//                context.getSession().invalidate();
             }
         };
     }

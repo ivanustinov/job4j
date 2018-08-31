@@ -20,10 +20,6 @@ import java.io.IOException;
 public class SignIn extends HttpServlet {
     private final ValidateService logic = ValidateService.getInstance();
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/contr").forward(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,13 +29,13 @@ public class SignIn extends HttpServlet {
         String page = "WEB-INF/views/authentification.jsp";
         if (!login.equals("") && !password.equals("")) {
             User user = logic.isCredentional(login, password);
+            System.out.println(user);
             if (user != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("login", login);
                 session.setAttribute("role", user.getRole());
                 session.setAttribute("id", user.getId());
-                req.getRequestDispatcher("/contr").forward(req, resp);
-                return;
+                page = "/contr";
             } else {
                 result = "Wrong password or login";
             }

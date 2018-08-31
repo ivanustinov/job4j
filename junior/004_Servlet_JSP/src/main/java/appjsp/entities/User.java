@@ -62,7 +62,8 @@ public class User {
         }
         User user = (User) o;
         return Objects.equals(login, user.login)
-                && Objects.equals(role, user.role);
+                && Objects.equals(role, user.role)
+                && Objects.equals(password, user.password);
     }
 
 

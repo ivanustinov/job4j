@@ -32,8 +32,8 @@ public class DbStore implements Store<User> {
         source.setMaxOpenPreparedStatements(100);
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, role text, login text," +
-                    "password text)");
+            stm.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, role text, login text,"
+                    + "password text)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,8 +71,8 @@ public class DbStore implements Store<User> {
     @Override
     public void adminUpdate(int id, String newRole, String newLogin, String newPassword) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, login = ?, " +
-                     "password = ?"
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, login = ?, "
+                     + "password = ?"
                      + "WHERE id = ?")) {
             insert.setString(1, newRole);
             insert.setString(2, newLogin);
@@ -87,8 +87,8 @@ public class DbStore implements Store<User> {
     @Override
     public void update(int id, String newLogin, String newPassword) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET login = ?, " +
-                     "password = ?"
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET login = ?, "
+                     + "password = ?"
                      + "WHERE id = ?")) {
             insert.setString(1, newLogin);
             insert.setString(2, newPassword);

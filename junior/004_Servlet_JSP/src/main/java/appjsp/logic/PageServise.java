@@ -2,7 +2,6 @@ package appjsp.logic;
 
 import appjsp.entities.User;
 import appjsp.entities.UsersRoles;
-import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
 
 import java.util.ArrayList;
@@ -18,8 +17,7 @@ import java.util.function.Consumer;
  * @since 27.08.2018
  */
 public class PageServise {
-    private static final PageServise INSTANCE = new PageServise();
-    private final Store<User> store = DbStore.getInstance();
+    private final Store<User> store;
     private final Map<UsersRoles, String> roleDispatch = new HashMap<>();
     private final Map<String, Consumer<SessionRequestContext>> pageDispatch = new HashMap<>();
 
@@ -35,11 +33,9 @@ public class PageServise {
         return page;
     }
 
-    public static PageServise getINSTANCE() {
-        return INSTANCE;
-    }
 
-    private PageServise() {
+    public PageServise(Store<User> store) {
+        this.store = store;
         initHomePage();
         initRedirectPage();
     }
