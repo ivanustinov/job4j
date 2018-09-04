@@ -3,6 +3,7 @@ package appjsp.servlets;
 import appjsp.entities.User;
 import appjsp.entities.UsersRoles;
 import appjsp.persistent.DbStore;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.RequestDispatcher;
@@ -26,6 +27,20 @@ import static org.mockito.Mockito.*;
  * @since 28.08.2018
  */
 public class ControllerTest {
+    @Before
+    public void setUp() throws Exception {
+
+    }
+
+    public int getUsersId(DbStore store) {
+        ArrayList<User> usersBefore = store.findAll();
+        store.add(UsersRoles.USER, "Petr", "petr");
+        ArrayList<User> usersAfter = store.findAll();
+        usersAfter.removeAll(usersBefore);
+        User petr = usersAfter.get(0);
+        return petr.getId();
+    }
+
     @Test
     public void addUser() throws ServletException, IOException {
         DbStore store = DbStore.getInstance();
@@ -51,18 +66,15 @@ public class ControllerTest {
         usersAfter.removeAll(usersBefore);
         User petr = usersAfter.get(0);
         int id = petr.getId();
+        assertThat(store.findById(id), is(new User(id, UsersRoles.USER, "Petr", "petr")));
         store.delete(id);
     }
+
 
     @Test
     public void updateAdmin() throws ServletException, IOException {
         DbStore store = DbStore.getInstance();
-        ArrayList<User> usersBefore = store.findAll();
-        store.add(UsersRoles.USER, "Petr", "petr");
-        ArrayList<User> usersAfter = store.findAll();
-        usersAfter.removeAll(usersBefore);
-        User petr = usersAfter.get(0);
-        int id = petr.getId();
+        int id = getUsersId(store);
         Controller controller = new Controller();
         HashMap<String, String[]> par = new HashMap<>();
         par.put("page", new String[]{"WEB-INF/views/adminupdate.jsp"});
@@ -87,12 +99,7 @@ public class ControllerTest {
     public void updateUser() throws ServletException, IOException {
         DbStore store = DbStore.getInstance();
         Controller controller = new Controller();
-        ArrayList<User> usersBefore = store.findAll();
-        store.add(UsersRoles.USER, "Petr", "petr");
-        ArrayList<User> usersAfter = store.findAll();
-        usersAfter.removeAll(usersBefore);
-        User petr = usersAfter.get(0);
-        int id = petr.getId();
+        int id = getUsersId(store);
         HashMap<String, String[]> par = new HashMap<>();
         par.put("page", new String[]{"WEB-INF/views/update.jsp"});
         par.put("action", new String[]{"update"});
@@ -115,12 +122,8 @@ public class ControllerTest {
     public void delete() throws ServletException, IOException {
         DbStore store = DbStore.getInstance();
         Controller controller = new Controller();
-        ArrayList<User> usersBefore = store.findAll();
-        store.add(UsersRoles.USER, "Petr", "petr");
-        ArrayList<User> usersAfter = store.findAll();
-        usersAfter.removeAll(usersBefore);
-        User petr = usersAfter.get(0);
-        int id = petr.getId();
+        ;
+        int id = getUsersId(store);
         HashMap<String, String[]> par = new HashMap<>();
         par.put("page", new String[]{"WEB-INF/views/list.jsp"});
         par.put("action", new String[]{"delete"});
