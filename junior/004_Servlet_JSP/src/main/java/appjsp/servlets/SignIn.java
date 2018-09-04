@@ -29,7 +29,6 @@ public class SignIn extends HttpServlet {
         String page = "WEB-INF/views/authentification.jsp";
         if (!login.equals("") && !password.equals("")) {
             User user = logic.isCredentional(login, password);
-            System.out.println(user);
             if (user != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("login", login);

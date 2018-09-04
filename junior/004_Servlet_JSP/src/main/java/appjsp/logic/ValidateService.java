@@ -135,7 +135,7 @@ public class ValidateService {
         return new Consumer<SessionRequestContext>() {
             @Override
             public void accept(SessionRequestContext context) {
-//                context.getSession().invalidate();
+                context.getSession().invalidate();
             }
         };
     }
