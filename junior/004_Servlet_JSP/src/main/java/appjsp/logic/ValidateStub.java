@@ -2,9 +2,8 @@ package appjsp.logic;
 
 import appjsp.entities.User;
 import appjsp.entities.UsersRoles;
-import appjsp.persistent.DbStore;
-import appjsp.persistent.Store;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,22 +14,20 @@ import java.util.function.Consumer;
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
- * @since 03.08.2018
+ * @since 05.09.2018
  */
-public class ValidateService implements Validate {
-    private static final ValidateService INSTANCE = new ValidateService();
-    private final Store<User> store = DbStore.getInstance();
+public class ValidateStub implements Validate {
+    private final Map<String, Consumer<SessionRequestContext>> userDispatch = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
+    private int id;
 
-    @Override
-    public List<User> getAll() {
-        return null;
+    public ValidateStub() {
+        init();
     }
 
-    private final Map<String, Consumer<SessionRequestContext>> userDispatch = new HashMap<>();
-    private final PageServise pageServise = new PageServise(store);
-
-    public static Validate getInstance() {
-        return INSTANCE;
+    @Override
+    public User isCredentional(String login, String password) {
+        return null;
     }
 
     @Override
@@ -40,11 +37,7 @@ public class ValidateService implements Validate {
             Consumer<SessionRequestContext> ans = userDispatch.get(action);
             ans.accept(context);
         }
-        return pageServise.initPage(context);
-    }
-
-    private ValidateService() {
-        init();
+        return context.getParameter("page");
     }
 
     @Override
@@ -55,25 +48,12 @@ public class ValidateService implements Validate {
                 String login = context.getParameter("login");
                 String password = context.getParameter("password");
                 UsersRoles role = UsersRoles.valueOf(context.getParameter("role"));
-                String result = "Enter values for the login or/and password fields";
                 if (!login.equals("") && !password.equals("")) {
-                    store.add(role, login, password);
-                    result = "User with login " + login + " has been created";
+                    users.put(id, new User(id, role, login, password));
+                    id++;
                 }
-                context.setRequestAttribute("result", result);
             }
         };
-    }
-
-    @Override
-    public User isCredentional(String login, String password) {
-        User userToLogin = null;
-        for (User user : store.findAll()) {
-            if (user.getLogin().equals(login) && user.getPassword().equals(password)) {
-                userToLogin = user;
-            }
-        }
-        return userToLogin;
     }
 
     @Override
@@ -85,7 +65,7 @@ public class ValidateService implements Validate {
                 String result = "Insert id";
                 if (!id.equals("")) {
                     int i = Integer.parseInt(id);
-                    User user = store.findById(i);
+                    User user = users.get(i);
                     result = (user == null ? "no user in the store with such id" : user.toString());
                 }
                 context.setRequestAttribute("result", result);
@@ -103,7 +83,9 @@ public class ValidateService implements Validate {
                 int id = (int) context.getSessionAttribute("id");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.update(id, newLogin, newPassword);
+                    User user = users.get(id);
+                    user.setLogin(newLogin);
+                    user.setPassword(newPassword);
                     result = "User with id " + id + " has been updated";
                 }
                 context.setRequestAttribute("result", result);
@@ -116,14 +98,17 @@ public class ValidateService implements Validate {
         return new Consumer<SessionRequestContext>() {
             @Override
             public void accept(SessionRequestContext context) {
-                String newRole = context.getParameter("role");
+                UsersRoles newRole = UsersRoles.valueOf(context.getParameter("role"));
                 String newLogin = context.getParameter("login");
                 String newPassword = context.getParameter("password");
                 String id = context.getParameter("id");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
                     int i = Integer.parseInt(id);
-                    store.adminUpdate(i, newRole, newLogin, newPassword);
+                    User user = users.get(i);
+                    user.setPassword(newPassword);
+                    user.setLogin(newLogin);
+                    user.setRole(newRole);
                     result = "User with id " + i + " has been updated";
                 }
                 context.setRequestAttribute("result", result);
@@ -138,12 +123,11 @@ public class ValidateService implements Validate {
             public void accept(SessionRequestContext context) {
                 String id = context.getParameter("id");
                 String result = "user with id " + id + " has been deleted";
-                store.delete(Integer.parseInt(id));
+                users.remove(Integer.parseInt(id));
                 context.setRequestAttribute("result", result);
             }
         };
     }
-
 
     @Override
     public Consumer<SessionRequestContext> logOut() {
@@ -162,5 +146,10 @@ public class ValidateService implements Validate {
         userDispatch.put("delete", delete());
         userDispatch.put("findById", findById());
         userDispatch.put("logOut", logOut());
+    }
+
+    @Override
+    public List<User> getAll() {
+        return new ArrayList<>(users.values());
     }
 }

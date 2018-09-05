@@ -1,6 +1,7 @@
 package appjsp.servlets;
 
 import appjsp.entities.User;
+import appjsp.logic.Validate;
 import appjsp.logic.ValidateService;
 
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ import java.io.IOException;
  * @since 23.08.2018
  */
 public class SignIn extends HttpServlet {
-    private final ValidateService logic = ValidateService.getInstance();
+    private final Validate logic = ValidateService.getInstance();
 
 
     @Override
