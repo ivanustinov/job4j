@@ -27,6 +27,13 @@ public class User {
         this.acsessLevel = role.getAcsessLevel();
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(UsersRoles role) {
+        this.role = role;
+    }
 
     public String getPassword() {
         return password;
@@ -50,6 +57,10 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

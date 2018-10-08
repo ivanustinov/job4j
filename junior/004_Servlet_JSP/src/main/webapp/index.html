@@ -8,66 +8,79 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
-        body {
-            text-align: center;
-        }
-
         th {
             background: #ccc; /* Цвет фона */
             text-align: center; /* Выравнивание по левому краю */
         }
+
     </style>
 </head>
-<body>
-<div class="container center1">
-    <h2>User's Store</h2>
-    <p>Enter Your information.</p>
-</div>
-<form class="form-horizontal" action="/action_page.php">
-    <div class="form-group">
-        <label class="control-label col-sm-5" for="email">Name:</label>
-        <div class="col-sm-2">
-            <input type="email" class="form-control" id="email" placeholder="Enter name">
+<body style="text-align: center">
+    <div>
+        <h2>User's Store</h2>
+        <p>Enter Your information.</p>
+    </div>
+    <form class="form-horizontal" action="/action_page.php">
+        <div class="form-group" style="margin-top: 10px">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="email">Name:</label>
+            <div class="col-sm-2" style="padding-left: 5px">
+                <input type="text" class="form-control" id="email" placeholder="Enter name">
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-5" for="pwd">Surname:</label>
-        <div class="col-sm-2">
-            <input type="password" class="form-control" id="pwd" placeholder="Enter surname">
+        <div class="form-group">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="pwd">Surname:</label>
+            <div class="col-sm-2" style="padding-left: 5px">
+                <input type="text" class="form-control" id="pwd" placeholder="Enter surname">
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="comment">Description:</label>
-        <textarea rows="5" id="comment" style="width: 30%"></textarea>
-    </div>
-    <div class="form-group">
-        <label class="radio-inline"><input type="radio" name="optradio" checked>Male</label>
-        <label class="radio-inline"><input type="radio" name="optradio">Female</label>
-    </div>
-    <div class="form-group">
+        <div class="form-group">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="eml">Email:</label>
+            <div class="col-sm-2" style="padding-left: 5px">
+                <input type="email" class="form-control" id="eml" placeholder="Enter email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="text">Comment:</label>
+            <div class="col-sm-4" style="padding-left: 5px">
+                <textarea class="form-control" rows="5" id="text" placeholder="Discribe Yourself"></textarea>
+            </div>
+        </div>
+        <div class="radio-inline form-group">
+            <label style="padding-right: 30px;"><input type="radio" name="optradio" checked/>Male</label>
+            <label><input type="radio" name="optradio">Female</label>
+        </div>
         <div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default" style="margin-top: 10px">Submit</button>
         </div>
+    </form>
+    <div style="text-align: center; width: 40%" class="container">
+        <h4 style="margin-top: 20px">Users:</h4>
+        <table border="2" class="table table-bordered">
+            <thead>
+            <tr>
+                <th style="width: 150px">Firstname</th>
+                <th style="width: 150px">Lastname</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>John</td>
+                <td>Doe</td>
+                <td>john@example.com</td>
+            </tr>
+            <tr>
+                <td>Mary</td>
+                <td>Moe</td>
+                <td>mary@example.com</td>
+            </tr>
+            <tr>
+                <td>July</td>
+                <td>Dooley</td>
+                <td>july@example.com</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-</form>
-<div class="container">
-    <h4>Users:</h4>
-    <table border="3" align="center" style="width: 60%">
-        <thead>
-        <tr>
-            <th>FirstName</th>
-            <th width="250">LastName</th>
-            <th width="300">Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>er</td>
-            <td>er</td>
-            <td>ee</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 </body>
 </html>

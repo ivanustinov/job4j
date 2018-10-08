@@ -1,6 +1,7 @@
 package appjsp.servlets;
 
 import appjsp.logic.SessionRequestContext;
+import appjsp.logic.Validate;
 import appjsp.logic.ValidateService;
 
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * @since 22.08.2018
  */
 public class Controller extends HttpServlet {
-    private final ValidateService logic = ValidateService.getInstance();
+    private final Validate logic = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
