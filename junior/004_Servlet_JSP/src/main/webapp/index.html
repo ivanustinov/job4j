@@ -13,6 +13,17 @@
             text-align: center; /* Выравнивание по левому краю */
         }
 
+        .table-bordered {
+            border: 2px solid black;;
+        }
+
+        .table-bordered > thead > tr > th {
+            border: 2px solid black;
+        }
+
+        .table-bordered > tbody > tr > td {
+            border: 2px solid black;
+        }
     </style>
 </head>
 <body style="text-align: center">
@@ -50,12 +61,12 @@
             <label><input type="radio" name="optradio">Female</label>
         </div>
         <div>
-            <button type="submit" class="btn btn-default" style="margin-top: 10px">Submit</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
         </div>
     </form>
     <div style="text-align: center; width: 40%" class="container">
         <h4 style="margin-top: 20px">Users:</h4>
-        <table border="2" class="table table-bordered">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th style="width: 150px">Firstname</th>
