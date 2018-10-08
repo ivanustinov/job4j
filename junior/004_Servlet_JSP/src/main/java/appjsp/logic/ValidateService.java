@@ -20,7 +20,7 @@ public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
     private final Store<User> store = DbStore.getInstance();
     private final Map<String, Consumer<SessionRequestContext>> userDispatch = new HashMap<>();
-    private final PageServise pageServise = new PageServise(store);
+    private final PageServise pageServise;
 
     public static ValidateService getInstance() {
         return INSTANCE;
@@ -37,6 +37,7 @@ public class ValidateService {
 
     private ValidateService() {
         init();
+        pageServise = new PageServise(store);
     }
 
     public Consumer<SessionRequestContext> add() {
@@ -49,7 +50,7 @@ public class ValidateService {
                 String result = "Enter values for the login or/and password fields";
                 if (!login.equals("") && !password.equals("")) {
                     store.add(role, login, password);
-                    result = "User with login " + login + " has been created";
+                    result = "User " + login + " has been created";
                 }
                 context.setRequestAttribute("result", result);
             }
@@ -88,11 +89,11 @@ public class ValidateService {
             public void accept(SessionRequestContext context) {
                 String newLogin = context.getParameter("login");
                 String newPassword = context.getParameter("password");
-                int id = (int) context.getSessionAttribute("id");
+                User user = (User) context.getSessionAttribute("user");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.update(id, newLogin, newPassword);
-                    result = "User with id " + id + " has been updated";
+                    store.update(user.getId(), newLogin, newPassword);
+                    result = "User with id " + user.getId() + " has been updated";
                 }
                 context.setRequestAttribute("result", result);
             }

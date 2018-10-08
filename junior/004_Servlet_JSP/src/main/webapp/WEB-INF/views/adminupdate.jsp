@@ -5,9 +5,9 @@
     <title>Update User</title>
 </head>
 <body>
-<h4 align='center'>Edit user ${param.login}</h4>
+    <h4 align='center'>Edit user ${user.login}</h4>
 <fieldset>
-    <form action="/contr" method='post'>
+    <form action="contr" method='post'>
         <legend align='center'>Insert new Parameters</legend>
         <input type='hidden' name='action' value='adminUpdate'>
         <input type='hidden' name='page' value='WEB-INF/views/adminupdate.jsp'>
@@ -25,7 +25,7 @@
             <button type='submit'>UPDATE</button>
         </p>
     </form>
-    <form action="/contr" method='post'>
+    <form action="contr" method='post'>
         <p align='center'>
             <button type='submit'>BACK TO USER'S LIST</button>
         </p>

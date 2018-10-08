@@ -18,14 +18,14 @@ import java.util.function.Consumer;
  */
 public class PageServise {
     private final Store<User> store;
-    private final Map<UsersRoles, String> roleDispatch = new HashMap<>();
     private final Map<String, Consumer<SessionRequestContext>> pageDispatch = new HashMap<>();
-
+    private final Map<UsersRoles, String> roleDispatch = new HashMap<>();
 
     public String initPage(SessionRequestContext context) {
         String page = context.getParameter("page");
         if (page == null) {
-            UsersRoles role = (UsersRoles) context.getSessionAttribute("role");
+            User user = (User) context.getSession().getAttribute("user");
+            UsersRoles role = user.getRole();
             page = roleDispatch.get(role);
         }
         Consumer<SessionRequestContext> ans = pageDispatch.get(page);
@@ -36,14 +36,13 @@ public class PageServise {
 
     public PageServise(Store<User> store) {
         this.store = store;
-        initHomePage();
         initRedirectPage();
+        initRoleDispatch();
     }
 
-    public void initHomePage() {
+    public void initRoleDispatch() {
         roleDispatch.put(UsersRoles.USER, "WEB-INF/views/userpage.jsp");
         roleDispatch.put(UsersRoles.ADMIN, "WEB-INF/views/list.jsp");
-
     }
 
     public void initRedirectPage() {
@@ -59,8 +58,9 @@ public class PageServise {
         return new Consumer<SessionRequestContext>() {
             @Override
             public void accept(SessionRequestContext context) {
-                User user = store.findById((int) (context.getSessionAttribute("id")));
-                context.setRequestAttribute("user", user);
+                User user = (User) (context.getSessionAttribute("user"));
+                User realUser = store.findById(user.getId());
+                context.setRequestAttribute("user", realUser);
             }
         };
     }
@@ -87,7 +87,10 @@ public class PageServise {
         return new Consumer<SessionRequestContext>() {
             @Override
             public void accept(SessionRequestContext context) {
+                User user = (User) (context.getSessionAttribute("user"));
+                User realUser = store.findById(user.getId());
                 ArrayList<User> users = store.findAll();
+                context.setRequestAttribute("user", realUser);
                 context.setRequestAttribute("users", users);
                 context.setRequestAttribute("size", users.size());
             }

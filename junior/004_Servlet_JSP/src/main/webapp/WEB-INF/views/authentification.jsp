@@ -6,16 +6,18 @@
 </head>
 <body>
 <fieldset>
-    <form action="/auth" method='post'>
+    <form action="auth" method='post'>
         <legend align='center'>Authentification</legend>
-        <p align='center'>LOGIN: <input type='text' name='login'></p>
-        <p align='center'>PASSWORD: <input type='password' name='password'></p>
-        <p align='center'>
+        <div align='center'>LOGIN: <input type='text' name='login'></div>
+        <div align='center'>PASSWORD: <input type='password' name='password'>
+            <br>
             <button type='submit'>ENTER</button>
-        </p>
+        </div>
     </form>
     <br/>
-    ${result}
+    <div align="center">
+        ${result}
+    </div>
 </fieldset>
 </body>
 </html>

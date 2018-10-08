@@ -5,8 +5,8 @@
     <title>User</title>
 </head>
 <body>
-<h4 align='center'>Hello ${sessionScope.login}</h4>
-<h4 align='center'>Role: ${sessionScope.role}</h4>
+    <h4 align='center'>Hello ${user.login}</h4>
+    <h4 align='center'>Role: ${sessionScope.user.role}</h4>
 <table align='center' border='2' cellspacing='0' cellpadding='2'>
     <caption>User's information</caption>
     <tr>
@@ -20,14 +20,14 @@
         <td>${user.role}</td>
         <td>${user.login}</td>
         <td>
-            <form action="/contr" method='post'>
+            <form action="contr" method='post'>
                 <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
                 <button type='submit'>Edit</button>
             </form>
         </td>
     </tr>
 </table>
-<form action="/contr" method='post'>
+    <form method='post'>
     <input type='hidden' name='action' value='logOut'>
     <input type='hidden' name='page' value='WEB-INF/views/authentification.jsp'>
     <p align="center">

@@ -7,24 +7,24 @@
 <body>
 <h4 align='center'>Edit User: ${user.login}</h4>
 <fieldset>
-    <form action="/contr" method='post'>
+    <form method='post'>
         <legend align='center'>Insert new Parameters</legend>
         <input type='hidden' name='action' value='update'>
         <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
-        <p align='center'>LOGIN: <input type='text' name='login' value="${user.login}" placeholder=${user.login}></p>
-        <p align='center'>PASSWORD: <input type='text' name='password' value="${user.password}"
-                                           placeholder=${user.password}></p>
-        <p align='center'>
+        <div align='center'>LOGIN: <input type='text' name='login' value="${user.login}" placeholder=${user.login}>
+        </div>
+        <div align='center'>PASSWORD:
+            <input type='text' name='password' value="${user.password}" placeholder=${user.password}>
             <button type='submit'>UPDATE</button>
-        </p>
+        </div>
     </form>
-    <form action="/contr" method='post'>
-        <p align='center'>
+    <form method='post'>
+        <div align='center'>
             <button type='submit'>BACK TO HOME PAGE</button>
-        </p>
+        </div>
     </form>
 </fieldset>
-<p align="center"><c:out value="${result}"/></p>
+    <div align="center">${result}</div>
 </body>
 </html>
 

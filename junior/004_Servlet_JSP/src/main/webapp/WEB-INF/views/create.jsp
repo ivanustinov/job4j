@@ -6,7 +6,7 @@
 </head>
 <body>
 <fieldset>
-    <form action="/contr" method='post'>
+    <form action="contr" method='post'>
         <legend align='center'>Create new User</legend>
         <input type='hidden' name='action' value='add'>
         <input type='hidden' name='page' value='WEB-INF/views/create.jsp'>
@@ -24,10 +24,10 @@
     </form>
 </fieldset>
 <p align="center">${result}</p>
-<form action="/contr" method='post'>
-    <p align='center'>
+    <form action="contr" method='post'>
+        <div align='center'>
         <button type='submit'>BACK TO USER'S LIST</button>
-    </p>
+        </div>
 </form>
 </body>
 </html>
