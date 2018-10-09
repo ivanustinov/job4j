@@ -12,12 +12,15 @@
             background: #ccc; /* Цвет фона */
             text-align: center; /* Выравнивание по левому краю */
         }
+
         .table-bordered {
             border: 2px solid black;;
         }
+
         .table-bordered > thead > tr > th {
             border: 2px solid black;
         }
+
         .table-bordered > tbody > tr > td {
             border: 2px solid black;
         }
@@ -34,6 +37,15 @@
                 }
             }
             return result
+        }
+
+        function addRow() {
+            var name = $('#name').val();
+            var serName = $('#serName').val();
+            var email = $('#eml').val();
+            $('#table tr:last').after('<tr><td>' + name
+                + '</td><td>' + serName
+                + '</td><td>' + email + '</td></tr>');
         }
     </script>
 </head>
@@ -74,10 +86,12 @@
         <div>
             <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return validate();">Submit
             </button>
+            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return addRow();">Add
+            </button>
         </div>
     </form>
     <div style="width: 35%; margin-top: 10px" class="container">
-        <table class="table table-bordered">
+        <table id="table" class="table table-bordered">
             <caption style="text-align: center; color: black">users in the store</caption>
             <thead>
             <tr>
@@ -87,21 +101,6 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>john@example.com</td>
-            </tr>
-            <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>mary@example.com</td>
-            </tr>
-            <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                <td>july@example.com</td>
-            </tr>
             </tbody>
         </table>
     </div>
