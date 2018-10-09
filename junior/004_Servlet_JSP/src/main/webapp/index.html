@@ -12,61 +12,73 @@
             background: #ccc; /* Цвет фона */
             text-align: center; /* Выравнивание по левому краю */
         }
-
         .table-bordered {
             border: 2px solid black;;
         }
-
         .table-bordered > thead > tr > th {
             border: 2px solid black;
         }
-
         .table-bordered > tbody > tr > td {
             border: 2px solid black;
         }
     </style>
+    <script>
+        function validate() {
+            var result = true;
+            var names = $('div [id]')
+            for (var i = 0; i != names.length; i++) {
+                var input = names[i]
+                if (input.value == '') {
+                    result = false;
+                    alert("Insert data in field " + input.id);
+                }
+            }
+            return result
+        }
+    </script>
 </head>
 <body style="text-align: center">
     <div>
         <h2>User's Store</h2>
         <p>Enter Your information.</p>
     </div>
-    <form class="form-horizontal" action="/action_page.php">
+    <form class="form-horizontal">
         <div class="form-group" style="margin-top: 10px">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="email">Name:</label>
-            <div class="col-sm-2" style="padding-left: 5px">
-                <input type="text" class="form-control" id="email" placeholder="Enter name">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="name">Name:</label>
+            <div class="col-sm-2" style="padding-left: 3px">
+                <input type="text" style="padding-left: 3px" class="form-control" id="name" placeholder="Enter name">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="pwd">Surname:</label>
-            <div class="col-sm-2" style="padding-left: 5px">
-                <input type="text" class="form-control" id="pwd" placeholder="Enter surname">
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="serName">Surname:</label>
+            <div class="col-sm-2" style="padding-left: 3px">
+                <input type="text" style="padding-left: 3px" class="form-control" id="serName"
+                       placeholder="Enter surname">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-5" style="padding-right: 0px" for="eml">Email:</label>
-            <div class="col-sm-2" style="padding-left: 5px">
-                <input type="email" class="form-control" id="eml" placeholder="Enter email">
+            <div class="col-sm-2" style="padding-left: 3px">
+                <input type="email" style="padding-left: 3px" class="form-control" id="eml" placeholder="Enter email">
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="text">Comment:</label>
-            <div class="col-sm-4" style="padding-left: 5px">
-                <textarea class="form-control" rows="5" id="text" placeholder="Discribe Yourself"></textarea>
-            </div>
+        <div class="form-group" style="text-align: left; padding-left: 38%">
+            <label class="control-label" for="text">Comment:</label>
+            <textarea class="form-control" style="padding-left: 3px; width: 40%" rows="5" id="text"
+                      placeholder="Discribe Yourself"></textarea>
         </div>
         <div class="radio-inline form-group">
             <label style="padding-right: 30px;"><input type="radio" name="optradio" checked/>Male</label>
             <label><input type="radio" name="optradio">Female</label>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return validate();">Submit
+            </button>
         </div>
     </form>
-    <div style="text-align: center; width: 40%" class="container">
-        <h4 style="margin-top: 20px">Users:</h4>
+    <div style="width: 35%; margin-top: 10px" class="container">
         <table class="table table-bordered">
+            <caption style="text-align: center; color: black">users in the store</caption>
             <thead>
             <tr>
                 <th style="width: 150px">Firstname</th>
