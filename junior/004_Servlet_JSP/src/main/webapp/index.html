@@ -63,8 +63,9 @@
                 url: "json",
                 type: "POST",
                 data: JSON.stringify(user),
-                dataType: "json",
-                success: getUsers()
+            }).done(function () {
+                $('#myForm')[0].reset();
+                getUsers();
             });
             return false;
         }
@@ -105,7 +106,7 @@
         <h2>User's Store</h2>
         <p>Enter Your information.</p>
     </div>
-    <form class="form-horizontal">
+    <form id="myForm" class="form-horizontal">
         <div class="form-group" style="margin-top: 10px">
             <label class="control-label col-sm-5" style="padding-right: 0px" for="name">Name:</label>
             <div class="col-sm-2" style="padding-left: 3px">
@@ -135,7 +136,7 @@
             <label><input type="radio" name="optradio">Female</label>
         </div>
         <div>
-            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return createUser()">Submit
+            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="createUser()">Submit
             </button>
         </div>
     </form>
