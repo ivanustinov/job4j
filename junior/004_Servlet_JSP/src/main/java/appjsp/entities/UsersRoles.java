@@ -8,14 +8,5 @@ package appjsp.entities;
  * @since 22.08.2018
  */
 public enum UsersRoles {
-    GUEST(0), USER(1), ADMIN(2);
-    private int acsessLevel;
-
-    UsersRoles(int acsessLevel) {
-        this.acsessLevel = acsessLevel;
-    }
-
-    public int getAcsessLevel() {
-        return acsessLevel;
-    }
+    GUEST, USER, ADMIN;
 }

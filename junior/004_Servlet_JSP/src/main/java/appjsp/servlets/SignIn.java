@@ -1,7 +1,7 @@
 package appjsp.servlets;
 
 import appjsp.entities.User;
-import appjsp.logic.Validate;
+import appjsp.entities.UsersRoles;
 import appjsp.logic.ValidateService;
 
 import javax.servlet.ServletException;
@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static appjsp.entities.UsersRoles.ADMIN;
+import static appjsp.entities.UsersRoles.USER;
 
 /**
  * //TODO add comments.
@@ -19,12 +24,15 @@ import java.io.IOException;
  * @since 23.08.2018
  */
 public class SignIn extends HttpServlet {
-    private final Validate logic = ValidateService.getInstance();
+    private final ValidateService logic = ValidateService.getInstance();
+    private final Map<UsersRoles, String> roleDispatch = new HashMap<>();
 
     @Override
     public void init() throws ServletException {
-
+        roleDispatch.put(USER, "userServlet");
+        roleDispatch.put(ADMIN, "adminServlet");
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,13 +45,17 @@ public class SignIn extends HttpServlet {
             if (user != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("user", user);
-                page = "contr";
+                UsersRoles role = user.getRole();
+                page = roleDispatch.get(role);
+                resp.sendRedirect(page);
+                return;
             } else {
                 result = "Wrong password or login";
+                req.setAttribute("result", result);
             }
+        } else {
+            req.setAttribute("result", result);
         }
-        req.setAttribute("result", result);
         req.getRequestDispatcher(page).forward(req, resp);
     }
-
 }

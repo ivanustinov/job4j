@@ -28,11 +28,12 @@ public class SignInTest {
     public void loginUser() throws ServletException, IOException {
         DbStore store = DbStore.getInstance();
         ArrayList<User> usersBefore = store.findAll();
-        store.add(UsersRoles.USER, "Petr", "petr");
+        User user = new User(UsersRoles.USER, "Petr", "petr");
+        store.add(user);
         ArrayList<User> usersAfter = store.findAll();
         usersAfter.removeAll(usersBefore);
         User petr = usersAfter.get(0);
-        int id = petr.getId();
+        String id = petr.getId();
         SignIn signIn = new SignIn();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameter("login")).thenReturn("Petr");

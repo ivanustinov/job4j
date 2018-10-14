@@ -5,25 +5,32 @@
     <title>Update User</title>
 </head>
 <body>
-<h4 align='center'>Edit User: ${user.login}</h4>
-<fieldset>
-    <form method='post'>
-        <legend align='center'>Insert new Parameters</legend>
-        <input type='hidden' name='action' value='update'>
-        <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
-        <div align='center'>LOGIN: <input type='text' name='login' value="${user.login}" placeholder=${user.login}>
-        </div>
-        <div align='center'>PASSWORD:
-            <input type='text' name='password' value="${user.password}" placeholder=${user.password}>
-            <button type='submit'>UPDATE</button>
-        </div>
-    </form>
-    <form method='post'>
-        <div align='center'>
-            <button type='submit'>BACK TO HOME PAGE</button>
-        </div>
-    </form>
-</fieldset>
+    <h4 align='center'>Edit User: ${user.login}</h4>
+    <fieldset>
+        <c:set var="user" scope="page" value="${sessionScope.user}"/>
+        <form method='post'>
+            <div style="text-align: center">
+                <input type='hidden' name='action' value="userUpdate">
+                <input type='hidden' name='id' value="${user.id}">
+                <input type='hidden' name='page' value="WEB-INF/views/update.jsp">
+                <legend>Insert new Parameters</legend>
+                <div>LOGIN: <input type='text' name='login' value="${user.login}"
+                                   placeholder=${user.login}>
+                </div>
+                <div>PASSWORD:
+                    <input type='text' name='password' value="${user.password}" placeholder=${user.password}>
+                </div>
+                <div>
+                    <button style="text-align: center" type='submit'>UPDATE</button>
+                </div>
+            </div>
+        </form>
+        <form method='post'>
+            <div align='center'>
+                <button type='submit'>BACK TO HOME PAGE</button>
+            </div>
+        </form>
+    </fieldset>
     <div align="center">${result}</div>
 </body>
 </html>

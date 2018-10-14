@@ -2,6 +2,7 @@ package appjsp.entities;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * //TODO add comments.
@@ -11,20 +12,25 @@ import java.util.Objects;
  * @since 03.08.2018
  */
 public class User {
-    private int id;
+    private String id = UUID.randomUUID().toString();
     private UsersRoles role;
     private String login;
     private String password;
-    private int acsessLevel;
     private LocalDateTime createDate;
 
-    public User(int id, UsersRoles role, String login, String password) {
+    public User(UsersRoles role, String login, String password) {
+        this.role = role;
+        this.login = login;
+        this.password = password;
+        this.createDate = LocalDateTime.now();
+    }
+
+    public User(String id, UsersRoles role, String login, String password) {
         this.id = id;
         this.role = role;
         this.login = login;
         this.password = password;
         this.createDate = LocalDateTime.now();
-        this.acsessLevel = role.getAcsessLevel();
     }
 
     public void setPassword(String password) {
@@ -51,16 +57,8 @@ public class User {
         this.login = login;
     }
 
-    public int getAcsessLevel() {
-        return acsessLevel;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
@@ -85,10 +83,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("id: %s\nrole: %s\nlogin: %s\n", id, role, login);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new User(1, UsersRoles.ADMIN, "Petr", "rtre"));
+        return String.format("id: %s; login: %s; role: %s", getId(), login, role);
     }
 }

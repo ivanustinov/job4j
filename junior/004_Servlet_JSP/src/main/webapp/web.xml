@@ -9,15 +9,6 @@
     <!--<welcome-file>index.html</welcome-file>-->
     <!--</welcome-file-list>-->
     <servlet>
-        <servlet-name>Controller</servlet-name>
-        <servlet-class>appjsp.servlets.Controller</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Controller</servlet-name>
-        <url-pattern>/contr</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>Authorization</servlet-name>
         <servlet-class>appjsp.servlets.SignIn</servlet-class>
         <load-on-startup>2</load-on-startup>
@@ -26,22 +17,4 @@
         <servlet-name>Authorization</servlet-name>
         <url-pattern>/auth</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>Redirect</servlet-name>
-        <servlet-class>appjsp.servlets.Redirect</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Redirect</servlet-name>
-        <url-pattern>/redirect</url-pattern>
-    </servlet-mapping>
-    <filter>
-        <filter-name>AuthFilter</filter-name>
-        <filter-class>appjsp.servlets.AuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AuthFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <!--<dispatcher>FORWARD</dispatcher>-->
-    </filter-mapping>
 </web-app>

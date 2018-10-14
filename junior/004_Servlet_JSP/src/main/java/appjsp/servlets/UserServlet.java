@@ -1,10 +1,9 @@
 package appjsp.servlets;
 
-import appjsp.logic.SessionRequestContext;
-import appjsp.logic.Validate;
 import appjsp.logic.ValidateService;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +14,11 @@ import java.io.IOException;
  *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
- * @since 22.08.2018
+ * @since 10.10.2018
  */
-public class Controller extends HttpServlet {
-    private final Validate logic = ValidateService.getInstance();
+@WebServlet(urlPatterns = {"/userServlet"})
+public class UserServlet extends HttpServlet {
+    private ValidateService actionService = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,10 +31,14 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionRequestContext context = new SessionRequestContext();
-        context.extractValues(req);
-        String page = logic.doAction(context);
-        context.insertAttributes(req);
+        String action = req.getParameter("action");
+        if (action != null) {
+            actionService.doAction(action, req);
+        }
+        String page = "WEB-INF/views/userpage.jsp";
+        if (req.getParameter("page") != null) {
+            page = req.getParameter("page");
+        }
         req.getRequestDispatcher(page).forward(req, resp);
     }
 }
