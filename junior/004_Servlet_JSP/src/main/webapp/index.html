@@ -24,8 +24,52 @@
         .table-bordered > tbody > tr > td {
             border: 2px solid black;
         }
+
+        .table-bordered > thead > tr > td {
+            border: 2px solid black;
+            padding: 3px;
+        }
     </style>
     <script>
+        $(getUsers());
+
+        function getUsers() {
+            $.ajax({
+                url: "json",
+                method: "GET",
+                complete: function (data) {
+                    var result = '';
+                    var users = JSON.parse(data.responseText);
+                    for (var i = 0; i != users.length; i++) {
+                        result += '<tr>'
+                            + '<td>' + users[i].firstName + '</td>'
+                            + '<td>' + users[i].serName + '</td>'
+                            + '<td>' + users[i].email + '</td>'
+                            + '</tr>'
+                    }
+                    var table = document.getElementById("tableBody");
+                    table.innerHTML = result;
+                }
+            })
+        }
+
+
+        function createUser() {
+            if (!validate()) {
+                return;
+            }
+            var user = {firstName: $('#name').val(), serName: $('#serName').val(), email: $('#eml').val()}
+            $.ajax({
+                url: "json",
+                type: "POST",
+                data: JSON.stringify(user),
+                dataType: "json",
+                success: getUsers()
+            });
+            return false;
+        }
+
+
         function validate() {
             var result = true;
             var names = $('div [id]')
@@ -40,12 +84,19 @@
         }
 
         function addRow() {
+            if (!validate()) {
+                return;
+            }
             var name = $('#name').val();
             var serName = $('#serName').val();
             var email = $('#eml').val();
-            $('#table tr:last').after('<tr><td>' + name
-                + '</td><td>' + serName
-                + '</td><td>' + email + '</td></tr>');
+            $('#table tr:last').after(
+                '<tr>'
+                + '<td>' + name + '</td>'
+                + '<td>' + serName + '</td>'
+                + '<td>' + email + '</td>'
+                + '</tr>'
+            );
         }
     </script>
 </head>
@@ -84,9 +135,7 @@
             <label><input type="radio" name="optradio">Female</label>
         </div>
         <div>
-            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return validate();">Submit
-            </button>
-            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return addRow();">Add
+            <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="return createUser()">Submit
             </button>
         </div>
     </form>
@@ -100,7 +149,7 @@
                 <th>Email</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
             </tbody>
         </table>
     </div>
