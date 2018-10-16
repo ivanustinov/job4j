@@ -40,7 +40,32 @@ public class SignIn extends HttpServlet {
         String password = req.getParameter("password");
         String result = "Enter values for the name or/and login fields";
         String page = "WEB-INF/views/authentification.jsp";
-        if (!login.equals("") && !password.equals("")) {
+        if (login != null && password != null && login.equals("") && !password.equals("")) {
+            User user = logic.isCredentional(login, password);
+            if (user != null) {
+                HttpSession session = req.getSession();
+                session.setAttribute("user", user);
+                UsersRoles role = user.getRole();
+                page = roleDispatch.get(role);
+                resp.sendRedirect(page);
+                return;
+            } else {
+                result = "Wrong password or login";
+                req.setAttribute("result", result);
+            }
+        } else {
+            req.setAttribute("result", result);
+        }
+        req.getRequestDispatcher(page).forward(req, resp);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login");
+        String password = req.getParameter("password");
+        String result = "Enter values for the name or/and login fields";
+        String page = "WEB-INF/views/authentification.jsp";
+        if (login != null && password != null && login.equals("") && !password.equals("")) {
             User user = logic.isCredentional(login, password);
             if (user != null) {
                 HttpSession session = req.getSession();
