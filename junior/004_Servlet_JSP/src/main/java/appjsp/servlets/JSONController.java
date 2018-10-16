@@ -47,6 +47,7 @@ public class JSONController extends HttpServlet {
         IndexUser indexUser = mapper.readValue(stringBuilder.toString(), IndexUser.class);
         users.put(indexUser.getId(), indexUser);
         System.out.println(users.size());
+        System.out.println("POST");
     }
 
     @Override
@@ -67,5 +68,6 @@ public class JSONController extends HttpServlet {
         }
         writer.append("]");
         writer.flush();
+        System.out.println("GET");
     }
 }
