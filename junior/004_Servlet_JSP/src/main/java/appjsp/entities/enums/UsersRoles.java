@@ -1,4 +1,4 @@
-package appjsp.entities;
+package appjsp.entities.enums;
 
 /**
  * //TODO add comments.

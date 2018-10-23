@@ -1,13 +1,17 @@
 package appjsp.persistent;
 
 import appjsp.entities.User;
-import appjsp.entities.UsersRoles;
+import appjsp.entities.enums.Cities;
+import appjsp.entities.enums.Countries;
+import appjsp.entities.enums.UsersRoles;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-import static appjsp.entities.UsersRoles.ADMIN;
+import static appjsp.entities.enums.Cities.NOVGOROD;
+import static appjsp.entities.enums.Countries.RUSSIA;
+import static appjsp.entities.enums.UsersRoles.ADMIN;
 
 /**
  * //TODO add comments.
@@ -34,19 +38,18 @@ public class DbStore implements Store<User> {
         source.setMaxOpenPreparedStatements(100);
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users(id text PRIMARY KEY, role text, login text,"
-                    + "password text)");
+            stm.execute("CREATE TABLE IF NOT EXISTS users(id text PRIMARY KEY, role text, coutry text, " +
+                    "city text, login text, password text)");
             ResultSet rs = stm.executeQuery("SELECT * FROM users");
             int number = 0;
             while (rs.next()) {
                 number++;
             }
             if (number == 0) {
-                User petr = new User(ADMIN, "Petr", "petr");
-                String id = petr.getId();
-                stm.executeUpdate("INSERT INTO users VALUES ('" + id + "', 'ADMIN', 'Petr', 'petr')");
+                User petr = new User(ADMIN, RUSSIA, NOVGOROD, "Petr", "petr");
+                stm.executeUpdate(String.format("INSERT INTO users VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", petr.getId(),
+                        petr.getRole(), petr.getCountry(), petr.getCity(), petr.getLogin(), petr.getPassword()));
             }
-            System.out.println(number);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,11 +62,13 @@ public class DbStore implements Store<User> {
     @Override
     public void add(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement add = connection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?)")) {
+             PreparedStatement add = connection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)")) {
             add.setString(1, user.getId());
             add.setString(2, user.getRole().toString());
-            add.setString(3, user.getLogin());
-            add.setString(4, user.getPassword());
+            add.setString(3, user.getCountry().toString());
+            add.setString(4, user.getCity().toString());
+            add.setString(5, user.getLogin());
+            add.setString(6, user.getPassword());
             add.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,15 +87,16 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public void adminUpdate(String id, String newRole, String newLogin, String newPassword) {
+    public void adminUpdate(String id, String newRole, String newCountry, String newCity, String newLogin, String newPassword) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, login = ?, "
-                     + "password = ?"
-                     + "WHERE id = ?")) {
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, country = ?"
+                     + "city = ?, login = ?, password = ? WHERE id = ?")) {
             insert.setString(1, newRole);
-            insert.setString(2, newLogin);
-            insert.setString(3, newPassword);
-            insert.setString(4, id);
+            insert.setString(2, newCountry);
+            insert.setString(3, newCity);
+            insert.setString(4, newLogin);
+            insert.setString(5, newPassword);
+            insert.setString(6, id);
             insert.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,14 +104,15 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public void update(String id, String newLogin, String newPassword) {
+    public void update(String id, String newCountry, String newCity, String newLogin, String newPassword) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET login = ?, "
-                     + "password = ?"
-                     + "WHERE id = ?")) {
-            insert.setString(1, newLogin);
-            insert.setString(2, newPassword);
-            insert.setString(3, id);
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET country = ?, "
+                     + " city = ?, login = ?, password = ? WHERE id = ?")) {
+            insert.setString(1, newCountry);
+            insert.setString(2, newCity);
+            insert.setString(3, newLogin);
+            insert.setString(4, newPassword);
+            insert.setString(5, id);
             insert.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,7 +126,10 @@ public class DbStore implements Store<User> {
              Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM users");
             while (rs.next()) {
-                users.add(new User(rs.getString(1), UsersRoles.valueOf(rs.getString(2)), rs.getString(3), rs.getString(4)));
+                users.add(new User(rs.getString(1), UsersRoles.valueOf(rs.getString(2)),
+                        Countries.valueOf(rs.getString(3)),
+                        Cities.valueOf(rs.getString(4)), rs.getString(5),
+                        rs.getString(6)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,10 +142,10 @@ public class DbStore implements Store<User> {
         User user = null;
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT * FROM users WHERE id = " + id);
+            ResultSet rs = stm.executeQuery("SELECT * FROM users WHERE id = '" + id + "'");
             while (rs.next()) {
-                user = new User(UsersRoles.valueOf(rs.getString(2)), rs.getString(3),
-                        rs.getString(4));
+                user = new User(rs.getString(1), UsersRoles.valueOf(rs.getString(2)), Countries.valueOf(rs.getString(3)),
+                        Cities.valueOf(rs.getString(4)), rs.getString(5), rs.getString(6));
             }
         } catch (SQLException e) {
             e.printStackTrace();

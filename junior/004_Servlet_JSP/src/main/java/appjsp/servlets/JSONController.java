@@ -42,12 +42,9 @@ public class JSONController extends HttpServlet {
                 stringBuilder.append(user);
             }
         }
-        System.out.println(stringBuilder.toString());
         ObjectMapper mapper = new ObjectMapper();
         IndexUser indexUser = mapper.readValue(stringBuilder.toString(), IndexUser.class);
         users.put(indexUser.getId(), indexUser);
-        System.out.println(users.size());
-        System.out.println("POST");
     }
 
     @Override
@@ -61,13 +58,13 @@ public class JSONController extends HttpServlet {
             writer.append("{\"firstName\":\"" + user.getFirstName() + "\", \"serName\":\"" + user.getSerName()
                     + "\", \"email\":\"" + user.getEmail() + "\"}");
             if (i++ == users.size() || users.size() == 0) {
-                continue;
+                break;
             } else {
                 writer.append(", ");
             }
         }
         writer.append("]");
         writer.flush();
-        System.out.println("GET");
+        writer.close();
     }
 }

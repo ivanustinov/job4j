@@ -1,5 +1,9 @@
 package appjsp.entities;
 
+import appjsp.entities.enums.Cities;
+import appjsp.entities.enums.Countries;
+import appjsp.entities.enums.UsersRoles;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,21 +20,30 @@ public class User {
     private UsersRoles role;
     private String login;
     private String password;
+    private Countries country;
+    private Cities city;
     private LocalDateTime createDate;
 
-    public User(UsersRoles role, String login, String password) {
+    public User(UsersRoles role, Countries country, Cities city, String login, String password) {
         this.role = role;
+        this.country = country;
+        this.city = city;
         this.login = login;
         this.password = password;
         this.createDate = LocalDateTime.now();
     }
 
-    public User(String id, UsersRoles role, String login, String password) {
+    public User(String id, UsersRoles role, Countries country, Cities city, String login, String password) {
         this.id = id;
         this.role = role;
+        this.country = country;
+        this.city = city;
         this.login = login;
         this.password = password;
         this.createDate = LocalDateTime.now();
+    }
+
+    public User() {
     }
 
     public void setPassword(String password) {
@@ -59,6 +72,14 @@ public class User {
 
     public String getId() {
         return id;
+    }
+
+    public Countries getCountry() {
+        return country;
+    }
+
+    public Cities getCity() {
+        return city;
     }
 
     @Override

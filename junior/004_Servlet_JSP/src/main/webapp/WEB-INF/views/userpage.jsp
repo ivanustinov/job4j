@@ -4,35 +4,40 @@
 <head>
     <title>User</title>
 </head>
-<body>
+<body style="text-align: center">
     <h4 align='center'>Hellow ${user.login}</h4>
-    <h4 align='center'>Role: ${sessionScope.user.role}</h4>
     <table align='center' border='2' cellspacing='0' cellpadding='2'>
-        <c:set var="user" scope="page" value="${sessionScope.user}"/>
         <caption>User's information</caption>
         <tr>
             <th>ID</th>
             <th>ROLE</th>
+            <th>COUNTRY</th>
+            <th>CITY</th>
             <th>LOGIN</th>
+            <th>PASSWORD</th>
             <th>ACTIONS</th>
         </tr>
         <tr>
-            <td>${user.id}</td>
-            <td>${user.role}</td>
-            <td>${user.login}</td>
+            <td>${sessionScope.user.id}</td>
+            <td>${sessionScope.user.role}</td>
+            <td>${sessionScope.user.country}</td>
+            <td>${sessionScope.user.city}</td>
+            <td>${sessionScope.user.login}</td>
+            <td>${sessionScope.user.password}</td>
             <td>
-                <form method='post'>
-                    <input type='hidden' name='page' value='WEB-INF/views/update.jsp'>
+                <form>
+                    <%--<input type='hidden' name='page' value='countryCity'>--%>
+                    <input type='hidden' name='page' value='/WEB-INF/views/update.jsp'>
                     <button type='submit'>EDIT</button>
                 </form>
             </td>
         </tr>
     </table>
-    <form method='post'>
+    <form>
         <input type='hidden' name='action' value='logOut'>
-        <p align="center">
+        <div>
             <button type='submit'>Exit</button>
-        </p>
+        </div>
     </form>
 </body>
 </html>

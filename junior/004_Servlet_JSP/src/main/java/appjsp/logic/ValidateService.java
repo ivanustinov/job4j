@@ -1,11 +1,12 @@
 package appjsp.logic;
 
 import appjsp.entities.User;
-import appjsp.entities.UsersRoles;
 import appjsp.persistent.DbStore;
 import appjsp.persistent.Store;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class ValidateService {
         actions.put("adminUpdate", adminUpdate());
         actions.put("userUpdate", userUpdate());
         actions.put("findById", findById());
+        actions.put("getAll", getAll());
         actions.put("logOut", logOut());
     }
 
@@ -44,16 +46,17 @@ public class ValidateService {
         return new Consumer<HttpServletRequest>() {
             @Override
             public void accept(HttpServletRequest req) {
-                String login = req.getParameter("login");
-                String password = req.getParameter("password");
-                String role = req.getParameter("role");
-                String result = "Enter values for the login or/and password fields";
-                if (!login.equals("") && !password.equals("")) {
-                    User user = new User(UsersRoles.valueOf(role), login, password);
-                    store.add(user);
-                    result = "User " + login + " has been created";
+                ObjectMapper mapper = new ObjectMapper();
+                User user = null;
+                String f = req.getParameter("user");
+                System.out.println(f);
+                try {
+                    user = mapper.readValue(f, User.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                req.setAttribute("result", result);
+                store.add(user);
+                req.setAttribute("result", "User " + user.getLogin() + " has been created");
             }
         };
     }
@@ -63,8 +66,8 @@ public class ValidateService {
             @Override
             public void accept(HttpServletRequest req) {
                 String id = req.getParameter("id");
-                String result = "user with id " + id + " has been deleted";
                 store.delete(id);
+                String result = "user with id " + id + " has been deleted";
                 req.setAttribute("result", result);
             }
         };
@@ -78,9 +81,11 @@ public class ValidateService {
                 String newPassword = req.getParameter("password");
                 String newRole = req.getParameter("role");
                 String id = req.getParameter("id");
+                String newCountry = req.getParameter("country");
+                String newCity = req.getParameter("city");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.adminUpdate(id, newRole, newLogin, newPassword);
+                    store.adminUpdate(id, newCountry, newCity, newRole, newLogin, newPassword);
                     result = "User with id " + id + " has been updated";
                 }
                 req.setAttribute("result", result);
@@ -94,10 +99,12 @@ public class ValidateService {
             public void accept(HttpServletRequest req) {
                 String newLogin = req.getParameter("login");
                 String newPassword = req.getParameter("password");
+                String newCountry = req.getParameter("country");
+                String newCity = req.getParameter("city");
                 String id = req.getParameter("id");
                 String result = "Enter values for the name or/and login fields";
                 if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.update(id, newLogin, newPassword);
+                    store.update(id, newCountry, newLogin, newLogin, newPassword);
                     result = "User with id " + id + " has been updated";
                 }
                 req.setAttribute("result", result);
@@ -130,8 +137,31 @@ public class ValidateService {
         };
     }
 
-    public List<User> getAll() {
-        return store.findAll();
+    public Consumer<HttpServletRequest> getAll() {
+        return new Consumer<HttpServletRequest>() {
+            @Override
+            public void accept(HttpServletRequest req) {
+                StringBuilder json = new StringBuilder();
+                int i = 1;
+                json.append("[");
+                List<User> users = store.findAll();
+                for (User user : users) {
+                    json.append("{\"role\" : \"" + user.getRole() + "\", "
+                            + "\"country\" : \"" + user.getCountry() + "\", "
+                            + "\"id\" : \"" + user.getId() + "\", "
+                            + "\"city\" : \"" + user.getCity() + "\", "
+                            + "\"login\" : \"" + user.getLogin() + "\", "
+                            + "\"password\" : \"" + user.getPassword() + "\"}");
+                    if (i++ == users.size() || users.size() == 0) {
+                        break;
+                    } else {
+                        json.append(", ");
+                    }
+                }
+                json.append("]");
+                req.setAttribute("result", json.toString());
+            }
+        };
     }
 
     public User isCredentional(String login, String password) {

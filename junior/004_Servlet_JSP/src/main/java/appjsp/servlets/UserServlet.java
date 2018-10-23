@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * //TODO add comments.
@@ -34,11 +35,19 @@ public class UserServlet extends HttpServlet {
         String action = req.getParameter("action");
         if (action != null) {
             actionService.doAction(action, req);
+            try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+                writer.append(req.getAttribute("result").toString());
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            String page = req.getParameter("page");
+            if (page != null) {
+                req.getRequestDispatcher(page).forward(req, resp);
+            } else {
+                req.getRequestDispatcher("WEB-INF/views/userpage.jsp").forward(req, resp);
+            }
         }
-        String page = "WEB-INF/views/userpage.jsp";
-        if (req.getParameter("page") != null) {
-            page = req.getParameter("page");
-        }
-        req.getRequestDispatcher(page).forward(req, resp);
     }
 }

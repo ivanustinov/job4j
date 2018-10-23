@@ -56,12 +56,12 @@
 
         function createUser() {
             if (!validate()) {
-                return;
+                return false;
             }
             var user = {
-                firstName: $('#Name').val(),
-                serName: $('#SurName').val(),
-                email: $('#Email').val()
+                firstName: $('#name').val(),
+                serName: $('#surName').val(),
+                email: $('#email').val()
             }
             $.ajax({
                 url: "json",
@@ -74,31 +74,16 @@
             return false;
         }
 
-
         function validate() {
+            var isEmpty = true;
             var names = $('div [id]')
             for (var i = 0; i != names.length; i++) {
-                var input = names[i]
-                if (input.value == '') {
-                    alert($(input).attr('placeholder'));
+                if (names[i].value == '') {
+                    alert($(names[i]).attr('placeholder'));
+                    isEmpty = false;
                 }
             }
-        }
-
-        function addRow() {
-            if (!validate()) {
-                return;
-            }
-            var name = $('#Name').val();
-            var serName = $('#SurName').val();
-            var email = $('#Email').val();
-            $('#table tr:last').after(
-                '<tr>'
-                + '<td>' + name + '</td>'
-                + '<td>' + serName + '</td>'
-                + '<td>' + email + '</td>'
-                + '</tr>'
-            );
+            return isEmpty;
         }
     </script>
 </head>
@@ -109,22 +94,22 @@
     </div>
     <form id="myForm" class="form-horizontal">
         <div class="form-group" style="margin-top: 10px">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="Name">Name:</label>
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="name">Name:</label>
             <div class="col-sm-2" style="padding-left: 3px">
-                <input type="text" style="padding-left: 3px" class="form-control" id="Name" placeholder="Enter name">
+                <input type="text" style="padding-left: 3px" class="form-control" id="name" placeholder="Enter name">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="SurName">Surname:</label>
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="surName">Surname:</label>
             <div class="col-sm-2" style="padding-left: 3px">
-                <input type="text" style="padding-left: 3px" class="form-control" id="SurName"
+                <input type="text" style="padding-left: 3px" class="form-control" id="surName"
                        placeholder="Enter surname">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-5" style="padding-right: 0px" for="Email">Email:</label>
+            <label class="control-label col-sm-5" style="padding-right: 0px" for="email">Email:</label>
             <div class="col-sm-2" style="padding-left: 3px">
-                <input type="email" style="padding-left: 3px" class="form-control" id="Email" placeholder="Enter email">
+                <input type="email" style="padding-left: 3px" class="form-control" id="email" placeholder="Enter email">
             </div>
         </div>
         <div class="form-group" style="text-align: left; padding-left: 38%">

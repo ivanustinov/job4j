@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * //TODO add comments.
@@ -18,7 +19,7 @@ import java.io.IOException;
  */
 @WebServlet(urlPatterns = {"/adminPage"})
 public class AdminPage extends HttpServlet {
-    private final ValidateService logic = ValidateService.getInstance();
+    private ValidateService actionService = ValidateService.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +32,22 @@ public class AdminPage extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("users", logic.getAll());
-        req.getRequestDispatcher("WEB-INF/views/list.jsp").forward(req, resp);
+        String action = req.getParameter("action");
+        if (action != null) {
+            actionService.doAction(action, req);
+            try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+                writer.append(req.getAttribute("result").toString());
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            String page = req.getParameter("page");
+            if (page != null) {
+                req.getRequestDispatcher(page).forward(req, resp);
+            } else {
+                req.getRequestDispatcher("WEB-INF/views/list.jsp").forward(req, resp);
+            }
+        }
     }
 }

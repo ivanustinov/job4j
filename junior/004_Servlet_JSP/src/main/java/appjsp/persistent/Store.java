@@ -16,9 +16,9 @@ public interface Store<T> {
 
     void delete(String id);
 
-    void adminUpdate(String id, String newRole, String newLogin, String newPassword);
+    void adminUpdate(String id, String newRole, String newCountry, String newCity, String newLogin, String newPassword);
 
-    void update(String id, String newLogin, String newPassword);
+    void update(String id, String newCountry, String newCity, String newLogin, String newPassword);
 
     ArrayList<T> findAll();
 

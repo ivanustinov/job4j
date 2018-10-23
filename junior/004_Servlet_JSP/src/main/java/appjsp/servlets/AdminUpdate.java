@@ -33,6 +33,6 @@ public class AdminUpdate extends HttpServlet {
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         req.setAttribute("user", logic.findUserById(id));
-        req.getRequestDispatcher("WEB-INF/views/adminupdate.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/views/adminUpdate.jsp").forward(req, resp);
     }
 }
