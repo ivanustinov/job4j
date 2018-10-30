@@ -6,6 +6,7 @@ import appjsp.persistent.Store;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -66,8 +67,9 @@ public class ValidateService {
             @Override
             public void accept(HttpServletRequest req) {
                 String id = req.getParameter("id");
+                String login = findUserById(id).getLogin();
                 store.delete(id);
-                String result = "user with id " + id + " has been deleted";
+                String result = "user with login " + login + " has been deleted";
                 req.setAttribute("result", result);
             }
         };
@@ -77,18 +79,16 @@ public class ValidateService {
         return new Consumer<HttpServletRequest>() {
             @Override
             public void accept(HttpServletRequest req) {
-                String newLogin = req.getParameter("login");
-                String newPassword = req.getParameter("password");
-                String newRole = req.getParameter("role");
-                String id = req.getParameter("id");
-                String newCountry = req.getParameter("country");
-                String newCity = req.getParameter("city");
-                String result = "Enter values for the name or/and login fields";
-                if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.adminUpdate(id, newCountry, newCity, newRole, newLogin, newPassword);
-                    result = "User with id " + id + " has been updated";
+                ObjectMapper mapper = new ObjectMapper();
+                User user = null;
+                String f = req.getParameter("user");
+                try {
+                    user = mapper.readValue(f, User.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                req.setAttribute("result", result);
+                store.adminUpdate(user);
+                req.setAttribute("result", "User with id " + user.getId() + " has been updated");
             }
         };
     }
@@ -97,18 +97,18 @@ public class ValidateService {
         return new Consumer<HttpServletRequest>() {
             @Override
             public void accept(HttpServletRequest req) {
-                String newLogin = req.getParameter("login");
-                String newPassword = req.getParameter("password");
-                String newCountry = req.getParameter("country");
-                String newCity = req.getParameter("city");
-                String id = req.getParameter("id");
-                String result = "Enter values for the name or/and login fields";
-                if (!newLogin.equals("") && !newLogin.equals("")) {
-                    store.update(id, newCountry, newLogin, newLogin, newPassword);
-                    result = "User with id " + id + " has been updated";
+                ObjectMapper mapper = new ObjectMapper();
+                User user = null;
+                String f = req.getParameter("user");
+                try {
+                    user = mapper.readValue(f, User.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                req.setAttribute("result", result);
-                req.getSession().setAttribute("user", findUserById(id));
+                HttpSession session = req.getSession();
+                session.setAttribute("user", user);
+                store.adminUpdate(user);
+                req.setAttribute("result", "User with id " + user.getId() + " has been updated");
             }
         };
     }
@@ -127,12 +127,8 @@ public class ValidateService {
             @Override
             public void accept(HttpServletRequest req) {
                 String id = req.getParameter("id");
-                String result = "Insert id";
-                if (!id.equals("")) {
-                    User user = store.findById(id);
-                    result = (user == null ? "No user in the store with such id" : user.toString());
-                }
-                req.setAttribute("result", result);
+                User user = store.findById(id);
+                req.setAttribute("user", user);
             }
         };
     }
@@ -150,8 +146,7 @@ public class ValidateService {
                             + "\"country\" : \"" + user.getCountry() + "\", "
                             + "\"id\" : \"" + user.getId() + "\", "
                             + "\"city\" : \"" + user.getCity() + "\", "
-                            + "\"login\" : \"" + user.getLogin() + "\", "
-                            + "\"password\" : \"" + user.getPassword() + "\"}");
+                            + "\"login\" : \"" + user.getLogin() + "\"}");
                     if (i++ == users.size() || users.size() == 0) {
                         break;
                     } else {
@@ -159,7 +154,7 @@ public class ValidateService {
                     }
                 }
                 json.append("]");
-                req.setAttribute("result", json.toString());
+                req.setAttribute("result", json);
             }
         };
     }

@@ -22,8 +22,7 @@
                     console.log(key + ' ' + value);
                     countries += '<option value=' + value + '>' + key + '</option>'
                 });
-                var currentContries = document.getElementById("countries");
-                currentContries.innerHTML = countries;
+                $('#countries').html(countries);
             });
         }
 
@@ -38,9 +37,7 @@
                 $.each(data, function (key, value) {
                     cities += '<option value=' + value + '>' + key + '</option>'
                 });
-                $('#cities').empty();
                 var currentCities = document.getElementById("cities");
-                console.log(currentCities);
                 currentCities.innerHTML = cities;
             });
         }
@@ -54,11 +51,10 @@
             for (var i = 0; i < array.length; i++) {
                 user[array[i].name] = array[i].value;
             }
-            console.log(array);
             var object = JSON.stringify(user);
             $.ajax({
-                url: "adminPage",
                 type: "POST",
+                url: "adminPage",
                 data: {
                     action: "add",
                     user: object
@@ -67,7 +63,6 @@
                 $('#result').html(data);
                 $('form')[0].reset();
             });
-            return false;
         }
 
         function validate() {
@@ -86,33 +81,41 @@
 </head>
 <body style="text-align: center">
     <fieldset>
-        <form method='post'>
+        <form class="form-horizontal">
             <legend align='center'>Create new User</legend>
             <div>
-                <select name="role">
+                <select class="form-control" style="margin-left: 706px; padding-left: 3px; width: auto" name="role">
                     <option selected="selected" disabled>Select role</option>
                     <option>USER</option>
                     <option>ADMIN</option>
                 </select>
             </div>
-            <div>
-                <select name="country" id="countries" onchange="getCities()"/>
+            <div style="margin-top: 10px">
+                <select class="form-control" style="margin-left: 706px; padding-left: 3px; width: auto" name="country"
+                        id="countries" onchange="getCities()"></select>
             </div>
-            <div>LOGIN: <input type='text' name='login' placeholder="Input login"></div>
-            <div>PASSWORD: <input type='text' name='password' placeholder="Input password"></div>
-            <p align='center'>
-                <button type='button' onclick="createUser()">CREATE</button>
-            </p>
-            <div>
-                <select name="city" id="cities"/>
+            <div style="margin-top: 10px; text-align: right">
+                <select class="form-control" style="margin-left: 706px; padding-left: 3px; width: auto" name="city"
+                        id="cities"></select>
+            </div>
+            <div style="margin-left: 706px; margin-top: 10px">
+                <input type='text' style="padding-left: 3px; width: auto" class="form-control"
+                       name='login' id="login" placeholder="Input login">
+            </div>
+            <div style="margin-left: 706px; margin-top: 10px">
+                <input type='text' style="padding-left: 3px; width: auto" class="form-control"
+                       name='password' id="password" placeholder="Input password">
+            </div>
+            <div align='center' style="margin-top: 10px">
+                <button type='button' class="btn btn-primary" onclick="createUser()">CREATE</button>
             </div>
         </form>
     </fieldset>
-    <p align="center" id="result"></p>
     <form>
         <div>
-            <button type='submit'>BACK TO USER'S LIST</button>
+            <button class="btn btn-primary" type='submit'>BACK TO USER'S LIST</button>
         </div>
     </form>
+    <p align="center" id="result"></p>
 </body>
 </html>

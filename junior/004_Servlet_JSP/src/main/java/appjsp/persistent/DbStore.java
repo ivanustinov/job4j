@@ -38,7 +38,7 @@ public class DbStore implements Store<User> {
         source.setMaxOpenPreparedStatements(100);
         try (Connection connection = source.getConnection();
              Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users(id text PRIMARY KEY, role text, coutry text, " +
+            stm.execute("CREATE TABLE IF NOT EXISTS users(id text PRIMARY KEY, role text, country text, " +
                     "city text, login text, password text)");
             ResultSet rs = stm.executeQuery("SELECT * FROM users");
             int number = 0;
@@ -87,16 +87,16 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public void adminUpdate(String id, String newRole, String newCountry, String newCity, String newLogin, String newPassword) {
+    public void adminUpdate(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, country = ?"
+             PreparedStatement insert = connection.prepareStatement("UPDATE users SET role = ?, country = ?, "
                      + "city = ?, login = ?, password = ? WHERE id = ?")) {
-            insert.setString(1, newRole);
-            insert.setString(2, newCountry);
-            insert.setString(3, newCity);
-            insert.setString(4, newLogin);
-            insert.setString(5, newPassword);
-            insert.setString(6, id);
+            insert.setString(1, user.getRole().toString());
+            insert.setString(2, user.getCountry().toString());
+            insert.setString(3, user.getCity().toString());
+            insert.setString(4, user.getLogin());
+            insert.setString(5, user.getPassword());
+            insert.setString(6, user.getId());
             insert.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

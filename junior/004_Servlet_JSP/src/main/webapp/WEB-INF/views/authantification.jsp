@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Insert Login & Password</title>
@@ -9,7 +11,7 @@
 </head>
 <script>
     function authorisation() {
-        if (!validate) {
+        if (!validate()) {
             return false;
         }
         $.ajax({
@@ -20,7 +22,7 @@
         }).done(function (data) {
             var response = data;
             if (response.result == "success") {
-                window.location.href = response.page;
+                window.location.href = "userPage";
             }
             else {
                 $('#result').html(response.result);
@@ -47,16 +49,18 @@
     <fieldset>
         <form id="myForm" class="form-horizontal">
             <div class="form-group" style="margin-top: 10px">
-                <label class="control-label col-sm-5" style="padding-right: 0px" for="login">Login:</label>
+                <label class="control-label col-sm-6" style="padding-right: 0px" for="login">Login:</label>
                 <div class="col-sm-2" style="padding-left: 3px">
-                    <input type="text" style="padding-left: 3px" class="form-control" id="login" name="login"
+                    <input type="text" style="padding-left: 3px; width: auto" class="form-control" id="login"
+                           name="login"
                            placeholder="Enter login">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-5" style="padding-right: 0px" for="password">Password:</label>
+                <label class="control-label col-sm-6" style="padding-right: 0px" for="password">Password:</label>
                 <div class="col-sm-2" style="padding-left: 3px">
-                    <input type="text" style="padding-left: 3px" class="form-control" id="password" name="password"
+                    <input type="text" style="padding-left: 3px; width: auto" class="form-control" id="password"
+                           name="password"
                            placeholder="Enter password">
                 </div>
             </div>

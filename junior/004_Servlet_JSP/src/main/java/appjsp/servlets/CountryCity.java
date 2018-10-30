@@ -85,9 +85,6 @@ public class CountryCity extends HttpServlet {
         writer.append("}");
         writer.flush();
         writer.close();
-//        request.setAttribute("countries", countries);
-//        String page = request.getParameter("newPage");
-//        request.getRequestDispatcher(page).forward(request, response);
     }
 
     public void onCountryChange(Countries country) {
