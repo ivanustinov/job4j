@@ -69,7 +69,7 @@
                     var users = JSON.parse(data.responseText);
                     var table = '';
                     if (users.length == 0) {
-                        table = 'There are no users in the store';
+                        $('#table').html('There are no users in the store');
                     }
                     else {
                         var a = 1;

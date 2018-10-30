@@ -19,10 +19,10 @@
             }).done(function (data) {
                 var countries = '<option selected="selected" disabled>Select country</option>';
                 $.each(data, function (key, value) {
-                    console.log(key + ' ' + value);
                     countries += '<option value=' + value + '>' + key + '</option>'
                 });
                 $('#countries').html(countries);
+                $('#cities').html('<option selected="selected" disabled>Select city</option>');
             });
         }
 
@@ -54,7 +54,7 @@
             var object = JSON.stringify(user);
             $.ajax({
                 type: "POST",
-                url: "adminPage",
+                url: "userPage",
                 data: {
                     action: "add",
                     user: object
